@@ -1,0 +1,662 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		930EA5412DAEA2BA00306F54 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 930EA5402DAEA2BA00306F54 /* Kingfisher */; };
+		939D42082DAE6EFE00E85C3E /* JellyfinAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 939D42072DAE6EFE00E85C3E /* JellyfinAPI */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		939D41E42DAE6DBA00E85C3E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 939D41CE2DAE6DB800E85C3E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 939D41D52DAE6DB800E85C3E;
+			remoteInfo = JellyPlayerSwift;
+		};
+		939D41EE2DAE6DBA00E85C3E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 939D41CE2DAE6DB800E85C3E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 939D41D52DAE6DB800E85C3E;
+			remoteInfo = JellyPlayerSwift;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		939D41D62DAE6DB800E85C3E /* JellyPlayerSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JellyPlayerSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		939D41E32DAE6DBA00E85C3E /* JellyPlayerSwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JellyPlayerSwiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		939D41ED2DAE6DBA00E85C3E /* JellyPlayerSwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JellyPlayerSwiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		939D421C2DAE7D4500E85C3E /* Exceptions for "JellyPlayerSwift" folder in "JellyPlayerSwift" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 939D41D52DAE6DB800E85C3E /* JellyPlayerSwift */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		930EA52B2DAE8F7200306F54 /* UI */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = UI;
+			sourceTree = "<group>";
+		};
+		939D41D82DAE6DB800E85C3E /* JellyPlayerSwift */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				939D421C2DAE7D4500E85C3E /* Exceptions for "JellyPlayerSwift" folder in "JellyPlayerSwift" target */,
+			);
+			path = JellyPlayerSwift;
+			sourceTree = "<group>";
+		};
+		939D41E62DAE6DBA00E85C3E /* JellyPlayerSwiftTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = JellyPlayerSwiftTests;
+			sourceTree = "<group>";
+		};
+		939D41F02DAE6DBA00E85C3E /* JellyPlayerSwiftUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = JellyPlayerSwiftUITests;
+			sourceTree = "<group>";
+		};
+		939D42002DAE6DDF00E85C3E /* Features */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Features;
+			sourceTree = "<group>";
+		};
+		939D42012DAE6DE600E85C3E /* Services */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Services;
+			sourceTree = "<group>";
+		};
+		939D42022DAE6DEF00E85C3E /* Extensions */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		939D42032DAE6DF600E85C3E /* Storage */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Storage;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		939D41D32DAE6DB800E85C3E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				930EA5412DAEA2BA00306F54 /* Kingfisher in Frameworks */,
+				939D42082DAE6EFE00E85C3E /* JellyfinAPI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		939D41E02DAE6DBA00E85C3E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		939D41EA2DAE6DBA00E85C3E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		939D41CD2DAE6DB800E85C3E = {
+			isa = PBXGroup;
+			children = (
+				930EA52B2DAE8F7200306F54 /* UI */,
+				939D42032DAE6DF600E85C3E /* Storage */,
+				939D42022DAE6DEF00E85C3E /* Extensions */,
+				939D42012DAE6DE600E85C3E /* Services */,
+				939D42002DAE6DDF00E85C3E /* Features */,
+				939D41D82DAE6DB800E85C3E /* JellyPlayerSwift */,
+				939D41E62DAE6DBA00E85C3E /* JellyPlayerSwiftTests */,
+				939D41F02DAE6DBA00E85C3E /* JellyPlayerSwiftUITests */,
+				939D41D72DAE6DB800E85C3E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		939D41D72DAE6DB800E85C3E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				939D41D62DAE6DB800E85C3E /* JellyPlayerSwift.app */,
+				939D41E32DAE6DBA00E85C3E /* JellyPlayerSwiftTests.xctest */,
+				939D41ED2DAE6DBA00E85C3E /* JellyPlayerSwiftUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		939D41D52DAE6DB800E85C3E /* JellyPlayerSwift */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 939D41F72DAE6DBA00E85C3E /* Build configuration list for PBXNativeTarget "JellyPlayerSwift" */;
+			buildPhases = (
+				939D41D22DAE6DB800E85C3E /* Sources */,
+				939D41D32DAE6DB800E85C3E /* Frameworks */,
+				939D41D42DAE6DB800E85C3E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				930EA52B2DAE8F7200306F54 /* UI */,
+				939D41D82DAE6DB800E85C3E /* JellyPlayerSwift */,
+				939D42002DAE6DDF00E85C3E /* Features */,
+				939D42012DAE6DE600E85C3E /* Services */,
+				939D42022DAE6DEF00E85C3E /* Extensions */,
+				939D42032DAE6DF600E85C3E /* Storage */,
+			);
+			name = JellyPlayerSwift;
+			packageProductDependencies = (
+				939D42072DAE6EFE00E85C3E /* JellyfinAPI */,
+				930EA5402DAEA2BA00306F54 /* Kingfisher */,
+			);
+			productName = JellyPlayerSwift;
+			productReference = 939D41D62DAE6DB800E85C3E /* JellyPlayerSwift.app */;
+			productType = "com.apple.product-type.application";
+		};
+		939D41E22DAE6DBA00E85C3E /* JellyPlayerSwiftTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 939D41FA2DAE6DBA00E85C3E /* Build configuration list for PBXNativeTarget "JellyPlayerSwiftTests" */;
+			buildPhases = (
+				939D41DF2DAE6DBA00E85C3E /* Sources */,
+				939D41E02DAE6DBA00E85C3E /* Frameworks */,
+				939D41E12DAE6DBA00E85C3E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				939D41E52DAE6DBA00E85C3E /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				939D41E62DAE6DBA00E85C3E /* JellyPlayerSwiftTests */,
+			);
+			name = JellyPlayerSwiftTests;
+			packageProductDependencies = (
+			);
+			productName = JellyPlayerSwiftTests;
+			productReference = 939D41E32DAE6DBA00E85C3E /* JellyPlayerSwiftTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		939D41EC2DAE6DBA00E85C3E /* JellyPlayerSwiftUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 939D41FD2DAE6DBA00E85C3E /* Build configuration list for PBXNativeTarget "JellyPlayerSwiftUITests" */;
+			buildPhases = (
+				939D41E92DAE6DBA00E85C3E /* Sources */,
+				939D41EA2DAE6DBA00E85C3E /* Frameworks */,
+				939D41EB2DAE6DBA00E85C3E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				939D41EF2DAE6DBA00E85C3E /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				939D41F02DAE6DBA00E85C3E /* JellyPlayerSwiftUITests */,
+			);
+			name = JellyPlayerSwiftUITests;
+			packageProductDependencies = (
+			);
+			productName = JellyPlayerSwiftUITests;
+			productReference = 939D41ED2DAE6DBA00E85C3E /* JellyPlayerSwiftUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		939D41CE2DAE6DB800E85C3E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1630;
+				LastUpgradeCheck = 1630;
+				TargetAttributes = {
+					939D41D52DAE6DB800E85C3E = {
+						CreatedOnToolsVersion = 16.3;
+					};
+					939D41E22DAE6DBA00E85C3E = {
+						CreatedOnToolsVersion = 16.3;
+						TestTargetID = 939D41D52DAE6DB800E85C3E;
+					};
+					939D41EC2DAE6DBA00E85C3E = {
+						CreatedOnToolsVersion = 16.3;
+						TestTargetID = 939D41D52DAE6DB800E85C3E;
+					};
+				};
+			};
+			buildConfigurationList = 939D41D12DAE6DB800E85C3E /* Build configuration list for PBXProject "JellyPlayerSwift" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 939D41CD2DAE6DB800E85C3E;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				939D42062DAE6EFE00E85C3E /* XCRemoteSwiftPackageReference "jellyfin-sdk-swift" */,
+				930EA53F2DAEA2BA00306F54 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 939D41D72DAE6DB800E85C3E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				939D41D52DAE6DB800E85C3E /* JellyPlayerSwift */,
+				939D41E22DAE6DBA00E85C3E /* JellyPlayerSwiftTests */,
+				939D41EC2DAE6DBA00E85C3E /* JellyPlayerSwiftUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		939D41D42DAE6DB800E85C3E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		939D41E12DAE6DBA00E85C3E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		939D41EB2DAE6DBA00E85C3E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		939D41D22DAE6DB800E85C3E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		939D41DF2DAE6DBA00E85C3E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		939D41E92DAE6DBA00E85C3E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		939D41E52DAE6DBA00E85C3E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 939D41D52DAE6DB800E85C3E /* JellyPlayerSwift */;
+			targetProxy = 939D41E42DAE6DBA00E85C3E /* PBXContainerItemProxy */;
+		};
+		939D41EF2DAE6DBA00E85C3E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 939D41D52DAE6DB800E85C3E /* JellyPlayerSwift */;
+			targetProxy = 939D41EE2DAE6DBA00E85C3E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		939D41F52DAE6DBA00E85C3E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = Y46T493R44;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		939D41F62DAE6DBA00E85C3E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = Y46T493R44;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		939D41F82DAE6DBA00E85C3E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Y46T493R44;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = JellyPlayerSwift/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = me.nikoladx.JellyPlayerSwift;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		939D41F92DAE6DBA00E85C3E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Y46T493R44;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = JellyPlayerSwift/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = me.nikoladx.JellyPlayerSwift;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		939D41FB2DAE6DBA00E85C3E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Y46T493R44;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = me.nikoladx.JellyPlayerSwiftTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JellyPlayerSwift.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/JellyPlayerSwift";
+			};
+			name = Debug;
+		};
+		939D41FC2DAE6DBA00E85C3E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Y46T493R44;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = me.nikoladx.JellyPlayerSwiftTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JellyPlayerSwift.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/JellyPlayerSwift";
+			};
+			name = Release;
+		};
+		939D41FE2DAE6DBA00E85C3E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Y46T493R44;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = me.nikoladx.JellyPlayerSwiftUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = JellyPlayerSwift;
+			};
+			name = Debug;
+		};
+		939D41FF2DAE6DBA00E85C3E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Y46T493R44;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = me.nikoladx.JellyPlayerSwiftUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = JellyPlayerSwift;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		939D41D12DAE6DB800E85C3E /* Build configuration list for PBXProject "JellyPlayerSwift" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				939D41F52DAE6DBA00E85C3E /* Debug */,
+				939D41F62DAE6DBA00E85C3E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		939D41F72DAE6DBA00E85C3E /* Build configuration list for PBXNativeTarget "JellyPlayerSwift" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				939D41F82DAE6DBA00E85C3E /* Debug */,
+				939D41F92DAE6DBA00E85C3E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		939D41FA2DAE6DBA00E85C3E /* Build configuration list for PBXNativeTarget "JellyPlayerSwiftTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				939D41FB2DAE6DBA00E85C3E /* Debug */,
+				939D41FC2DAE6DBA00E85C3E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		939D41FD2DAE6DBA00E85C3E /* Build configuration list for PBXNativeTarget "JellyPlayerSwiftUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				939D41FE2DAE6DBA00E85C3E /* Debug */,
+				939D41FF2DAE6DBA00E85C3E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		930EA53F2DAEA2BA00306F54 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.3.2;
+			};
+		};
+		939D42062DAE6EFE00E85C3E /* XCRemoteSwiftPackageReference "jellyfin-sdk-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jellyfin/jellyfin-sdk-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		930EA5402DAEA2BA00306F54 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 930EA53F2DAEA2BA00306F54 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+		939D42072DAE6EFE00E85C3E /* JellyfinAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 939D42062DAE6EFE00E85C3E /* XCRemoteSwiftPackageReference "jellyfin-sdk-swift" */;
+			productName = JellyfinAPI;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 939D41CE2DAE6DB800E85C3E /* Project object */;
+}
