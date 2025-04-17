@@ -19,4 +19,20 @@ struct Song: Codable {
     let AlbumId: String
     let RunTimeTicks: Int
     let Artists: [String]
+    
+    var streamUrl: URL? {
+        if let serverUrl = UserDefaults.standard.string(forKey: serverKey), let accessToken = UserDefaults.standard.string(forKey: accessKey) {
+            return URL(string: "\(serverUrl)/Audio/\(Id)/stream?Static=true&MaxStreamingBitrate=320000&api_key=\(accessToken)")
+        } else {
+            return nil
+        }
+    }
+    
+    var coverUrl: URL? {
+        if let serverUrl = UserDefaults.standard.string(forKey: serverKey) {
+            return URL(string: "\(serverUrl)/Items/\(Id)/Images/Primary")
+        } else {
+            return nil
+        }
+    }
 }

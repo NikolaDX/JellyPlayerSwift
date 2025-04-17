@@ -23,5 +23,13 @@ extension AlbumTracksView {
                 songs = await albumService.fetchAlbumSongs(albumId: album.Id)
             }
         }
+        
+        func playSong(_ song: Song) {
+            do {
+                try PlaybackService.shared.playSong(song)
+            } catch {
+                print("Playback error: \(error.localizedDescription)")
+            }
+        }
     }
 }

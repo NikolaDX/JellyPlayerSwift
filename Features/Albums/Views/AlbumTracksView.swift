@@ -32,7 +32,7 @@ struct AlbumTracksView: View {
                 
                 HStack {
                     NiceIconButton("Play", buttonImage: "play.fill") {
-                        
+                        viewModel.playSong(viewModel.songs.first!)
                     }
                     
                     NiceIconButton("Shuffle", buttonImage: "shuffle") {
@@ -43,6 +43,9 @@ struct AlbumTracksView: View {
                 
                 ForEach(viewModel.songs, id: \.Id) { song in
                     AlbumTrackRow(song)
+                        .onTapGesture {
+                            viewModel.playSong(song)
+                        }
                 }
             }
             .padding(spaceBetween)

@@ -50,7 +50,7 @@ struct AlbumsView: View {
             .gesture(
                 DragGesture()
                     .onChanged { value in
-                        let dragSensitivity: CGFloat = 700
+                        let dragSensitivity: CGFloat = 500
                         let delta = -value.translation.height / dragSensitivity
                         scrollOffset = viewModel.clamp(scrollOffset - delta, lower: 0, upper: CGFloat(viewModel.albums.count - 1))
                     }

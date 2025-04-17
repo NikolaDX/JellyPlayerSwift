@@ -9,7 +9,7 @@ import Foundation
 import JellyfinAPI
 import UIKit
 
-class JellyfinService: ObservableObject {
+class JellyfinService {
     private var serverUrl: String? {
         get { return UserDefaults.standard.string(forKey: serverKey) }
         set { UserDefaults.standard.set(newValue, forKey: serverKey) }

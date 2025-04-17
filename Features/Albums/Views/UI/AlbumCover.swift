@@ -5,7 +5,6 @@
 //  Created by Nikola Ristic on 4/15/25.
 //
 
-import Kingfisher
 import SwiftUI
 
 struct AlbumCover: View {
@@ -16,10 +15,8 @@ struct AlbumCover: View {
     }
     
     var body: some View {
-        KFImage(album.coverUrl)
-            .resizable()
-            .scaledToFit()
-            .clipShape(.rect(cornerRadius: 20))
+        Cover(url: album.coverUrl)
+            .clipShape(.rect(cornerRadius: 30))
     }
 }
 

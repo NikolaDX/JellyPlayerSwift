@@ -20,6 +20,11 @@ struct ContentView: View {
                     }
                 }
         }
+        .padding(.bottom, PlaybackService.shared.currentSong == nil ? 0 : 100)
+        .overlay(alignment: .bottom) {
+            MiniPlayerView()
+                .padding()
+        }
     }
 }
 
