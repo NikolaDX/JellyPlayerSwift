@@ -19,8 +19,7 @@ struct AlbumCover: View {
         KFImage(album.coverUrl)
             .resizable()
             .scaledToFit()
-            .shadow(color: .primary.opacity(0.5), radius: 5, x: 5, y: 5)
-            .clipShape(.rect(cornerRadius: 10))
+            .clipShape(.rect(cornerRadius: 20))
     }
 }
 

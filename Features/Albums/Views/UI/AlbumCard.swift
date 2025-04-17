@@ -31,7 +31,7 @@ struct AlbumCard: View {
                     .foregroundStyle(.secondary)
             }
         }
-        
+        .padding()
     }
 }
 

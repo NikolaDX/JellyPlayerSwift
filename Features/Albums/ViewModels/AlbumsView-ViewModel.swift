@@ -18,5 +18,9 @@ extension AlbumsView {
                 self.albums = await albumService.fetchAlbums()
             }
         }
+        
+        func clamp(_ value: CGFloat, lower: CGFloat, upper: CGFloat) -> CGFloat {
+            min(max(value, lower), upper)
+        }
     }
 }
