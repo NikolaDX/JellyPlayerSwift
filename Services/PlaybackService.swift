@@ -21,7 +21,12 @@ class PlaybackService {
     var currentTime: Double = 0
     
     var duration: Double {
-        self.player?.currentItem?.duration.seconds ?? 0.0
+        if let time = self.player?.currentItem?.duration.seconds {
+            if !time.isNaN && time.isFinite {
+                return time
+            }
+        }
+        return 0
     }
     
     private init() { }
@@ -45,7 +50,13 @@ class PlaybackService {
     }
 
     func updateTime() {
-        currentTime = self.player?.currentTime().seconds ?? 0.0
+        if let time = self.player?.currentTime().seconds {
+            if !time.isNaN && time.isFinite {
+                currentTime = time
+            }
+        } else {
+            currentTime = 0
+        }
     }
     
     func togglePlayPause() {

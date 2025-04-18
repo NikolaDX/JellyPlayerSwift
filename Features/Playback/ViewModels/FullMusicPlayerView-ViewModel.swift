@@ -58,6 +58,10 @@ extension FullMusicPlayerView {
             playbackService.seek(to: time)
         }
         
+        init() {
+            sliderTime = currentTime
+        }
+        
         func formatTime(_ time: Double) -> String {
             let minutes = Int(time) / 60
             let seconds = Int(time) % 60

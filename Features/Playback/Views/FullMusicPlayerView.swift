@@ -16,7 +16,9 @@ struct FullMusicPlayerView: View {
             
             SpinningVinyl(
                 coverUrl: viewModel.coverUrl,
-                isPlaying: viewModel.isPlaying
+                isPlaying: viewModel.isPlaying,
+                currentTime: $viewModel.sliderTime,
+                isScrubbing: $viewModel.isEditing
             )
             
             Spacer()

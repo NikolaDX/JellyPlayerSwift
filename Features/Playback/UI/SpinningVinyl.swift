@@ -10,6 +10,8 @@ import SwiftUI
 struct SpinningVinyl: View {
     let coverUrl: URL?
     let isPlaying: Bool
+    @Binding var currentTime: Double
+    @Binding var isScrubbing: Bool
     
     @State private var rotation: Double = 0
     @State private var displayRotation: Double = 0
@@ -38,6 +40,13 @@ struct SpinningVinyl: View {
                 stopSpinningSmoothly()
             }
         }
+        .onChange(of: currentTime) { _, newValue in
+            if isScrubbing {
+                withAnimation(.easeOut(duration: 0.3)) {
+                    displayRotation = newValue.truncatingRemainder(dividingBy: 360)
+                }
+            }
+        }
     }
     
     func startSpinning() {
@@ -46,7 +55,7 @@ struct SpinningVinyl: View {
         isDecelerating = false
 
         timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { _ in
-            rotation += 0.3
+            if !isScrubbing { rotation += 0.3 }
             displayRotation = rotation.truncatingRemainder(dividingBy: 360)
         }
     }
@@ -77,5 +86,7 @@ struct SpinningVinyl: View {
 }
 
 #Preview {
-    SpinningVinyl(coverUrl: URL(string: ""), isPlaying: false)
+    @Previewable @State var currentTime: Double = 0
+    @Previewable @State var isScrubbing: Bool = false
+    SpinningVinyl(coverUrl: URL(string: ""), isPlaying: false, currentTime: $currentTime, isScrubbing: $isScrubbing)
 }
