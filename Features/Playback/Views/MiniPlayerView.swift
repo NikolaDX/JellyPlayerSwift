@@ -10,6 +10,8 @@ import SwiftUI
 struct MiniPlayerView: View {
     @State private var viewModel = ViewModel()
     
+    @Namespace var playerViewAnimation
+    
     var body: some View {
         if let song = viewModel.currentSong {
             HStack {
@@ -28,8 +30,17 @@ struct MiniPlayerView: View {
                     falseLabel: Image(systemName: "play.fill")) {
                     viewModel.togglePlayPause()
                 }
+                    .font(.title2)
             }
             .padding()
+            .sheet(isPresented: $viewModel.showingPlayer) {
+                FullMusicPlayerView()
+                    .navigationTransition(.zoom(sourceID: "playerView", in: playerViewAnimation))
+            }
+            .matchedTransitionSource(id: "playerView", in: playerViewAnimation)
+            .onTapGesture {
+                viewModel.showingPlayer = true
+            }
             .background(.ultraThinMaterial)
             .clipShape(.rect(cornerRadius: 15))
         }

@@ -13,6 +13,7 @@ extension MiniPlayerView {
     @Observable
     class ViewModel {
         var playbackService = PlaybackService.shared
+        var showingPlayer: Bool = false
         
         var currentSong: Song? {
             playbackService.currentSong

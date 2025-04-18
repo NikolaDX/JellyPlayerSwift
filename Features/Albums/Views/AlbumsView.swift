@@ -20,11 +20,11 @@ struct AlbumsView: View {
     
     var body: some View {
         NavigationStack(path: $navigationPath) {
-            ZStack {
+            ZStack(alignment: .bottom) {
                 ForEach(viewModel.albums.indices.reversed(), id: \.self) { index in
                     let album = viewModel.albums[index]
                     let depth = CGFloat(index) - scrollOffset
-                    let scale = max(0.7, 1 - abs(depth) * 0.05)
+                    let scale = max(0.7, 1 - abs(depth) * 0.1)
                     let yOffset = -depth * 50
                     let visibleRange: ClosedRange<Int> = Int(scrollOffset)...Int(scrollOffset) + 2
                     let opacity = max(0.3, 1 - abs(depth) * 0.1)
@@ -50,9 +50,14 @@ struct AlbumsView: View {
             .gesture(
                 DragGesture()
                     .onChanged { value in
-                        let dragSensitivity: CGFloat = 500
+                        let dragSensitivity: CGFloat = 450
                         let delta = -value.translation.height / dragSensitivity
                         scrollOffset = viewModel.clamp(scrollOffset - delta, lower: 0, upper: CGFloat(viewModel.albums.count - 1))
+                    }
+                    .onEnded { _ in
+                        withAnimation(.easeOut(duration: 0.25)) {
+                            scrollOffset = round(scrollOffset)
+                        }
                     }
             )
         }
