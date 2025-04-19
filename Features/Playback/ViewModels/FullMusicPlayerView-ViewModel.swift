@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension FullMusicPlayerView {
     @Observable
@@ -13,6 +14,7 @@ extension FullMusicPlayerView {
         var playbackService = PlaybackService.shared
         var sliderTime: Double = 0
         var isEditing: Bool = false
+        var coverDominantColor: Color = .black
         
         var currentSong: Song? {
             playbackService.currentSong
@@ -20,6 +22,15 @@ extension FullMusicPlayerView {
         
         var coverUrl: URL? {
             playbackService.currentSong?.coverUrl
+        }
+        
+        func updateDominantColor() {
+            guard let url = coverUrl else { return }
+            
+            ArtworkService().fetchArtwork(url: url) { [weak self] image in
+                guard let self = self, let image = image else { return }
+                self.coverDominantColor = image.dominantColor()
+            }
         }
         
         var title: String {
@@ -50,16 +61,17 @@ extension FullMusicPlayerView {
             formatTime(sliderTime)
         }
         
+        init() {
+            sliderTime = currentTime
+            updateDominantColor()
+        }
+        
         func togglePlayPause() {
             playbackService.togglePlayPause()
         }
         
         func seek(to time: Double) {
             playbackService.seek(to: time)
-        }
-        
-        init() {
-            sliderTime = currentTime
         }
         
         func formatTime(_ time: Double) -> String {

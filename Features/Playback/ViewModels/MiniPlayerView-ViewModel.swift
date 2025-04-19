@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftAudioEx
 import SwiftUI
 
 extension MiniPlayerView {
