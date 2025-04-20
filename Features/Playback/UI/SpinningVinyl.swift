@@ -18,6 +18,8 @@ struct SpinningVinyl: View {
     @State private var timer: Timer?
     @State private var isDecelerating: Bool = false
     
+    private let rotSpeed: Double = 0.2
+    
     var body: some View {
         ZStack(alignment: .center) {
             Cover(url: coverUrl)
@@ -55,7 +57,7 @@ struct SpinningVinyl: View {
         isDecelerating = false
 
         timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { _ in
-            if !isScrubbing { rotation += 0.3 }
+            if !isScrubbing { rotation += rotSpeed }
             displayRotation = rotation.truncatingRemainder(dividingBy: 360)
         }
     }

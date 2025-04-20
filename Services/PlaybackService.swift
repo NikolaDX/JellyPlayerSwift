@@ -6,6 +6,7 @@
 //
 
 import AVFoundation
+import Combine
 import Foundation
 import MediaPlayer
 
@@ -17,6 +18,9 @@ class PlaybackService {
     private var timeObserverToken: Any?
     private var playbackObserverToken: Any?
     private var playerItemStatusObserver: NSKeyValueObservation?
+    private var queue: [Song] = []
+    private var currentIndex: Int = 0
+    private var cancellables = Set<AnyCancellable>()
     
     var currentSong: Song? = nil
     var isPlaying: Bool = false
@@ -34,6 +38,7 @@ class PlaybackService {
     private init() {
         setupBackgroundSession()
         setupRemoteControls()
+        setupAutomaticPlayback()
     }
     
     deinit {
@@ -48,6 +53,14 @@ class PlaybackService {
         } catch {
             print(error.localizedDescription)
         }
+    }
+    
+    func setupAutomaticPlayback() {
+        NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime)
+            .sink { [weak self] _ in
+                self?.next()
+            }
+            .store(in: &cancellables)
     }
     
     func updateNowPlayingInfo(song: Song) {
@@ -92,6 +105,16 @@ class PlaybackService {
             return .success
         }
         
+        remoteCommandCenter.nextTrackCommand.addTarget { event in
+            self.next()
+            return .success
+        }
+        
+        remoteCommandCenter.previousTrackCommand.addTarget { event in
+            self.previous()
+            return .success
+        }
+        
         MPRemoteCommandCenter.shared().changePlaybackPositionCommand.addTarget { [weak self] event in
             guard let self = self,
             let player = self.player,
@@ -122,6 +145,31 @@ class PlaybackService {
             }
         }
     }
+    
+    func getQueue() -> [Song] {
+        queue
+    }
+    
+    func getCurrentIndex() -> Int {
+        currentIndex
+    }
+    
+    func playAndBuildQueue(_ song: Song, songsToPlay: [Song]) throws {
+        flushQueue()
+        
+        for s in songsToPlay {
+            queue.append(s)
+            if (s == song) {
+                currentIndex = songsToPlay.firstIndex(of: song)!
+            }
+        }
+        
+        try playSong(queue[currentIndex])
+    }
+    
+    func flushQueue() {
+        queue.removeAll()
+    }
 
     func updateTime() {
         if let time = self.player?.currentTime().seconds {
@@ -145,6 +193,22 @@ class PlaybackService {
     func pause() {
         player?.pause()
         isPlaying = false
+    }
+    
+    func next() {
+        currentIndex += 1;
+        if currentIndex >= queue.count {
+            currentIndex = 0;
+        }
+        try? playSong(queue[currentIndex])
+    }
+    
+    func previous() {
+        currentIndex -= 1;
+        if currentIndex < 0 {
+            currentIndex = queue.count - 1;
+        }
+        try? playSong(queue[currentIndex])
     }
     
     func seek(to time: Double) {

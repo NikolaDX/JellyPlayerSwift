@@ -37,5 +37,13 @@ extension MiniPlayerView {
         func togglePlayPause() {
             playbackService.togglePlayPause()
         }
+        
+        func nextSong() {
+            playbackService.next()
+        }
+        
+        func previousSong() {
+            playbackService.previous()
+        }
     }
 }

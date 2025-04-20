@@ -11,7 +11,7 @@ struct SongResponse: Codable {
     let Items: [Song]
 }
 
-struct Song: Codable {
+struct Song: Codable, Equatable {
     let Id: String
     let Name: String
     let IndexNumber: Int
@@ -34,5 +34,9 @@ struct Song: Codable {
         } else {
             return nil
         }
+    }
+    
+    static func ==(lhs: Song, rhs: Song) -> Bool {
+        lhs.Id == rhs.Id
     }
 }

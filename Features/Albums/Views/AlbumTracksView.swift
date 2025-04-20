@@ -32,7 +32,7 @@ struct AlbumTracksView: View {
                 
                 HStack {
                     NiceIconButton("Play", buttonImage: "play.fill") {
-                        viewModel.playSong(viewModel.songs.first!)
+                        viewModel.playSong(viewModel.songs[0])
                     }
                     
                     NiceIconButton("Shuffle", buttonImage: "shuffle") {

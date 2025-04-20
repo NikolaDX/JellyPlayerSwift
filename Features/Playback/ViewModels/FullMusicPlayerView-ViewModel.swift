@@ -15,6 +15,7 @@ extension FullMusicPlayerView {
         var sliderTime: Double = 0
         var isEditing: Bool = false
         var coverDominantColor: Color = .black
+        var showingQueue: Bool = false
         
         var currentSong: Song? {
             playbackService.currentSong
@@ -39,6 +40,10 @@ extension FullMusicPlayerView {
         
         var artist: String {
             playbackService.currentSong?.Artists.joined(separator: ", ") ?? ""
+        }
+        
+        var album: String {
+            playbackService.currentSong?.Album ?? ""
         }
         
         var isPlaying: Bool {
@@ -70,8 +75,22 @@ extension FullMusicPlayerView {
             playbackService.togglePlayPause()
         }
         
+        func nextSong() {
+            playbackService.next()
+        }
+        
+        func previousSong() {
+            playbackService.previous()
+        }
+        
         func seek(to time: Double) {
             playbackService.seek(to: time)
+        }
+        
+        func toggleQueue() {
+            withAnimation {
+                showingQueue.toggle()
+            }
         }
         
         func formatTime(_ time: Double) -> String {
