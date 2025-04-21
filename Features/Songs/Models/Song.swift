@@ -30,7 +30,7 @@ struct Song: Codable, Equatable {
     
     var coverUrl: URL? {
         if let serverUrl = UserDefaults.standard.string(forKey: serverKey) {
-            return URL(string: "\(serverUrl)/Items/\(Id)/Images/Primary")
+            return URL(string: "\(serverUrl)/Items/\(AlbumId)/Images/Primary")
         } else {
             return nil
         }

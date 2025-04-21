@@ -14,7 +14,6 @@ struct SpinningVinyl: View {
     @Binding var isScrubbing: Bool
     
     @State private var rotation: Double = 0
-    @State private var displayRotation: Double = 0
     @State private var timer: Timer?
     @State private var isDecelerating: Bool = false
     
@@ -29,7 +28,7 @@ struct SpinningVinyl: View {
                 .fill(Color.black)
                 .frame(width: 80, height: 80)
         }
-        .rotationEffect(.degrees(displayRotation))
+        .rotationEffect(.degrees(rotation))
         .onAppear {
             if isPlaying {
                 startSpinning()
@@ -45,7 +44,7 @@ struct SpinningVinyl: View {
         .onChange(of: currentTime) { _, newValue in
             if isScrubbing {
                 withAnimation(.easeOut(duration: 0.3)) {
-                    displayRotation = newValue.truncatingRemainder(dividingBy: 360)
+                    rotation = newValue * 3
                 }
             }
         }
@@ -57,8 +56,9 @@ struct SpinningVinyl: View {
         isDecelerating = false
 
         timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { _ in
-            if !isScrubbing { rotation += rotSpeed }
-            displayRotation = rotation.truncatingRemainder(dividingBy: 360)
+            if !isScrubbing {
+                rotation += rotSpeed
+            }
         }
     }
 
@@ -76,7 +76,6 @@ struct SpinningVinyl: View {
         timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { t in
             currentSpeed *= decelerationRate
             rotation += currentSpeed
-            displayRotation = rotation.truncatingRemainder(dividingBy: 360)
 
             if currentSpeed < minSpeed {
                 t.invalidate()

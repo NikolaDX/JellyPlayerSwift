@@ -22,12 +22,8 @@ struct FullMusicPlayerView: View {
                 Spacer()
                 
                 if viewModel.showingQueue {
-                    VStack {
-                        QueueView()
-                            
-                    }
-                    .transition(.slide.combined(with: .opacity))
-                    .frame(maxHeight: 500)
+                    QueueView()
+                        .transition(.slide.combined(with: .opacity))
                 } else {
                     VStack {
                         SpinningVinyl(
@@ -81,7 +77,7 @@ struct FullMusicPlayerView: View {
                 }
                 .tint(viewModel.coverDominantColor)
                 
-                HStack(spacing: buttonSize) {
+                HStack(alignment: .center, spacing: buttonSize) {
                     IconButton(
                         icon: Image(systemName: "backward.fill")) {
                             viewModel.previousSong()
@@ -104,7 +100,7 @@ struct FullMusicPlayerView: View {
                 
                 Spacer()
                 
-                HStack(spacing: buttonSize * 1.5) {
+                HStack(alignment: .bottom, spacing: buttonSize * 1.5) {
                     IconButton(icon: Image(systemName: "dice")) {
                         //shuffle queue
                     }
