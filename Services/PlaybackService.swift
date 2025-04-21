@@ -10,6 +10,12 @@ import Combine
 import Foundation
 import MediaPlayer
 
+enum RepeatMode: String, CaseIterable {
+    case none = "None"
+    case repeatAll = "Repeat All"
+    case repeatOne = "Repeat One"
+}
+
 @Observable
 class PlaybackService {
     static let shared = PlaybackService()
@@ -21,6 +27,10 @@ class PlaybackService {
     private var queue: [Song] = []
     private var currentIndex: Int = 0
     private var cancellables = Set<AnyCancellable>()
+    private var isShuffleEnabled: Bool = true
+    private var repeatMode: RepeatMode = .none
+    
+    private let playSongDebouncer = DebounceService(delay: 0.2)
     
     var currentSong: Song? = nil
     var isPlaying: Bool = false
@@ -45,7 +55,7 @@ class PlaybackService {
         cleanup()
     }
     
-    func setupBackgroundSession() {
+    private func setupBackgroundSession() {
         let audioSession = AVAudioSession.sharedInstance()
         do {
             try audioSession.setCategory(.playback)
@@ -55,15 +65,15 @@ class PlaybackService {
         }
     }
     
-    func setupAutomaticPlayback() {
+    private func setupAutomaticPlayback() {
         NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime)
             .sink { [weak self] _ in
-                self?.next()
+                self?.onSongEnded()
             }
             .store(in: &cancellables)
     }
     
-    func updateNowPlayingInfo(song: Song) {
+    private func updateNowPlayingInfo(song: Song) {
         var nowPlayingInfo: [String: Any] = [
             MPMediaItemPropertyTitle: song.Name,
             MPMediaItemPropertyArtist: song.Artists.joined(separator: ", "),
@@ -82,7 +92,7 @@ class PlaybackService {
             
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
         }
-
+        
         playbackObserverToken = player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1, preferredTimescale: 1), queue: .main) { [weak self] time in
             guard let _ = self else { return }
 
@@ -92,7 +102,7 @@ class PlaybackService {
         }
     }
     
-    func setupRemoteControls() {
+    private func setupRemoteControls() {
         let remoteCommandCenter = MPRemoteCommandCenter.shared()
         
         remoteCommandCenter.playCommand.addTarget { event in
@@ -128,20 +138,28 @@ class PlaybackService {
         }
     }
     
-    func playSong(_ song: Song) throws {
-        cleanup()
-        let playerItem = AVPlayerItem(url: song.streamUrl!)
-        player = AVPlayer(playerItem: playerItem)
-        player?.play()
-        let interval = CMTimeMakeWithSeconds(1.0, preferredTimescale: 1)
-        timeObserverToken = player?.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
-            self?.updateTime()
-        }
-        playerItemStatusObserver = playerItem.observe(\.status, options: [.initial, .new]) { [weak self] item, _ in
-            if item.status == .readyToPlay {
-                self?.updateNowPlayingInfo(song: song)
-                self?.currentSong = song
-                self?.isPlaying = true
+    private func playSong(_ song: Song) {
+        isShuffleEnabled = false
+        
+        playSongDebouncer.run {
+            self.cleanup()
+            
+            let playerItem = AVPlayerItem(url: song.streamUrl!)
+            self.player = AVPlayer(playerItem: playerItem)
+            self.player?.play()
+            
+            let interval = CMTimeMakeWithSeconds(1.0, preferredTimescale: 1)
+            self.timeObserverToken = self.player?.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
+                self?.updateTime()
+            }
+            
+            self.playerItemStatusObserver = playerItem.observe(\.status, options: [.initial, .new]) { [weak self] item, _ in
+                if item.status == .readyToPlay {
+                    self?.updateNowPlayingInfo(song: song)
+                    self?.currentSong = song
+                    self?.isPlaying = true
+                    self?.isShuffleEnabled = true
+                }
             }
         }
     }
@@ -154,7 +172,7 @@ class PlaybackService {
         currentIndex
     }
     
-    func playAndBuildQueue(_ song: Song, songsToPlay: [Song]) throws {
+    func playAndBuildQueue(_ song: Song, songsToPlay: [Song]) {
         flushQueue()
         
         for s in songsToPlay {
@@ -164,14 +182,57 @@ class PlaybackService {
             }
         }
         
-        try playSong(queue[currentIndex])
+        playSong(queue[currentIndex])
     }
     
-    func flushQueue() {
+    func playAtIndex(_ index: Int) {
+        currentIndex = index
+        playSong(queue[currentIndex])
+    }
+    
+    private func flushQueue() {
         queue.removeAll()
     }
+    
+    func removeFromQueue(at index: Int) {
+        if index == currentIndex {
+            return
+        }
+        
+        queue.remove(at: index)
+        if index <= currentIndex {
+            currentIndex = max(0, currentIndex - 1)
+        }
+    }
+    
+    func moveSong(from source: IndexSet, to destination: Int) {
+        guard let sourceIndex = source.first else { return }
 
-    func updateTime() {
+        queue.move(fromOffsets: source, toOffset: destination)
+
+        if sourceIndex == currentIndex {
+            if destination > sourceIndex {
+                currentIndex = destination - 1
+            } else {
+                currentIndex = destination
+            }
+        } else if sourceIndex < currentIndex && destination > currentIndex {
+            currentIndex -= 1
+        } else if sourceIndex > currentIndex && destination <= currentIndex {
+            currentIndex += 1
+        }
+    }
+
+    func shuffleQueue() {
+        guard isShuffleEnabled else { return }
+        
+        queue.shuffle()
+        if let currentId = currentSong?.Id, let index = queue.firstIndex(where: { $0.Id == currentId }) {
+            queue.swapAt(currentIndex, index)
+        }
+    }
+
+    private func updateTime() {
         if let time = self.player?.currentTime().seconds {
             if !time.isNaN && time.isFinite {
                 currentTime = time
@@ -200,7 +261,7 @@ class PlaybackService {
         if currentIndex >= queue.count {
             currentIndex = 0;
         }
-        try? playSong(queue[currentIndex])
+        playSong(queue[currentIndex])
     }
     
     func previous() {
@@ -208,20 +269,50 @@ class PlaybackService {
         if currentIndex < 0 {
             currentIndex = queue.count - 1;
         }
-        try? playSong(queue[currentIndex])
+        playSong(queue[currentIndex])
+    }
+    
+    private func onSongEnded() {
+        switch repeatMode {
+        case .none:
+            if (currentIndex != queue.count - 1) {
+                next()
+            }
+        case .repeatAll:
+            next()
+        case .repeatOne:
+            playAtIndex(currentIndex)
+        }
     }
     
     func seek(to time: Double) {
         self.player?.seek(to: CMTimeMakeWithSeconds(time, preferredTimescale: 600), toleranceBefore: .zero, toleranceAfter: .positiveInfinity)
     }
     
-    func cleanup() {
-        if let timeObserverToken = timeObserverToken {
-            player?.removeTimeObserver(timeObserverToken)
+    func getRepeatMode() -> RepeatMode {
+        repeatMode
+    }
+    
+    func changeQueueMode() {
+        let allCases = RepeatMode.allCases
+        if let index = allCases.firstIndex(of: repeatMode) {
+            let nextIndex = (index + 1) % allCases.count
+            repeatMode = allCases[nextIndex]
         }
-        if let playbackObserverToken = playbackObserverToken {
-            player?.removeTimeObserver(playbackObserverToken)
+    }
+    
+    private func cleanup() {
+        if let timeObserverToken = timeObserverToken, let observerPlayer = player {
+            observerPlayer.removeTimeObserver(timeObserverToken)
+            self.timeObserverToken = nil
         }
+        
+        if let playbackObserverToken = playbackObserverToken, let observerPlayer = player {
+            observerPlayer.removeTimeObserver(playbackObserverToken)
+            self.playbackObserverToken = nil
+        }
+
         playerItemStatusObserver?.invalidate()
+        playerItemStatusObserver = nil
     }
 }

@@ -18,46 +18,52 @@ struct QueueView: View {
                     .clipShape(.rect(cornerRadius: 10))
                 
                 VStack(alignment: .leading) {
-                    Text(viewModel.songName)
-                        .font(.headline)
-                        .lineLimit(1)
-                    
-                    Text(viewModel.songArtists)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
+                    Headline(viewModel.songName)
+                    Subheadline(viewModel.songArtists)
                 }
                 
                 Spacer()
             }
             
-            List(viewModel.queue.indices, id: \.self) { index in
-                HStack {
-                    Text("\(index + 1)")
-                        .frame(width: 30)
-                    
-                    VStack(alignment: .leading) {
-                        Text(viewModel.queue[index].Name)
-                            .lineLimit(1)
-                            .font(.headline)
-                        
-                        Text(viewModel.queue[index].Artists.joined(separator: ", "))
-                            .lineLimit(1)
-                            .foregroundStyle(.secondary)
-                            .font(.subheadline)
+            ScrollViewReader { proxy in
+                List {
+                    ForEach(viewModel.queue.indices, id: \.self) { index in
+                        QueueRow(
+                            song: viewModel.queue[index],
+                            songIndex: index,
+                            currentIndex: viewModel.currentIndex
+                        )
+                        .listRowBackground(Color.clear)
+                        .onTapGesture {
+                            viewModel.playSong(songIndex: index)
+                        }
+                        .deleteDisabled(index == viewModel.currentIndex)
                     }
-                    
-                    Spacer()
-                    
-                    if index == viewModel.currentIndex {
-                        Image(systemName: "play.circle.fill")
+                    .onDelete { indexSet in
+                        if !indexSet.contains(viewModel.currentIndex) {
+                            withAnimation {
+                                viewModel.removeAtIndexes(indexSet)
+                            }
+                        }
+                    }
+                    .onMove { source, destination in
+                        withAnimation {
+                            viewModel.moveQueueItems(from: source, to: destination)
+                        }
                     }
                 }
-                .listRowBackground(Color.clear)
+                .scrollIndicators(.hidden)
+                .scrollContentBackground(.hidden)
+                .background(Color.clear)
+                .onChange(of: viewModel.currentIndex) {
+                    withAnimation {
+                        proxy.scrollTo(viewModel.currentIndex, anchor: .center)
+                    }
+                }
+                .onAppear {
+                    proxy.scrollTo(viewModel.currentIndex, anchor: .center)
+                }
             }
-            .scrollIndicators(.hidden)
-            .scrollContentBackground(.hidden)
-            .background(Color.clear)
         }
     }
 }

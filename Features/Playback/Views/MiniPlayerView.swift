@@ -71,7 +71,6 @@ struct MiniPlayerView: View {
             )
             .sheet(isPresented: $viewModel.showingPlayer) {
                 FullMusicPlayerView()
-                    .preferredColorScheme(.light)
                     .navigationTransition(.zoom(sourceID: "playerView", in: playerViewAnimation))
             }
             .matchedTransitionSource(id: "playerView", in: playerViewAnimation)

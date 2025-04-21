@@ -25,11 +25,7 @@ extension AlbumTracksView {
         }
         
         func playSong(_ song: Song) {
-            do {
-                try PlaybackService.shared.playAndBuildQueue(song, songsToPlay: songs)
-            } catch {
-                print("Playback error: \(error.localizedDescription)")
-            }
+            PlaybackService.shared.playAndBuildQueue(song, songsToPlay: songs)
         }
     }
 }

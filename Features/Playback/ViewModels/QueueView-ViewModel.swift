@@ -10,12 +10,14 @@ import Foundation
 extension QueueView {
     @Observable
     class ViewModel {
+        let playbackService = PlaybackService.shared
+        
         var queue: [Song] {
-            PlaybackService.shared.getQueue()
+            playbackService.getQueue()
         }
         
         var currentIndex: Int {
-            PlaybackService.shared.getCurrentIndex()
+            playbackService.getCurrentIndex()
         }
         
         var coverUrl: URL? {
@@ -30,5 +32,18 @@ extension QueueView {
             queue[currentIndex].Artists.joined(separator: ", ")
         }
         
+        func playSong(songIndex: Int) {
+            playbackService.playAtIndex(songIndex)
+        }
+        
+        func removeAtIndexes(_ indexSet: IndexSet) {
+            for index in indexSet {
+                playbackService.removeFromQueue(at: index)
+            }
+        }
+        
+        func moveQueueItems(from indexes: IndexSet, to destination: Int) {
+            playbackService.moveSong(from: indexes, to: destination)
+        }
     }
 }

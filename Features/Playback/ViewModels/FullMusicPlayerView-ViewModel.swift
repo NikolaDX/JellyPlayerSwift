@@ -93,6 +93,12 @@ extension FullMusicPlayerView {
             }
         }
         
+        func shuffleQueue() {
+            withAnimation {
+                playbackService.shuffleQueue()
+            }
+        }
+        
         func formatTime(_ time: Double) -> String {
             let minutes = Int(time) / 60
             let seconds = Int(time) % 60

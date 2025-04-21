@@ -102,12 +102,10 @@ struct FullMusicPlayerView: View {
                 
                 HStack(alignment: .bottom, spacing: buttonSize * 1.5) {
                     IconButton(icon: Image(systemName: "dice")) {
-                        //shuffle queue
+                        viewModel.shuffleQueue()
                     }
                     
-                    IconButton(icon: Image(systemName: "repeat.circle")) {
-                        //change repeat mode
-                    }
+                    RepeatModeButton()
                     
                     IconButton(icon: Image(systemName: "chevron.down")) {
                         dismiss()
@@ -127,6 +125,7 @@ struct FullMusicPlayerView: View {
             }
             .padding()
         }
+        .preferredColorScheme(.light)
         .foregroundStyle(.white)
     }
 }
