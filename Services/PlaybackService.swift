@@ -173,6 +173,8 @@ class PlaybackService {
     }
     
     func playAndBuildQueue(_ song: Song, songsToPlay: [Song]) {
+        guard !songsToPlay.isEmpty else { return }
+        
         flushQueue()
         
         for s in songsToPlay {

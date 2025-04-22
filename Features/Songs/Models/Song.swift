@@ -36,6 +36,10 @@ struct Song: Codable, Equatable {
         }
     }
     
+    var durationInSeconds: Int {
+        RunTimeTicks / 10000000
+    }
+    
     static func ==(lhs: Song, rhs: Song) -> Bool {
         lhs.Id == rhs.Id
     }

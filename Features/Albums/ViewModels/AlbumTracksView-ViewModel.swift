@@ -27,5 +27,16 @@ extension AlbumTracksView {
         func playSong(_ song: Song) {
             PlaybackService.shared.playAndBuildQueue(song, songsToPlay: songs)
         }
+        
+        func shufflePlay() {
+            let shuffledSongs = songs.shuffled()
+            PlaybackService.shared.playAndBuildQueue(shuffledSongs[0], songsToPlay: shuffledSongs)
+        }
+        
+        func formatTime(_ time: Double) -> String {
+            let minutes = Int(time) / 60
+            let seconds = Int(time) % 60
+            return String(format: "%02d:%02d", minutes, seconds)
+        }
     }
 }

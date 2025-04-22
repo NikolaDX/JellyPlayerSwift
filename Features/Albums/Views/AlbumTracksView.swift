@@ -36,7 +36,7 @@ struct AlbumTracksView: View {
                     }
                     
                     NiceIconButton("Shuffle", buttonImage: "shuffle") {
-                        
+                        viewModel.shufflePlay()
                     }
                 }
                 .padding(.bottom, spaceBetween)
