@@ -1,0 +1,30 @@
+//
+//  LibraryView-ViewModel.swift
+//  JellyPlayerSwift
+//
+//  Created by Nikola Ristic on 4/22/25.
+//
+
+import SwiftUI
+
+struct LibraryOption {
+    let id = UUID()
+    let title: String
+    let iconName: String
+    let viewToShow: AnyView
+}
+
+extension LibraryView {
+    @Observable
+    class ViewModel {
+        let libraryOptions: [LibraryOption] = [
+            LibraryOption(title: "Playlists", iconName: "music.note.list", viewToShow: AnyView(Heading("Playlists"))),
+            LibraryOption(title: "Artists", iconName: "music.microphone", viewToShow: AnyView(Heading("Artists"))),
+            LibraryOption(title: "Albums", iconName: "rectangle.stack", viewToShow: AnyView(Heading("Albums"))),
+            LibraryOption(title: "Songs", iconName: "music.note", viewToShow: AnyView(Heading("Songs"))),
+            LibraryOption(title: "Genres", iconName: "guitars", viewToShow: AnyView(Heading("Genres"))),
+            LibraryOption(title: "Favorites", iconName: "star", viewToShow: AnyView(Heading("Favorites"))),
+            LibraryOption(title: "Downloaded", iconName: "arrow.down.circle", viewToShow: AnyView(Heading("Downloaded")))
+        ]
+    }
+}

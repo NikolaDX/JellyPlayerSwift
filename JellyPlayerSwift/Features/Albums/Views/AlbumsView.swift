@@ -16,35 +16,42 @@ struct AlbumsView: View {
 
     @Namespace private var albumViewAnimation
     
-    let columns: [GridItem] = Array.init(repeating: GridItem(.flexible()), count: 2)
-    
     var body: some View {
         NavigationStack(path: $navigationPath) {
-            ZStack(alignment: .bottom) {
-                ForEach(viewModel.albums.indices.reversed(), id: \.self) { index in
-                    let album = viewModel.albums[index]
-                    let depth = CGFloat(index) - scrollOffset
-                    let scale = max(0.7, 1 - abs(depth) * 0.1)
-                    let yOffset = -depth * 50
-                    let visibleRange: ClosedRange<Int> = Int(scrollOffset)...Int(scrollOffset) + 2
-                    let opacity = max(0.3, 1 - abs(depth) * 0.1)
-
-                    GeometryReader { proxy in
-                        AlbumCard(album: album)
-                            .scaleEffect(scale)
-                            .offset(y: yOffset)
-                            .zIndex(Double(-depth))
-                            .opacity(visibleRange.contains(index) ? opacity : 0)
-                            .allowsHitTesting(visibleRange.contains(index))
-                            .animation(.easeInOut(duration: 0.3), value: scrollOffset)
-                            .onTapGesture {
-                                navigationPath.append(album)
+            VStack {
+                GeometryReader { metrics in
+                    ZStack(alignment: .bottom) {
+                        ForEach(viewModel.albums.indices.reversed(), id: \.self) { index in
+                            VStack {
+                                let screenHeight = metrics.size.height
+                                let album = viewModel.albums[index]
+                                let depth = CGFloat(index) - scrollOffset
+                                let depthScaleFactor = max(0.8, 1 - abs(depth) * 0.1)
+                                let scale = (screenHeight / (screenHeight * 1.1)) * depthScaleFactor
+                                let yOffset = -depth * (screenHeight / 15)
+                                let visibleRange: ClosedRange<Int> = Int(scrollOffset)...Int(scrollOffset) + 2
+                                let opacity = max(0.3, 1 - abs(depth) * 0.1)
+                                
+                                GeometryReader { proxy in
+                                    AlbumCard(album: album)
+                                        .scaleEffect(scale)
+                                        .offset(y: yOffset)
+                                        .zIndex(Double(-depth))
+                                        .opacity(visibleRange.contains(index) ? opacity : 0)
+                                        .allowsHitTesting(visibleRange.contains(index))
+                                        .animation(.easeInOut(duration: 0.3), value: scrollOffset)
+                                        .onTapGesture {
+                                            navigationPath.append(album)
+                                        }
+                                        .frame(width: proxy.size.width, height: proxy.size.height)
+                                        .matchedTransitionSource(id: album.Id, in: albumViewAnimation)
+                                }
                             }
-                            .frame(width: proxy.size.width, height: proxy.size.height)
-                            .matchedTransitionSource(id: album.Id, in: albumViewAnimation)
+                        }
                     }
                 }
             }
+            .navigationTitle("Home")
             .navigationDestination(for: Album.self) { album in
                 AlbumTracksView(album: album)
                     .navigationTransition(.zoom(sourceID: album.Id, in: albumViewAnimation))

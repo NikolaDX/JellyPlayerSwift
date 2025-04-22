@@ -13,7 +13,10 @@ struct ContentView: View {
         .safeAreaInset(edge: .bottom) {
             MiniPlayerView()
                 .padding()
-                .padding(.bottom, 55)
+                .padding(.bottom,
+                         UIDevice.current.userInterfaceIdiom == .pad
+                         ? 0 : 55
+                )
         }
     }
 }

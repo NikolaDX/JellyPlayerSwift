@@ -16,39 +16,42 @@ struct AlbumTracksView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack {
-                AlbumCover(album: viewModel.album)
-                    .padding(.bottom, spaceBetween)
-                
-                Text(viewModel.album.Name)
-                    .font(.title)
-                    .fontWeight(.bold)
-                
-                Text(viewModel.album.AlbumArtist)
-                    .foregroundStyle(.secondary)
-                    .font(.headline)
-                    .padding(.bottom, spaceBetween)
-                
-                HStack {
-                    NiceIconButton("Play", buttonImage: "play.fill") {
-                        viewModel.playSong(viewModel.songs[0])
-                    }
+        GeometryReader { proxy in
+            ScrollView {
+                VStack {
+                    AlbumCover(album: viewModel.album)
+                        .frame(maxHeight: proxy.size.height / 2)
+                        .padding(.bottom, spaceBetween)
                     
-                    NiceIconButton("Shuffle", buttonImage: "shuffle") {
-                        viewModel.shufflePlay()
+                    Text(viewModel.album.Name)
+                        .font(.title)
+                        .fontWeight(.bold)
+                    
+                    Text(viewModel.album.AlbumArtist)
+                        .foregroundStyle(.secondary)
+                        .font(.headline)
+                        .padding(.bottom, spaceBetween)
+                    
+                    HStack {
+                        NiceIconButton("Play", buttonImage: "play.fill") {
+                            viewModel.playSong(viewModel.songs[0])
+                        }
+                        
+                        NiceIconButton("Shuffle", buttonImage: "shuffle") {
+                            viewModel.shufflePlay()
+                        }
+                    }
+                    .padding(.bottom, spaceBetween)
+                    
+                    ForEach(viewModel.songs, id: \.Id) { song in
+                        AlbumTrackRow(song)
+                            .onTapGesture {
+                                viewModel.playSong(song)
+                            }
                     }
                 }
-                .padding(.bottom, spaceBetween)
-                
-                ForEach(viewModel.songs, id: \.Id) { song in
-                    AlbumTrackRow(song)
-                        .onTapGesture {
-                            viewModel.playSong(song)
-                        }
-                }
+                .padding(spaceBetween)
             }
-            .padding(spaceBetween)
         }
         .onAppear {
             viewModel.fetchSongs()

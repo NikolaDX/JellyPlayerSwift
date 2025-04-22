@@ -17,15 +17,12 @@ struct FullMusicPlayerView: View {
     var body: some View {
         ZStack {
             GradientView(color: viewModel.coverDominantColor)
-            
             VStack {
-                Spacer()
-                
                 if viewModel.showingQueue {
                     QueueView()
                         .transition(.slide.combined(with: .opacity))
                 } else {
-                    VStack {
+                    VStack(spacing: 5) {
                         SpinningVinyl(
                             coverUrl: viewModel.coverUrl,
                             isPlaying: viewModel.isPlaying,
@@ -45,85 +42,85 @@ struct FullMusicPlayerView: View {
                         Text(viewModel.artist)
                             .foregroundStyle(.secondary)
                             .font(.title3)
+                        
+                        Spacer()
                     }
                     .transition(.slide.combined(with: .opacity))
-                    .frame(maxHeight: 500)
                 }
                 
                 Spacer()
-                    
-                HStack {
-                    Text(viewModel.formattedCurrentTime)
-                        .font(.headline)
-                    
-                    Spacer()
-                    
-                    Text(viewModel.formattedDuration)
-                        .font(.headline)
-                }
-                
-                Slider(value: $viewModel.sliderTime, in: 0...viewModel.duration, onEditingChanged: { editing in
-                    if !editing {
-                        viewModel.seek(to: viewModel.sliderTime)
-                        viewModel.isEditing = false
-                    } else {
-                        viewModel.isEditing = true
+                 
+                VStack(spacing: 10) {
+                    HStack {
+                        Text(viewModel.formattedCurrentTime)
+                            .font(.headline)
+                        
+                        Spacer()
+                        
+                        Text(viewModel.formattedDuration)
+                            .font(.headline)
                     }
-                })
-                .onChange(of: viewModel.currentTime) {
-                    if !viewModel.isEditing {
-                        viewModel.sliderTime = viewModel.currentTime
-                    }
-                }
-                .tint(viewModel.coverDominantColor)
-                
-                HStack(alignment: .center, spacing: buttonSize) {
-                    IconButton(
-                        icon: Image(systemName: "backward.fill")) {
-                            viewModel.previousSong()
+                    
+                    Slider(value: $viewModel.sliderTime, in: 0...viewModel.duration, onEditingChanged: { editing in
+                        if !editing {
+                            viewModel.seek(to: viewModel.sliderTime)
+                            viewModel.isEditing = false
+                        } else {
+                            viewModel.isEditing = true
                         }
-                    
-                    ConditionalIconButton(
-                        condition: viewModel.isPlaying,
-                        trueLabel: Image(systemName: "pause.circle.fill"),
-                        falseLabel: Image(systemName: "play.circle.fill")) {
-                            viewModel.togglePlayPause()
+                    })
+                    .onChange(of: viewModel.currentTime) {
+                        if !viewModel.isEditing {
+                            viewModel.sliderTime = viewModel.currentTime
                         }
-                        .font(.system(size: buttonSize * 2))
+                    }
+                    .tint(viewModel.coverDominantColor)
                     
-                    IconButton(
-                        icon: Image(systemName: "forward.fill")) {
-                            viewModel.nextSong()
+                    HStack(alignment: .center, spacing: buttonSize) {
+                        IconButton(
+                            icon: Image(systemName: "backward.fill")) {
+                                viewModel.previousSong()
+                            }
+                        
+                        ConditionalIconButton(
+                            condition: viewModel.isPlaying,
+                            trueLabel: Image(systemName: "pause.circle.fill"),
+                            falseLabel: Image(systemName: "play.circle.fill")) {
+                                viewModel.togglePlayPause()
+                            }
+                            .font(.system(size: buttonSize * 2))
+                        
+                        IconButton(
+                            icon: Image(systemName: "forward.fill")) {
+                                viewModel.nextSong()
+                            }
+                    }
+                    .font(.system(size: buttonSize))
+                    
+                    HStack(alignment: .bottom, spacing: buttonSize * 1.5) {
+                        IconButton(icon: Image(systemName: "dice")) {
+                            viewModel.shuffleQueue()
                         }
+                        
+                        RepeatModeButton()
+                        
+                        IconButton(icon: Image(systemName: "chevron.down")) {
+                            dismiss()
+                        }
+                        
+                        IconButton(icon: Image(systemName: "star")) {
+                            //add/remove from favorites
+                        }
+                        
+                        IconButton(icon: Image(systemName: "music.note.list")) {
+                            viewModel.toggleQueue()
+                        }
+                    }
+                    .font(.system(size: buttonSize))
                 }
-                .font(.system(size: buttonSize))
-                
-                Spacer()
-                
-                HStack(alignment: .bottom, spacing: buttonSize * 1.5) {
-                    IconButton(icon: Image(systemName: "dice")) {
-                        viewModel.shuffleQueue()
-                    }
-                    
-                    RepeatModeButton()
-                    
-                    IconButton(icon: Image(systemName: "chevron.down")) {
-                        dismiss()
-                    }
-                    
-                    IconButton(icon: Image(systemName: "star")) {
-                        //add/remove from favorites
-                    }
-                    
-                    IconButton(icon: Image(systemName: "music.note.list")) {
-                        viewModel.toggleQueue()
-                    }
-                }
-                .font(.system(size: buttonSize))
-                
-                Spacer()
             }
             .padding()
+            .padding(.vertical, 5)
         }
         .preferredColorScheme(.light)
         .foregroundStyle(.white)

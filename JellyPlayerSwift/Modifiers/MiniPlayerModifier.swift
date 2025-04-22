@@ -10,6 +10,8 @@ import SwiftUI
 struct MiniPlayerModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .padding(.bottom, PlaybackService.shared.currentSong != nil ? 75 : 0)
+            .padding(.bottom,
+                     PlaybackService.shared.currentSong != nil
+                     ? 75 : 0)
     }
 }

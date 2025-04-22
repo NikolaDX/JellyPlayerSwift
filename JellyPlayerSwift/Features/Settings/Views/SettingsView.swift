@@ -11,21 +11,24 @@ struct SettingsView: View {
     @State private var viewModel = ViewModel()
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 15) {
-                Heading("Server setup")
-                InputField(text: $viewModel.serverText, censored: false, placeholder: "Server URL")
-                
-                NiceButton("Set server") {
-                    viewModel.showingLogin = true
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 15) {
+                    Heading("Server setup")
+                    InputField(text: $viewModel.serverText, censored: false, placeholder: "Server URL")
+                    
+                    NiceButton("Set server") {
+                        viewModel.showingLogin = true
+                    }
+                    
                 }
-                
+                .navigationTitle("Settings")
+                .sheet(isPresented: $viewModel.showingLogin) {
+                    AuthenticationView(serverUrl: viewModel.serverText)
+                }
+                .padding(20)
             }
             .navigationTitle("Settings")
-            .sheet(isPresented: $viewModel.showingLogin) {
-                AuthenticationView(serverUrl: viewModel.serverText)
-            }
-            .padding(20)
         }
     }
 }

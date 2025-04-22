@@ -16,7 +16,7 @@ struct TabsScreen: View {
             }
             
             Tab("Library", systemImage: "music.note") {
-                Text("Music library")
+                LibraryView()
                     .modifier(MiniPlayerModifier())
             }
             
