@@ -20,34 +20,28 @@ struct SpinningVinyl: View {
     private let rotSpeed: Double = 0.2
     
     var body: some View {
-        ZStack(alignment: .center) {
-            Cover(url: coverUrl)
-                .clipShape(Circle())
-            
-            Circle()
-                .fill(Color.black)
-                .frame(width: 80, height: 80)
-        }
-        .rotationEffect(.degrees(rotation))
-        .onAppear {
-            if isPlaying {
-                startSpinning()
-            }
-        }
-        .onChange(of: isPlaying) { _, newValue in
-            if newValue {
-                startSpinning()
-            } else {
-                stopSpinningSmoothly()
-            }
-        }
-        .onChange(of: currentTime) { _, newValue in
-            if isScrubbing {
-                withAnimation(.easeOut(duration: 0.3)) {
-                    rotation = newValue * 3
+        Cover(url: coverUrl)
+            .clipShape(Circle())
+            .rotationEffect(.degrees(rotation))
+            .onAppear {
+                if isPlaying {
+                    startSpinning()
                 }
             }
-        }
+            .onChange(of: isPlaying) { _, newValue in
+                if newValue {
+                    startSpinning()
+                } else {
+                    stopSpinningSmoothly()
+                }
+            }
+            .onChange(of: currentTime) { _, newValue in
+                if isScrubbing {
+                    withAnimation(.easeOut(duration: 0.3)) {
+                        rotation = newValue * 3
+                    }
+                }
+            }
     }
     
     func startSpinning() {

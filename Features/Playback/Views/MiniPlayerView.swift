@@ -34,9 +34,10 @@ struct MiniPlayerView: View {
                     falseLabel: Image(systemName: "play.fill")) {
                     viewModel.togglePlayPause()
                 }
+                    .padding(.horizontal, 5)
                     .font(.title2)
             }
-            .padding()
+            .padding(5)
             .contentShape(Rectangle())
             .gesture(
                 DragGesture(minimumDistance: 20)
@@ -73,12 +74,13 @@ struct MiniPlayerView: View {
                 FullMusicPlayerView()
                     .navigationTransition(.zoom(sourceID: "playerView", in: playerViewAnimation))
             }
+            .background(.ultraThinMaterial)
+            .clipShape(.rect(cornerRadius: 15))
             .matchedTransitionSource(id: "playerView", in: playerViewAnimation)
             .onTapGesture {
                 viewModel.showingPlayer = true
             }
-            .background(.ultraThinMaterial)
-            .clipShape(.rect(cornerRadius: 15))
+            .shadow(color: .black.opacity(0.5), radius: 15)
         }
     }
 }

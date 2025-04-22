@@ -88,6 +88,11 @@
 			path = Storage;
 			sourceTree = "<group>";
 		};
+		93C9DCD52DB7D7140010A9DF /* Modifiers */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Modifiers;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +125,7 @@
 		939D41CD2DAE6DB800E85C3E = {
 			isa = PBXGroup;
 			children = (
+				93C9DCD52DB7D7140010A9DF /* Modifiers */,
 				930EA52B2DAE8F7200306F54 /* UI */,
 				939D42032DAE6DF600E85C3E /* Storage */,
 				939D42022DAE6DEF00E85C3E /* Extensions */,
@@ -164,6 +170,7 @@
 				939D42012DAE6DE600E85C3E /* Services */,
 				939D42022DAE6DEF00E85C3E /* Extensions */,
 				939D42032DAE6DF600E85C3E /* Storage */,
+				93C9DCD52DB7D7140010A9DF /* Modifiers */,
 			);
 			name = JellyPlayerSwift;
 			packageProductDependencies = (

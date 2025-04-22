@@ -9,21 +9,11 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        NavigationStack {
-            AlbumsView()
-                .navigationTitle("JellyPlayer")
-                .toolbar {
-                    NavigationLink {
-                        SettingsView()
-                    } label: {
-                        Image(systemName: "gear")
-                    }
-                }
-        }
-        .padding(.bottom, PlaybackService.shared.currentSong == nil ? 0 : 100)
-        .overlay(alignment: .bottom) {
+        TabsScreen()
+        .safeAreaInset(edge: .bottom) {
             MiniPlayerView()
                 .padding()
+                .padding(.bottom, 55)
         }
     }
 }

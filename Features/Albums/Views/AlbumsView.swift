@@ -43,8 +43,11 @@ struct AlbumsView: View {
                             .frame(width: proxy.size.width, height: proxy.size.height)
                             .matchedTransitionSource(id: album.Id, in: albumViewAnimation)
                     }
-                    
                 }
+            }
+            .navigationDestination(for: Album.self) { album in
+                AlbumTracksView(album: album)
+                    .navigationTransition(.zoom(sourceID: album.Id, in: albumViewAnimation))
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .gesture(
@@ -61,10 +64,6 @@ struct AlbumsView: View {
                     }
             )
         }
-        .navigationDestination(for: Album.self) { album in
-            AlbumTracksView(album: album)
-                .navigationTransition(.zoom(sourceID: album.Id, in: albumViewAnimation))
-        }
         .onAppear {
             viewModel.fetchAlbums()
         }
@@ -72,5 +71,6 @@ struct AlbumsView: View {
 }
 
 #Preview {
+    @Previewable @State var navigationPath = NavigationPath()
     AlbumsView()
 }
