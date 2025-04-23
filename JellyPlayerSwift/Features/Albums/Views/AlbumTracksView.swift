@@ -27,10 +27,12 @@ struct AlbumTracksView: View {
                         .font(.title)
                         .fontWeight(.bold)
                     
-                    Text(viewModel.album.AlbumArtist)
-                        .foregroundStyle(.secondary)
-                        .font(.headline)
-                        .padding(.bottom, spaceBetween)
+                    NavigationLink(destination: ArtistDetailsView(artist: viewModel.album.AlbumArtists[0])) {
+                        Text(viewModel.album.AlbumArtist)
+                            .foregroundStyle(.secondary)
+                            .font(.headline)
+                            .padding(.bottom, spaceBetween)
+                    }
                     
                     HStack {
                         NiceIconButton("Play", buttonImage: "play.fill") {
@@ -61,5 +63,5 @@ struct AlbumTracksView: View {
 
 #Preview {
     @Previewable @Namespace var albumViewAnimation
-    AlbumTracksView(album: Album(Id: "id", Name: "Name", AlbumArtist: "Artist"))
+    AlbumTracksView(album: Album(Id: "id", Name: "Name", AlbumArtist: "Artist", AlbumArtists: []))
 }

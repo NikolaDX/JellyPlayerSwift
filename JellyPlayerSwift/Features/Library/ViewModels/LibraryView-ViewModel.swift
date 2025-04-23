@@ -19,8 +19,8 @@ extension LibraryView {
     class ViewModel {
         let libraryOptions: [LibraryOption] = [
             LibraryOption(title: "Playlists", iconName: "music.note.list", viewToShow: AnyView(Heading("Playlists"))),
-            LibraryOption(title: "Artists", iconName: "music.microphone", viewToShow: AnyView(Heading("Artists"))),
-            LibraryOption(title: "Albums", iconName: "rectangle.stack", viewToShow: AnyView(Heading("Albums"))),
+            LibraryOption(title: "Artists", iconName: "music.microphone", viewToShow: AnyView(ArtistsView())),
+            LibraryOption(title: "Albums", iconName: "rectangle.stack", viewToShow: AnyView(AlbumsLibraryView())),
             LibraryOption(title: "Songs", iconName: "music.note", viewToShow: AnyView(Heading("Songs"))),
             LibraryOption(title: "Genres", iconName: "guitars", viewToShow: AnyView(Heading("Genres"))),
             LibraryOption(title: "Favorites", iconName: "star", viewToShow: AnyView(Heading("Favorites"))),

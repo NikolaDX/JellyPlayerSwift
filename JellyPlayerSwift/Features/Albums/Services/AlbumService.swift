@@ -7,7 +7,7 @@
 
 import Foundation
 
-class AlbumService: ObservableObject {
+class AlbumService {
     private var serverUrl: String? {
         get { return UserDefaults.standard.string(forKey: serverKey) }
     }

@@ -1,27 +1,25 @@
 //
-//  Album.swift
+//  Artist.swift
 //  JellyPlayerSwift
 //
-//  Created by Nikola Ristic on 4/15/25.
+//  Created by Nikola Ristic on 4/23/25.
 //
 
 import Foundation
 
-struct AlbumResponse: Codable {
-    let Items: [Album]
+struct ArtistResponse: Codable {
+    let Items: [Artist]
 }
 
-struct Album: Codable, Hashable {
+struct Artist: Codable, Hashable {
     let Id: String
     let Name: String
-    let AlbumArtist: String
-    let AlbumArtists: [Artist]
     
     var coverUrl: URL? {
         if let serverUrl = UserDefaults.standard.string(forKey: serverKey) {
             return URL(string: "\(serverUrl)/Items/\(Id)/Images/Primary")
         } else {
             return nil
-        }   
+        }
     }
 }

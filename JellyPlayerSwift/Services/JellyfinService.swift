@@ -74,4 +74,29 @@ class JellyfinService {
         
         return nil
     }
+    
+    func fetchSpecific(queryItems: [URLQueryItem], toFetch itemType: String) async -> Data? {
+        guard let server = serverUrl, let token = accessToken else {
+            return nil
+        }
+
+        var components = URLComponents(string: "\(server)/\(itemType)")
+        components?.queryItems = queryItems
+        
+        guard let url = components?.url else {
+            return nil
+        }
+
+        var request = URLRequest(url: url)
+        request.setValue(token, forHTTPHeaderField: "X-Emby-Token")
+        request.httpMethod = "GET"
+        
+        if let (data, response) = try? await URLSession.shared.data(for: request) {
+            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+                return data
+            }
+        }
+        
+        return nil
+    }
 }
