@@ -22,7 +22,7 @@ extension LibraryView {
             LibraryOption(title: "Artists", iconName: "music.microphone", viewToShow: AnyView(ArtistsView())),
             LibraryOption(title: "Albums", iconName: "rectangle.stack", viewToShow: AnyView(AlbumsLibraryView())),
             LibraryOption(title: "Songs", iconName: "music.note", viewToShow: AnyView(SongsLibraryView())),
-            LibraryOption(title: "Genres", iconName: "guitars", viewToShow: AnyView(Heading("Genres"))),
+            LibraryOption(title: "Genres", iconName: "guitars", viewToShow: AnyView(GenresView())),
             LibraryOption(title: "Favorites", iconName: "star", viewToShow: AnyView(Heading("Favorites"))),
             LibraryOption(title: "Downloaded", iconName: "arrow.down.circle", viewToShow: AnyView(Heading("Downloaded")))
         ]

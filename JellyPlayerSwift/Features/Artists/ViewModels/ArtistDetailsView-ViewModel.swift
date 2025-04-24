@@ -23,6 +23,5 @@ extension ArtistDetailsView {
                 self.artistAlbums = await artistsService.fetchArtistAlbums(artistId: artist.Id)
             }
         }
-        
     }
 }
