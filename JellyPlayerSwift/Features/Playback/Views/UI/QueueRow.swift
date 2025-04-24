@@ -21,7 +21,8 @@ struct QueueRow: View {
     var body: some View {
         HStack {
             Text("\(songIndex + 1)")
-                .frame(width: 30)
+                .frame(width: 50)
+                .monospacedDigit()
             
             VStack(alignment: .leading) {
                 Text(song.Name)
