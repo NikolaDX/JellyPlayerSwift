@@ -25,6 +25,10 @@ extension FullMusicPlayerView {
             playbackService.currentSong?.coverUrl
         }
         
+        var isFavorite: Bool {
+            playbackService.currentSong?.UserData.IsFavorite ?? false
+        }
+        
         func updateDominantColor() {
             guard let url = coverUrl else { return }
             
@@ -96,6 +100,17 @@ extension FullMusicPlayerView {
         func shuffleQueue() {
             withAnimation {
                 playbackService.shuffleQueue()
+            }
+        }
+        
+        func toggleFavorite() {
+            if let song = currentSong {
+                let songsService = SongsService()
+                if song.UserData.IsFavorite {
+                    songsService.removeFromFavorites(song: song)
+                } else {
+                    songsService.addSongToFavorites(song: song)
+                }
             }
         }
         

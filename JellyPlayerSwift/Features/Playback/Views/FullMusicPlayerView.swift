@@ -108,8 +108,8 @@ struct FullMusicPlayerView: View {
                             dismiss()
                         }
                         
-                        IconButton(icon: Image(systemName: "star")) {
-                            //add/remove from favorites
+                        FavoriteButton(isFavorite: viewModel.isFavorite) {
+                            viewModel.toggleFavorite()
                         }
                         
                         IconButton(icon: Image(systemName: "music.note.list")) {

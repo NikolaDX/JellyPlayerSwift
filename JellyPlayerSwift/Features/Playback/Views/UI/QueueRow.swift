@@ -46,5 +46,5 @@ struct QueueRow: View {
 }
 
 #Preview {
-    QueueRow(song: Song(Id: "Id", Name: "Name", IndexNumber: 1, Album: "Album", AlbumId: "AlbumId", RunTimeTicks: 120000, Artists: ["Artist"]), songIndex: 1, currentIndex: 1)
+    QueueRow(song: Song(Id: "Id", Name: "Name", IndexNumber: 1, Album: "Album", AlbumId: "AlbumId", RunTimeTicks: 120000, Artists: ["Artist"], UserData: UserData(IsFavorite: false)), songIndex: 1, currentIndex: 1)
 }

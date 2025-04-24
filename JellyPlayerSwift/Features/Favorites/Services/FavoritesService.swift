@@ -1,5 +1,5 @@
 //
-//  SongsService.swift
+//  FavoritesService.swift
 //  JellyPlayerSwift
 //
 //  Created by Nikola Ristic on 4/24/25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class SongsService {
+class FavoritesService {
     private var serverUrl: String? {
         get { return UserDefaults.standard.string(forKey: serverKey) }
     }
@@ -22,9 +22,10 @@ class SongsService {
     
     let jellyfinService = JellyfinService()
     
-    func fetchAllSongs() async -> [Song] {
+    func fetchFavoriteSongs() async -> [Song] {
         if let data = await jellyfinService.fetchItems(queryItems: [
             URLQueryItem(name: "IncludeItemTypes", value: "Audio"),
+            URLQueryItem(name: "IsFavorite", value: "true"),
             URLQueryItem(name: "Recursive", value: "true"),
             URLQueryItem(name: "SortBy", value: "Name"),
             URLQueryItem(name: "SortOrder", value: "Ascending")
@@ -35,17 +36,5 @@ class SongsService {
         }
         
         return []
-    }
-    
-    func addSongToFavorites(song: Song) {
-        let jellyfinService = JellyfinService()
-        jellyfinService.addToServer(queryItems: [], path: "FavoriteItems/\(song.Id)")
-        song.UserData.IsFavorite = true
-    }
-    
-    func removeFromFavorites(song: Song) {
-        let jellyfinService = JellyfinService()
-        jellyfinService.removeFromServer(queryItems: [], path: "FavoriteItems/\(song.Id)")
-        song.UserData.IsFavorite = false
     }
 }

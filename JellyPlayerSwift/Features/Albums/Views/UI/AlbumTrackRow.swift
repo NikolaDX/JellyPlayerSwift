@@ -45,5 +45,5 @@ struct AlbumTrackRow: View {
 }
 
 #Preview {
-    AlbumTrackRow(Song(Id: "Id", Name: "Name", IndexNumber: 1, Album: "Album", AlbumId: "Id", RunTimeTicks: 12345, Artists: ["Artist"]))
+    AlbumTrackRow(Song(Id: "Id", Name: "Name", IndexNumber: 1, Album: "Album", AlbumId: "Id", RunTimeTicks: 12345, Artists: ["Artist"], UserData: UserData(IsFavorite: false)))
 }

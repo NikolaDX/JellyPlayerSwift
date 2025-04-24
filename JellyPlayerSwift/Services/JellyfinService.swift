@@ -99,4 +99,48 @@ class JellyfinService {
         
         return nil
     }
+    
+    func addToServer(queryItems: [URLQueryItem], path: String) {
+        guard let server = serverUrl, let userId = userId, let token = accessToken else {
+            return
+        }
+        
+        var components = URLComponents(string: "\(server)/Users/\(userId)/\(path)")
+        components?.queryItems = queryItems
+        
+        guard let url = components?.url else {
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.setValue(token, forHTTPHeaderField: "X-Emby-Token")
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        URLSession.shared.dataTask(with: request) { _, response, error in
+            
+        }.resume()
+    }
+    
+    func removeFromServer(queryItems: [URLQueryItem], path: String) {
+        guard let server = serverUrl, let userId = userId, let token = accessToken else {
+            return
+        }
+        
+        var components = URLComponents(string: "\(server)/Users/\(userId)/\(path)")
+        components?.queryItems = queryItems
+        
+        guard let url = components?.url else {
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.setValue(token, forHTTPHeaderField: "X-Emby-Token")
+        request.httpMethod = "DELETE"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        URLSession.shared.dataTask(with: request) { _, response, error in
+            
+        }.resume()
+    }
 }

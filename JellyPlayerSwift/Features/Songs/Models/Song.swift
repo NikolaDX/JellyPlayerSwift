@@ -11,7 +11,11 @@ struct SongResponse: Codable {
     let Items: [Song]
 }
 
-struct Song: Codable, Equatable {
+struct UserData: Codable {
+    var IsFavorite: Bool
+}
+
+class Song: Codable, Equatable {
     let Id: String
     let Name: String
     let IndexNumber: Int
@@ -19,6 +23,18 @@ struct Song: Codable, Equatable {
     let AlbumId: String
     let RunTimeTicks: Int
     let Artists: [String]
+    var UserData: UserData
+    
+    init(Id: String, Name: String, IndexNumber: Int, Album: String, AlbumId: String, RunTimeTicks: Int, Artists: [String], UserData: UserData) {
+        self.Id = Id
+        self.Name = Name
+        self.IndexNumber = IndexNumber
+        self.Album = Album
+        self.AlbumId = AlbumId
+        self.RunTimeTicks = RunTimeTicks
+        self.Artists = Artists
+        self.UserData = UserData
+    }
     
     var streamUrl: URL? {
         if let serverUrl = UserDefaults.standard.string(forKey: serverKey), let accessToken = UserDefaults.standard.string(forKey: accessKey) {

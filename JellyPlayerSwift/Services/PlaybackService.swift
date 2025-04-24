@@ -275,6 +275,7 @@ class PlaybackService {
     }
     
     private func onSongEnded() {
+        pause()
         switch repeatMode {
         case .none:
             if (currentIndex != queue.count - 1) {
