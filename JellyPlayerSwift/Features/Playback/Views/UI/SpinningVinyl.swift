@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SpinningVinyl: View {
-    let coverUrl: URL?
+    let song: Song
     let isPlaying: Bool
     @Binding var currentTime: Double
     @Binding var isScrubbing: Bool
@@ -20,7 +20,7 @@ struct SpinningVinyl: View {
     private let rotSpeed: Double = 0.2
     
     var body: some View {
-        Cover(url: coverUrl)
+        LargeSongCover(song)
             .clipShape(Circle())
             .rotationEffect(.degrees(rotation))
             .onAppear {
@@ -83,5 +83,5 @@ struct SpinningVinyl: View {
 #Preview {
     @Previewable @State var currentTime: Double = 0
     @Previewable @State var isScrubbing: Bool = false
-    SpinningVinyl(coverUrl: URL(string: ""), isPlaying: false, currentTime: $currentTime, isScrubbing: $isScrubbing)
+    SpinningVinyl(song: Song(Id: "Id", Name: "Name", IndexNumber: 1, Album: "Album", AlbumId: "Id", RunTimeTicks: 120000, Artists: ["Artist"], UserData: UserData(IsFavorite: false)), isPlaying: false, currentTime: $currentTime, isScrubbing: $isScrubbing)
 }

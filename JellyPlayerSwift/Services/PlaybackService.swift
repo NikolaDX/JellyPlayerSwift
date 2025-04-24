@@ -144,7 +144,14 @@ class PlaybackService {
         playSongDebouncer.run {
             self.cleanup()
             
-            let playerItem = AVPlayerItem(url: song.streamUrl!)
+            let playerItem: AVPlayerItem
+            
+            if let localPath = song.localFilePath {
+                playerItem = AVPlayerItem(url: localPath)
+            } else {
+                playerItem = AVPlayerItem(url: song.streamUrl!)
+            }
+            
             self.player = AVPlayer(playerItem: playerItem)
             self.player?.play()
             

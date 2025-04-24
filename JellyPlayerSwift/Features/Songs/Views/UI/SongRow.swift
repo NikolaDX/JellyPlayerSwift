@@ -29,6 +29,14 @@ struct SongRow: View {
                 .foregroundStyle(.secondary)
                 .monospacedDigit()
         }
+        .contentShape(Rectangle())
+        .contextMenu {
+            Button {
+                DownloadService.shared.downloadSong(song)
+            } label: {
+                Label("Download", systemImage: "arrow.down.circle")
+            }
+        }
     }
     
     func formatTime(_ time: Int) -> String {

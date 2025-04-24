@@ -23,13 +23,15 @@ struct FullMusicPlayerView: View {
                         .transition(.slide.combined(with: .opacity))
                 } else {
                     VStack(spacing: 5) {
-                        SpinningVinyl(
-                            coverUrl: viewModel.coverUrl,
-                            isPlaying: viewModel.isPlaying,
-                            currentTime: $viewModel.sliderTime,
-                            isScrubbing: $viewModel.isEditing
-                        )
-                        .shadow(color: .black, radius: 10)
+                        if let song = viewModel.currentSong {
+                            SpinningVinyl(
+                                song: song,
+                                isPlaying: viewModel.isPlaying,
+                                currentTime: $viewModel.sliderTime,
+                                isScrubbing: $viewModel.isEditing
+                            )
+                            .shadow(color: .black, radius: 10)
+                        }
                         
                         Spacer()
                         
@@ -124,6 +126,11 @@ struct FullMusicPlayerView: View {
         }
         .preferredColorScheme(.light)
         .foregroundStyle(.white)
+        .onChange(of: viewModel.currentSong) {
+            withAnimation {
+                viewModel.updateDominantColor()
+            }
+        }
     }
 }
 

@@ -33,7 +33,12 @@ extension FullMusicPlayerView {
             guard let url = coverUrl else { return }
             
             ArtworkService().fetchArtwork(url: url) { [weak self] image in
-                guard let self = self, let image = image else { return }
+                guard let self = self, let image = image else {
+                    if let localCover = self?.currentSong?.coverImage {
+                        self?.coverDominantColor = localCover.dominantColor()
+                    }
+                    return
+                }
                 self.coverDominantColor = image.dominantColor()
             }
         }

@@ -1,14 +1,14 @@
 //
-//  SongCover.swift
+//  LargeSongCover.swift
 //  JellyPlayerSwift
 //
-//  Created by Nikola Ristic on 4/17/25.
+//  Created by Nikola Ristic on 4/24/25.
 //
 
 import Kingfisher
 import SwiftUI
 
-struct SongCover: View {
+struct LargeSongCover: View {
     private let song: Song
     
     init(_ song: Song) {
@@ -22,17 +22,9 @@ struct SongCover: View {
                     Image(uiImage: image)
                         .resizable()
                         .scaledToFit()
-                        .frame(maxWidth: 50, maxHeight: 50)
-                        .clipShape(.rect(cornerRadius: 10))
                 }
             }
             .resizable()
             .scaledToFit()
-            .frame(maxWidth: 50, maxHeight: 50)
-            .clipShape(.rect(cornerRadius: 10))
     }
-}
-
-#Preview {
-    SongCover(Song(Id: "Id", Name: "Name", IndexNumber: 1, Album: "Album", AlbumId: "AlbumId", RunTimeTicks: 120000, Artists: ["Artist"], UserData: UserData(IsFavorite: false)))
 }
