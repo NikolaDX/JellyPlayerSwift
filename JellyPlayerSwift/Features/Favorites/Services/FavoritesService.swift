@@ -40,13 +40,26 @@ class FavoritesService {
     
     func addSongToFavorites(song: Song) {
         let jellyfinService = JellyfinService()
-        jellyfinService.addToServer(queryItems: [], path: "FavoriteItems/\(song.Id)")
-        song.UserData.IsFavorite = true
+        Task {
+            do {
+                try await jellyfinService.addToServer(queryItems: [], path: "FavoriteItems/\(song.Id)")
+                song.UserData.IsFavorite = true
+            } catch {
+                print("Error adding to favorites: \(error.localizedDescription)")
+            }
+        }
     }
     
     func removeFromFavorites(song: Song) {
         let jellyfinService = JellyfinService()
-        jellyfinService.removeFromServer(queryItems: [], path: "FavoriteItems/\(song.Id)")
-        song.UserData.IsFavorite = false
+        Task {
+            do {
+                try await jellyfinService.removeFromServer(queryItems: [], path: "FavoriteItems/\(song.Id)")
+                song.UserData.IsFavorite = false
+            } catch {
+                print("Error removing from favorites: \(error.localizedDescription)")
+            }
+            
+        }
     }
 }

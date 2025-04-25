@@ -100,7 +100,7 @@ class JellyfinService {
         return nil
     }
     
-    func addToServer(queryItems: [URLQueryItem], path: String) {
+    func addToServer(queryItems: [URLQueryItem], path: String) async throws {
         guard let server = serverUrl, let userId = userId, let token = accessToken else {
             return
         }
@@ -117,12 +117,36 @@ class JellyfinService {
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        URLSession.shared.dataTask(with: request) { _, response, error in
-            
-        }.resume()
+        let (_, _) = try await URLSession.shared.data(for: request)
     }
     
-    func removeFromServer(queryItems: [URLQueryItem], path: String) {
+    func addToServerWithHttpBody(queryItems: [URLQueryItem], path: String, httpBody: [String: Any]) async throws {
+        guard let server = serverUrl, let userId = userId, let token = accessToken else {
+            return
+        }
+        
+        var components = URLComponents(string: "\(server)/\(path)")
+        
+        var newQuery = queryItems
+        newQuery.append(URLQueryItem(name: "userId", value: userId))
+        
+        components?.queryItems = newQuery
+        
+        guard let url = components?.url else {
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.setValue(token, forHTTPHeaderField: "X-Emby-Token")
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        request.httpBody = try JSONSerialization.data(withJSONObject: httpBody)
+        
+        let (_, _) = try await URLSession.shared.data(for: request)
+    }
+    
+    func removeFromServer(queryItems: [URLQueryItem], path: String) async throws {
         guard let server = serverUrl, let userId = userId, let token = accessToken else {
             return
         }
@@ -139,8 +163,6 @@ class JellyfinService {
         request.httpMethod = "DELETE"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        URLSession.shared.dataTask(with: request) { _, response, error in
-            
-        }.resume()
+        let (_, _) = try await URLSession.shared.data(for: request)
     }
 }

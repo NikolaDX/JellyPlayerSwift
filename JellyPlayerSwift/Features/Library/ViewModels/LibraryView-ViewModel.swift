@@ -18,7 +18,7 @@ extension LibraryView {
     @Observable
     class ViewModel {
         let libraryOptions: [LibraryOption] = [
-            LibraryOption(title: "Playlists", iconName: "music.note.list", viewToShow: AnyView(Heading("Playlists"))),
+            LibraryOption(title: "Playlists", iconName: "music.note.list", viewToShow: AnyView(PlaylistsView())),
             LibraryOption(title: "Artists", iconName: "music.microphone", viewToShow: AnyView(ArtistsView())),
             LibraryOption(title: "Albums", iconName: "rectangle.stack", viewToShow: AnyView(AlbumsLibraryView())),
             LibraryOption(title: "Songs", iconName: "music.note", viewToShow: AnyView(SongsLibraryView())),
