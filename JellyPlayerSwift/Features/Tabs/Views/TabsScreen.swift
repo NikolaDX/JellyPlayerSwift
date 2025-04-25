@@ -25,10 +25,6 @@ struct TabsScreen: View {
                     .modifier(MiniPlayerModifier())
             }
         }
-        
-        if DownloadService.shared.isDownloading {
-            ProgressView(value: DownloadService.shared.averageDownloadProgress, total: 1.0)
-        }
     }
 }
 

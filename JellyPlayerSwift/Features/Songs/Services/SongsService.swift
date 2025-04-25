@@ -36,16 +36,4 @@ class SongsService {
         
         return []
     }
-    
-    func addSongToFavorites(song: Song) {
-        let jellyfinService = JellyfinService()
-        jellyfinService.addToServer(queryItems: [], path: "FavoriteItems/\(song.Id)")
-        song.UserData.IsFavorite = true
-    }
-    
-    func removeFromFavorites(song: Song) {
-        let jellyfinService = JellyfinService()
-        jellyfinService.removeFromServer(queryItems: [], path: "FavoriteItems/\(song.Id)")
-        song.UserData.IsFavorite = false
-    }
 }

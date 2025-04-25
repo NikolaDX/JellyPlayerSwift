@@ -8,17 +8,14 @@
 import SwiftUI
 
 struct DownloadedView: View {
-    @State private var viewModel = ViewModel()
+    @ObservedObject var downloadService: DownloadService
     
     var body: some View {
-        SongsView(songs: viewModel.songs)
+        SongsView(songs: downloadService.downloads)
             .navigationTitle("Downloaded")
-            .task {
-                viewModel.loadSongs()
-            }
     }
 }
 
 #Preview {
-    DownloadedView()
+    DownloadedView(downloadService: DownloadService.shared)
 }

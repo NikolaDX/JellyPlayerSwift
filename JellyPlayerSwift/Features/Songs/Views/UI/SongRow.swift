@@ -31,10 +31,18 @@ struct SongRow: View {
         }
         .contentShape(Rectangle())
         .contextMenu {
-            Button {
-                DownloadService.shared.downloadSong(song)
-            } label: {
-                Label("Download", systemImage: "arrow.down.circle")
+            if song.localFilePath != nil {
+                Button(role: .destructive) {
+                    DownloadService.shared.removeDownload(song)
+                } label: {
+                    Label("Remove download", systemImage: "trash")
+                }
+            } else {
+                Button {
+                    DownloadService.shared.downloadSong(song)
+                } label: {
+                    Label("Download", systemImage: "arrow.down.circle")
+                }
             }
         }
     }

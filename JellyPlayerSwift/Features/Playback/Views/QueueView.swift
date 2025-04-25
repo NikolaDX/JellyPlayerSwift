@@ -13,7 +13,7 @@ struct QueueView: View {
     var body: some View {
         VStack {
             HStack {
-                Cover(url: viewModel.coverUrl)
+                LargeSongCover(viewModel.queue[viewModel.currentIndex])
                     .frame(maxWidth: 100)
                     .clipShape(.rect(cornerRadius: 10))
                 

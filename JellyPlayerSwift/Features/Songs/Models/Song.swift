@@ -25,7 +25,6 @@ class Song: Codable, Equatable {
     let Artists: [String]
     var UserData: UserData
     var coverImageData: Data?
-    var localFilePath: URL?
     
     init(Id: String, Name: String, IndexNumber: Int, Album: String, AlbumId: String, RunTimeTicks: Int, Artists: [String], UserData: UserData) {
         self.Id = Id
@@ -38,25 +37,27 @@ class Song: Codable, Equatable {
         self.UserData = UserData
     }
     
-    init(Id: String, Name: String, IndexNumber: Int, Album: String, AlbumId: String, RunTimeTicks: Int, Artists: [String], UserData: UserData, coverImageData: Data?, localFilePath: URL?) {
-        self.Id = Id
-        self.Name = Name
-        self.IndexNumber = IndexNumber
-        self.Album = Album
-        self.AlbumId = AlbumId
-        self.RunTimeTicks = RunTimeTicks
-        self.Artists = Artists
-        self.UserData = UserData
-        self.coverImageData = coverImageData
-        self.localFilePath = localFilePath
-    }
-    
     var streamUrl: URL? {
         if let serverUrl = UserDefaults.standard.string(forKey: serverKey), let accessToken = UserDefaults.standard.string(forKey: accessKey) {
             return URL(string: "\(serverUrl)/Audio/\(Id)/stream?Static=true&MaxStreamingBitrate=320000&api_key=\(accessToken)")
         } else {
             return nil
         }
+    }
+    
+    var localFilePath: URL? {
+        do {
+            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let fileURLS = try FileManager.default.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
+            
+            if fileURLS.contains(where: { $0.absoluteString.contains(Id)}) {
+                return fileURLS.first { $0.absoluteString.contains(Id) }
+            }
+        } catch {
+            print("Error fetching local file path: \(error.localizedDescription)")
+        }
+        
+        return nil
     }
     
     var coverUrl: URL? {

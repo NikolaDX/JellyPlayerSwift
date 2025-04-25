@@ -16,20 +16,19 @@ struct SongCover: View {
     }
     
     var body: some View {
-        KFImage(song.coverUrl)
-            .placeholder {
-                if let image = song.coverImage {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: 50, maxHeight: 50)
-                        .clipShape(.rect(cornerRadius: 10))
-                }
-            }
-            .resizable()
-            .scaledToFit()
-            .frame(maxWidth: 50, maxHeight: 50)
-            .clipShape(.rect(cornerRadius: 10))
+        if let image = song.coverImage {
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFit()
+                .frame(maxWidth: 50, maxHeight: 50)
+                .clipShape(.rect(cornerRadius: 10))
+        } else {
+            KFImage(song.coverUrl)
+                .resizable()
+                .scaledToFit()
+                .frame(maxWidth: 50, maxHeight: 50)
+                .clipShape(.rect(cornerRadius: 10))
+        }
     }
 }
 

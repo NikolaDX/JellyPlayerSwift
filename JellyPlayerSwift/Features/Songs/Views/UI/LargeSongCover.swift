@@ -16,15 +16,14 @@ struct LargeSongCover: View {
     }
     
     var body: some View {
-        KFImage(song.coverUrl)
-            .placeholder {
-                if let image = song.coverImage {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
-                }
-            }
-            .resizable()
-            .scaledToFit()
+        if let image = song.coverImage {
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFit()
+        } else {
+            KFImage(song.coverUrl)
+                .resizable()
+                .scaledToFit()
+        }
     }
 }

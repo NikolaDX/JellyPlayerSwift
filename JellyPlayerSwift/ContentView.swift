@@ -9,14 +9,17 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
+        DownloadProgressView(downloadService: DownloadService.shared)
         TabsScreen()
         .safeAreaInset(edge: .bottom) {
-            MiniPlayerView()
-                .padding()
-                .padding(.bottom,
-                         UIDevice.current.userInterfaceIdiom == .pad
-                         ? 0 : 55
-                )
+            VStack {
+                MiniPlayerView()
+                    .padding()
+                    .padding(.bottom,
+                             UIDevice.current.userInterfaceIdiom == .pad
+                             ? 0 : 55
+                    )
+            }
         }
     }
 }

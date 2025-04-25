@@ -7,10 +7,12 @@
 import Foundation
 import UIKit
 
-class DownloadService: NSObject, URLSessionDownloadDelegate {
+class DownloadService: NSObject, ObservableObject, URLSessionDownloadDelegate {
     static let shared = DownloadService()
     
     @Published var isDownloading = false
+    @Published var averageDownloadProgress: Double = 0.0
+    @Published var downloads: [Song] = []
     
     private let backgroundSessionIdentifier: String = "me.JellyPlayer.backgroundDownloadSession"
     private lazy var backgroundSession: URLSession = {
@@ -25,17 +27,9 @@ class DownloadService: NSObject, URLSessionDownloadDelegate {
     
     private let fileManager: FileManager = .default
     
-    var averageDownloadProgress: Double {
-        if downloadProgress.isEmpty {
-            return 0
-        }
-        
-        let totalProgress = downloadProgress.values.reduce(0, +)
-        return totalProgress / Double(downloadProgress.count)
-    }
-    
     private override init() {
         super.init()
+        downloads = loadDownloads() ?? []
     }
     
     func getDocumentsDirectory() -> URL {
@@ -60,6 +54,8 @@ class DownloadService: NSObject, URLSessionDownloadDelegate {
 
         do {
             try fileManager.removeItem(at: fileURL)
+            downloads.removeAll(where: { $0.Id == download.Id})
+            saveDownloads(songs: downloads)
         } catch {
             print("Error removing file: \(error.localizedDescription)")
         }
@@ -83,6 +79,14 @@ class DownloadService: NSObject, URLSessionDownloadDelegate {
             Task { @MainActor in
                 self.downloadingSongs.remove(song.Id)
             }
+            
+            ArtworkService().fetchArtwork(url: song.coverUrl!) { image in
+                if let img = image {
+                    song.coverImageData = img.pngData()
+                }
+                self.downloads.append(song)
+                self.saveDownloads(songs: self.downloads)
+            }
         } catch {
             print("Error moving downloaded file: \(error.localizedDescription)")
             Task { @MainActor in
@@ -95,13 +99,18 @@ class DownloadService: NSObject, URLSessionDownloadDelegate {
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         let progress = Double(totalBytesWritten) / Double(totalBytesExpectedToWrite)
         downloadProgress[downloadTask.taskIdentifier] = progress
+        DispatchQueue.main.async {
+            self.averageDownloadProgress = self.downloadProgress.values.reduce(0, +) / Double(self.downloadProgress.count)
+        }
     }
 
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         downloadTasks.removeValue(forKey: task)
         if downloadTasks.isEmpty {
-            isDownloading = false;
+            Task { @MainActor in
+                isDownloading = false;
+            }
         }
     }
     
@@ -140,5 +149,27 @@ class DownloadService: NSObject, URLSessionDownloadDelegate {
         default:
             return "mp3"
         }
+    }
+    
+    func saveDownloads(songs: [Song]) {
+        do {
+            let url = getDocumentsDirectory().appendingPathComponent("downloads.json")
+            let data = try JSONEncoder().encode(songs)
+            try data.write(to: url)
+        } catch {
+            print("Error saving downloads: \(error.localizedDescription)")
+        }
+    }
+    
+    func loadDownloads() -> [Song]? {
+        do {
+            let url = getDocumentsDirectory().appendingPathComponent("downloads.json")
+            let data = try Data(contentsOf: url)
+            let downloadedSongs = try JSONDecoder().decode([Song].self, from: data)
+            return downloadedSongs
+        } catch {
+            print("Error loading downloads: \(error.localizedDescription)")
+        }
+        return nil
     }
 }

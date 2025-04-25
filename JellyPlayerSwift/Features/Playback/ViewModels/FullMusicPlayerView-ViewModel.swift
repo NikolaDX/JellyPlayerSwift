@@ -30,16 +30,15 @@ extension FullMusicPlayerView {
         }
         
         func updateDominantColor() {
-            guard let url = coverUrl else { return }
-            
-            ArtworkService().fetchArtwork(url: url) { [weak self] image in
-                guard let self = self, let image = image else {
-                    if let localCover = self?.currentSong?.coverImage {
-                        self?.coverDominantColor = localCover.dominantColor()
-                    }
-                    return
+            if let image = currentSong?.coverImage {
+                coverDominantColor = image.dominantColor()
+            } else {
+                guard let url = coverUrl else { return }
+                
+                ArtworkService().fetchArtwork(url: url) { [weak self] image in
+                    guard let self = self, let image = image else { return }
+                    self.coverDominantColor = image.dominantColor()
                 }
-                self.coverDominantColor = image.dominantColor()
             }
         }
         
@@ -110,11 +109,11 @@ extension FullMusicPlayerView {
         
         func toggleFavorite() {
             if let song = currentSong {
-                let songsService = SongsService()
+                let favoritesService = FavoritesService()
                 if song.UserData.IsFavorite {
-                    songsService.removeFromFavorites(song: song)
+                    favoritesService.removeFromFavorites(song: song)
                 } else {
-                    songsService.addSongToFavorites(song: song)
+                    favoritesService.addSongToFavorites(song: song)
                 }
             }
         }
