@@ -34,7 +34,7 @@ struct MiniPlayerView: View {
                     falseLabel: Image(systemName: "play.fill")) {
                     viewModel.togglePlayPause()
                 }
-                    .padding(.horizontal, 5)
+                    .padding()
                     .font(.title2)
             }
             .padding(5)

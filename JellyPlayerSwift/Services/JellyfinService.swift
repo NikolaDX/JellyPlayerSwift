@@ -165,4 +165,46 @@ class JellyfinService {
         
         let (_, _) = try await URLSession.shared.data(for: request)
     }
+    
+    func removeFromServerWithHttpBody(queryItems: [URLQueryItem], path: String, httpBody: [String: Any]) async throws {
+        guard let server = serverUrl, let token = accessToken else {
+            return
+        }
+        
+        var components = URLComponents(string: "\(server)/\(path)")
+        components?.queryItems = queryItems
+        
+        guard let url = components?.url else {
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.setValue(token, forHTTPHeaderField: "X-Emby-Token")
+        request.httpMethod = "DELETE"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        request.httpBody = try JSONSerialization.data(withJSONObject: httpBody)
+        
+        let (_, _) = try await URLSession.shared.data(for: request)
+    }
+    
+    func removeItemFromServer(queryItems: [URLQueryItem], path: String) async throws {
+        guard let server = serverUrl, let token = accessToken else {
+            return
+        }
+        
+        var components = URLComponents(string: "\(server)/Items/\(path)")
+        components?.queryItems = queryItems
+        
+        guard let url = components?.url else {
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.setValue(token, forHTTPHeaderField: "X-Emby-Token")
+        request.httpMethod = "DELETE"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let (_, _) = try await URLSession.shared.data(for: request)
+    }
 }

@@ -51,7 +51,7 @@ struct AlbumsView: View {
                     }
                 }
             }
-            .navigationTitle("Home")
+            .navigationTitle("JellyPlayer")
             .navigationDestination(for: Album.self) { album in
                 AlbumTracksView(album: album)
                     .navigationTransition(.zoom(sourceID: album.Id, in: albumViewAnimation))

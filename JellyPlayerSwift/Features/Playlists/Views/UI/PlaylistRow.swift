@@ -24,8 +24,7 @@ struct PlaylistRow: View {
             
             Spacer()
             
-            Subheadline("\(playlist.ChildCount ?? 0) \(playlist.ChildCount == 1 ? "song" : "songs")")
-
+            Subheadline("\(playlist.NumberOfSongs ?? 0) \(playlist.NumberOfSongs == 1 ? "song" : "songs")")
         }
     }
 }

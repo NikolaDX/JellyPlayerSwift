@@ -15,7 +15,7 @@ extension AlbumsView {
         func fetchAlbums() {
             let albumService = AlbumService()
             Task { @MainActor in
-                self.albums = await albumService.fetchAlbums()
+                self.albums = await albumService.fetchRandomAlbums()
             }
         }
         

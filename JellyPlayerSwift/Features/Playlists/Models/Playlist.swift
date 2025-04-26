@@ -11,10 +11,15 @@ struct PlaylistResponse: Codable {
     let Items: [Playlist]
 }
 
-struct Playlist: Codable {
+class Playlist: Codable {
     let Id: String
     let Name: String
-    var ChildCount: Int?
+    var NumberOfSongs: Int?
+    
+    init(Id: String, Name: String) {
+        self.Id = Id
+        self.Name = Name
+    }
     
     var coverUrl: URL? {
         if let serverUrl = UserDefaults.standard.string(forKey: serverKey) {

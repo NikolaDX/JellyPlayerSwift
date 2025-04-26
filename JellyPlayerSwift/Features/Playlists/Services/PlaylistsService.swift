@@ -30,19 +30,39 @@ class PlaylistsService {
             URLQueryItem(name: "SortOrder", value: "Ascending")
         ]) {
             if let decodedResponse = try? JSONDecoder().decode(PlaylistResponse.self, from: data) {
-                return decodedResponse.Items
+                let playlists = decodedResponse.Items
+
+                for i in playlists.indices {
+                    let playlistId = playlists[i].Id
+                    let songCount = await fetchPlaylistCount(for: playlistId)
+                    playlists[i].NumberOfSongs = songCount
+                }
+
+                return playlists
             }
         }
         
         return []
     }
     
+    func fetchPlaylistCount(for playlistId: String) async -> Int {
+        return await fetchPlaylistSongs(playlistId: playlistId).count
+    }
+    
     func fetchPlaylistSongs(playlistId: String) async -> [Song] {
         if let data = await jellyfinService.fetchSpecific(queryItems: [
             URLQueryItem(name: "IncludeItemTypes", value: "Audio")
         ], toFetch: "Playlists/\(playlistId)/Items") {
-            if let decodedResponse = try? JSONDecoder().decode(SongResponse.self, from: data) {
-                return decodedResponse.Items
+            do {
+                let raw = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+                if let itemsArray = raw?["Items"] as? [[String: Any]] {
+                    return itemsArray.compactMap { itemDict in
+                        guard let itemData = try? JSONSerialization.data(withJSONObject: itemDict) else { return nil }
+                        return try? JSONDecoder().decode(Song.self, from: itemData)
+                    }
+                }
+            } catch {
+                print("Failed to parse playlist response: \(error)")
             }
         }
         
@@ -58,4 +78,30 @@ class PlaylistsService {
             ])
     }
     
+    func deletePlaylist(playlistId: String) async throws {
+        try await jellyfinService.removeItemFromServer(
+            queryItems: [],
+            path: playlistId
+        )
+    }
+    
+    func addSongsToPlaylist(songIds: [String], playlistId: String) async throws {
+        try await jellyfinService.addToServerWithHttpBody(
+            queryItems: [
+                URLQueryItem(name: "ids", value: songIds.joined(separator: ","))
+            ],
+            path: "Playlists/\(playlistId)/Items",
+            httpBody: [:]
+        )
+    }
+    
+    func removeSongsFromPlaylist(songIds: [String], playlistId: String) async throws {
+        try await jellyfinService.removeFromServerWithHttpBody(
+            queryItems: [
+                URLQueryItem(name: "entryIds", value: songIds.joined(separator: ","))
+            ],
+            path: "Playlists/\(playlistId)/Items",
+            httpBody: [:]
+        )
+    }
 }

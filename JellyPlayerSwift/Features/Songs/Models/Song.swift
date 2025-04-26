@@ -7,10 +7,6 @@
 
 import SwiftUI
 
-struct SongResponse: Codable {
-    let Items: [Song]
-}
-
 struct UserData: Codable {
     var IsFavorite: Bool
 }

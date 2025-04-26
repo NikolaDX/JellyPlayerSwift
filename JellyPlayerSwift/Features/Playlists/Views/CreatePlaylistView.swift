@@ -20,9 +20,7 @@ struct CreatePlaylistView: View {
                 
                 HStack(spacing: 5) {
                     NiceButton("Create playlist") {
-                        Task {
-                            viewModel.createPlaylist()
-                        }
+                        viewModel.createPlaylist()
                     }
                     
                     if viewModel.isLoading {

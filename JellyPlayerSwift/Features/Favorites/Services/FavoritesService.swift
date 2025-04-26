@@ -30,8 +30,16 @@ class FavoritesService {
             URLQueryItem(name: "SortBy", value: "Name"),
             URLQueryItem(name: "SortOrder", value: "Ascending")
         ]) {
-            if let decodedResponse = try? JSONDecoder().decode(SongResponse.self, from: data) {
-                return decodedResponse.Items
+            do {
+                let raw = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+                if let itemsArray = raw?["Items"] as? [[String: Any]] {
+                    return itemsArray.compactMap { itemDict in
+                        guard let itemData = try? JSONSerialization.data(withJSONObject: itemDict) else { return nil }
+                        return try? JSONDecoder().decode(Song.self, from: itemData)
+                    }
+                }
+            } catch {
+                print("Failed to parse playlist response: \(error)")
             }
         }
         

@@ -10,6 +10,8 @@ import SwiftUI
 struct SongRow: View {
     private let song: Song
     
+    @State private var showingAddToPlaylist: Bool = false
+    
     init(_ song: Song) {
         self.song = song
     }
@@ -44,7 +46,17 @@ struct SongRow: View {
                     Label("Download", systemImage: "arrow.down.circle")
                 }
             }
+            
+            Button {
+                showingAddToPlaylist = true
+            } label: {
+                Label("Add to playlist", systemImage: "plus.circle.fill")
+            }
         }
+        .sheet(isPresented: $showingAddToPlaylist) {
+            AddSongToPlaylistView(song)
+        }
+        
     }
     
     func formatTime(_ time: Int) -> String {

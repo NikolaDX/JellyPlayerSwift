@@ -24,5 +24,17 @@ extension PlaylistSongsView {
                 songs = await playlistsService.fetchPlaylistSongs(playlistId: playlist.Id)
             }
         }
+        
+        func removeSongsFromPlaylist(songIds: [String], playlistId: String) {
+            let playlistsSerivce = PlaylistsService()
+            Task { @MainActor in
+                do {
+                    try await playlistsSerivce.removeSongsFromPlaylist(songIds: songIds, playlistId: playlistId)
+                    fetchSongs()
+                } catch {
+                    print("Error removing song: \(error.localizedDescription)")
+                }
+            }
+        }
     }
 }

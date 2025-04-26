@@ -38,6 +38,20 @@ class AlbumService {
         return []
     }
     
+    func fetchRandomAlbums() async -> [Album] {
+        if let data = await jellyfinService.fetchItems(queryItems: [
+            URLQueryItem(name: "IncludeItemTypes", value: "MusicAlbum"),
+            URLQueryItem(name: "Fields", value: "Genres,AlbumArtistIds,AlbumArtists"),
+            URLQueryItem(name: "Recursive", value: "true")
+        ]) {
+            if let decodedResponse = try? JSONDecoder().decode(AlbumResponse.self, from: data) {
+                return decodedResponse.Items.shuffled()
+            }
+        }
+        
+        return []
+    }
+    
     func fetchAlbumSongs(albumId: String) async -> [Song] {
         if let data = await jellyfinService.fetchItems(queryItems: [
             URLQueryItem(name: "ParentId", value: albumId),
@@ -46,8 +60,16 @@ class AlbumService {
             URLQueryItem(name: "SortBy", value: "IndexNumber"),
             URLQueryItem(name: "SortOrder", value: "Ascending")
         ]) {
-            if let decodedResponse = try? JSONDecoder().decode(SongResponse.self, from: data) {
-                return decodedResponse.Items
+            do {
+                let raw = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+                if let itemsArray = raw?["Items"] as? [[String: Any]] {
+                    return itemsArray.compactMap { itemDict in
+                        guard let itemData = try? JSONSerialization.data(withJSONObject: itemDict) else { return nil }
+                        return try? JSONDecoder().decode(Song.self, from: itemData)
+                    }
+                }
+            } catch {
+                print("Failed to parse playlist response: \(error)")
             }
         }
         

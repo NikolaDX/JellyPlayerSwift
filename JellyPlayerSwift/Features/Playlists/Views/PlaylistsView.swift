@@ -12,18 +12,30 @@ struct PlaylistsView: View {
     @State private var showingPlaylistCreation: Bool = false
     
     var body: some View {
-        List(viewModel.playlists, id: \.Id) { playlist in
-            NavigationLink {
-                PlaylistSongsView(playlist: playlist)
-            } label: {
-                PlaylistRow(playlist)
+        List {
+            ForEach(viewModel.playlists, id: \.Id) { playlist in
+                NavigationLink {
+                    PlaylistSongsView(playlist: playlist)
+                } label: {
+                    PlaylistRow(playlist)
+                }
+                .contextMenu {
+                    Button(role: .destructive) {
+                        viewModel.deletePlaylist(playlistId: playlist.Id)
+                    } label: {
+                        Label("Delete playlist", systemImage: "trash")
+                    }
+                }
             }
+            .onDelete(perform: deleteRows)
         }
         .navigationTitle("Playlists")
         .toolbar {
             IconButton(icon: Image(systemName: "plus.circle.fill")) {
                 showingPlaylistCreation = true
             }
+            
+            EditButton()
         }
         .onChange(of: showingPlaylistCreation) { _, newValue in
             if !newValue {
@@ -35,6 +47,12 @@ struct PlaylistsView: View {
         }
         .task {
             viewModel.fetchPlaylists()
+        }
+    }
+    
+    func deleteRows(at offsets: IndexSet) {
+        for index in offsets {
+            viewModel.deletePlaylist(playlistId: viewModel.playlists[index].Id)
         }
     }
 }

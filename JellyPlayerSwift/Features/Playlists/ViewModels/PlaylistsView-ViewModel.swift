@@ -18,5 +18,17 @@ extension PlaylistsView {
                 self.playlists = await playlistsService.fetchPlaylists()
             }
         }
+        
+        func deletePlaylist(playlistId: String) {
+            let playlistsService = PlaylistsService()
+            Task { @MainActor in
+                do {
+                    try await playlistsService.deletePlaylist(playlistId: playlistId)
+                    fetchPlaylists()
+                } catch {
+                    print("Error deleting playlist: \(error.localizedDescription)")
+                }
+            }
+        }
     }
 }
