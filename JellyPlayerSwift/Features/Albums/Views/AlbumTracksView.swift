@@ -34,13 +34,17 @@ struct AlbumTracksView: View {
                             .padding(.bottom, spaceBetween)
                     }
                     
-                    HStack {
+                    HStack(spacing: 20) {
                         NiceIconButton("Play", buttonImage: "play.fill") {
-                            viewModel.playSong(viewModel.songs[0])
+                            if (!viewModel.songs.isEmpty) {
+                                viewModel.playSong(viewModel.songs[0])
+                            }
                         }
                         
                         NiceIconButton("Shuffle", buttonImage: "shuffle") {
-                            viewModel.shufflePlay()
+                            if (!viewModel.songs.isEmpty) {
+                                viewModel.shufflePlay()
+                            }
                         }
                     }
                     .padding(.bottom, spaceBetween)

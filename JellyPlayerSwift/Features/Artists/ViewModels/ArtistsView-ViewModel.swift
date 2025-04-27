@@ -12,8 +12,16 @@ extension ArtistsView {
     class ViewModel {
         var artists: [Artist] = []
         
+        var filterText: String = ""
+        
+        var filteredArtists: [Artist] {
+            filterText.isEmpty ? artists : artists.filter {
+                $0.Name.localizedStandardContains(filterText)
+            }
+        }
+        
         var artistsByLetter: [String: [Artist]] {
-            Dictionary(grouping: artists) { artist in
+            Dictionary(grouping: filteredArtists) { artist in
                 String(artist.Name.prefix(1).uppercased())
             }
         }

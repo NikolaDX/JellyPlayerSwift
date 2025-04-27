@@ -5,7 +5,6 @@
 //  Created by Nikola Ristic on 4/23/25.
 //
 
-import Kingfisher
 import SwiftUI
 
 struct ArtistDetailsView: View {
@@ -18,6 +17,21 @@ struct ArtistDetailsView: View {
     var body: some View {
         ScrollView {
             ArtistHeader(artist: viewModel.artist)
+            HStack(spacing: 20) {
+                NiceIconButton("Play", buttonImage: "play.fill") {
+                    Task {
+                        await viewModel.playArtist()
+                    }
+                }
+                
+                NiceIconButton("Shuffle", buttonImage: "shuffle") {
+                    Task {
+                        await viewModel.shuffleArtist()
+                    }
+                }
+            }
+            .padding(20)
+            
             AlbumsGridView(albums: viewModel.artistAlbums)
         }
         .frame(maxWidth: .infinity, alignment: .leading)

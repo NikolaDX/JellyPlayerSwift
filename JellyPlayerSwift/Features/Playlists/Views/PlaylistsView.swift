@@ -13,7 +13,7 @@ struct PlaylistsView: View {
     
     var body: some View {
         List {
-            ForEach(viewModel.playlists, id: \.Id) { playlist in
+            ForEach(viewModel.filteredPlaylists, id: \.Id) { playlist in
                 NavigationLink {
                     PlaylistSongsView(playlist: playlist)
                 } label: {
@@ -30,6 +30,7 @@ struct PlaylistsView: View {
             .onDelete(perform: deleteRows)
         }
         .navigationTitle("Playlists")
+        .searchable(text: $viewModel.filterText, prompt: "Search for a playlist...")
         .toolbar {
             IconButton(icon: Image(systemName: "plus.circle.fill")) {
                 showingPlaylistCreation = true

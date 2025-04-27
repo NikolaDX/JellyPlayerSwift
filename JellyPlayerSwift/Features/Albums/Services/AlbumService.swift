@@ -56,6 +56,7 @@ class AlbumService {
         if let data = await jellyfinService.fetchItems(queryItems: [
             URLQueryItem(name: "ParentId", value: albumId),
             URLQueryItem(name: "IncludeItemTypes", value: "Audio"),
+            URLQueryItem(name: "Fields", value: "DateCreated"),
             URLQueryItem(name: "Recursive", value: "true"),
             URLQueryItem(name: "SortBy", value: "IndexNumber"),
             URLQueryItem(name: "SortOrder", value: "Ascending")

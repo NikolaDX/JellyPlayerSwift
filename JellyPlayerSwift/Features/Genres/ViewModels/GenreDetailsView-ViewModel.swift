@@ -23,5 +23,32 @@ extension GenreDetailsView {
                 self.genreAlbums = await genresService.fetchGenreAlbums(genreId: genre.Id)
             }
         }
+        
+        func playGenre() async {
+            let albumService = AlbumService()
+            var songs: [Song] = []
+            
+            for album in genreAlbums {
+                songs = await songs + albumService.fetchAlbumSongs(albumId: album.Id)
+            }
+            
+            if !songs.isEmpty {
+                PlaybackService.shared.playAndBuildQueue(songs[0], songsToPlay: songs)
+            }
+        }
+        
+        func shuffleGenre() async {
+            let albumService = AlbumService()
+            var songs: [Song] = []
+            
+            for album in genreAlbums {
+                songs = await songs + albumService.fetchAlbumSongs(albumId: album.Id)
+            }
+            
+            if !songs.isEmpty {
+                songs = songs.shuffled()
+                PlaybackService.shared.playAndBuildQueue(songs[0], songsToPlay: songs)
+            }
+        }
     }
 }

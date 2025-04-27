@@ -30,6 +30,7 @@ struct ArtistsView: View {
             .padding(.top)
         }
         .navigationTitle("Artists")
+        .searchable(text: $viewModel.filterText, prompt: "Search for an artist...")
         .task {
             viewModel.fetchArtists()
         }

@@ -12,6 +12,14 @@ extension PlaylistsView {
     class ViewModel {
         var playlists: [Playlist] = []
         
+        var filterText: String = ""
+        
+        var filteredPlaylists: [Playlist] {
+            filterText.isEmpty ? playlists : playlists.filter {
+                $0.Name.localizedCaseInsensitiveContains(filterText)
+            }
+        }
+        
         func fetchPlaylists() {
             let playlistsService = PlaylistsService()
             Task { @MainActor in

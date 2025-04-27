@@ -11,9 +11,17 @@ struct AlbumsGridView: View {
     let albums: [Album]
     @Namespace private var albumViewAnimation
     @State private var isDragging: Bool = false
+    @State private var filterText: String = ""
+    
+    private var filteredAlbums: [Album] {
+        filterText.isEmpty ? albums: albums.filter {
+            $0.Name.localizedCaseInsensitiveContains(filterText) ||
+            $0.AlbumArtist.localizedCaseInsensitiveContains(filterText)
+        }
+    }
     
     private var albumsByLetter: [String: [Album]] {
-        Dictionary(grouping: albums) { album in
+        Dictionary(grouping: filteredAlbums) { album in
             String(album.Name.prefix(1).uppercased())
         }
     }
@@ -24,6 +32,9 @@ struct AlbumsGridView: View {
     
     var body: some View {
         ScrollView {
+            InputField(text: $filterText, censored: false, placeholder: "Search for an album...")
+                .padding()
+            
             ForEach(sortedLetters, id: \.self) { letter in
                 LazyVStack(alignment: .leading) {
                     Section {

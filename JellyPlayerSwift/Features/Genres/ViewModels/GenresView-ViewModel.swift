@@ -12,6 +12,14 @@ extension GenresView {
     class ViewModel {
         var genres: [Genre] = []
         
+        var filterText: String = ""
+        
+        var filteredGenrers: [Genre] {
+            filterText.isEmpty ? genres : genres.filter {
+                $0.Name.localizedCaseInsensitiveContains(filterText)
+            }
+        }
+        
         func fetchGenres() {
             let genresService = GenresService()
             Task { @MainActor in

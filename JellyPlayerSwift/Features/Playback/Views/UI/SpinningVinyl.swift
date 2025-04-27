@@ -83,5 +83,5 @@ struct SpinningVinyl: View {
 #Preview {
     @Previewable @State var currentTime: Double = 0
     @Previewable @State var isScrubbing: Bool = false
-    SpinningVinyl(song: Song(Id: "Id", Name: "Name", IndexNumber: 1, Album: "Album", AlbumId: "Id", RunTimeTicks: 120000, Artists: ["Artist"], UserData: UserData(IsFavorite: false)), isPlaying: false, currentTime: $currentTime, isScrubbing: $isScrubbing)
+    SpinningVinyl(song: Song(Id: "Id", Name: "Name", IndexNumber: 1, Album: "Album", AlbumId: "Id", RunTimeTicks: 120000, Artists: ["Artist"], UserData: UserData(IsFavorite: false, PlayCount: 1), DateCreated: ""), isPlaying: false, currentTime: $currentTime, isScrubbing: $isScrubbing)
 }

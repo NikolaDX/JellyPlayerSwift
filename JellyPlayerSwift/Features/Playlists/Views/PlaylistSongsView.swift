@@ -17,9 +17,9 @@ struct PlaylistSongsView: View {
     
     var body: some View {
         List {
-            ForEach(viewModel.songs, id: \.Id) { song in
+            ForEach(viewModel.filteredSongs, id: \.Id) { song in
                 Button {
-                    PlaybackService.shared.playAndBuildQueue(song, songsToPlay: viewModel.songs)
+                    viewModel.playFrom(song: song)
                 } label: {
                     SongRow(song)
                         .contextMenu {
@@ -35,9 +35,37 @@ struct PlaylistSongsView: View {
             .onDelete(perform: deleteRows)
         }
         .navigationTitle(viewModel.playlist.Name)
+        .searchable(text: $viewModel.filterText, prompt: "Search for a song...")
         .toolbar {
             IconButton(icon: Image(systemName: "plus.circle.fill")) {
                 showingAddToPlaylist = true
+            }
+            
+            Menu("Sort by", systemImage: "arrow.up.arrow.down") {
+                Menu("Sort order") {
+                    Picker("Sort order", selection: $viewModel.selectedSortOrder) {
+                        Text("Ascending").tag("Ascending")
+                        Text("Descending").tag("Descending")
+                    }
+                }
+                
+                Menu("Sort by") {
+                    Picker("Sort by", selection: $viewModel.selectedSortOption) {
+                        Text("Name").tag("Name")
+                        Text("Album").tag("Album")
+                        Text("Artist").tag("Artist")
+                        Text("Date added").tag("DateAdded")
+                        Text("Play count").tag("PlayCount")
+                    }
+                }
+            }
+            
+            IconButton(icon: Image(systemName: "play.fill")) {
+                viewModel.playAll()
+            }
+            
+            IconButton(icon: Image(systemName: "shuffle")) {
+                viewModel.shufflePlay()
             }
             
             EditButton()

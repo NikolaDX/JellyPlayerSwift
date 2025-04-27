@@ -17,6 +17,19 @@ struct GenreDetailsView: View {
     var body: some View {
         AlbumsGridView(albums: viewModel.genreAlbums)
             .navigationTitle(viewModel.genre.Name)
+            .toolbar {
+                IconButton(icon: Image(systemName: "play.fill")) {
+                    Task {
+                        await viewModel.playGenre()
+                    }
+                }
+                
+                IconButton(icon: Image(systemName: "shuffle")) {
+                    Task {
+                        await viewModel.shuffleGenre()
+                    }
+                }
+            }
             .task {
                 viewModel.fetchGenreAlbums()
             }

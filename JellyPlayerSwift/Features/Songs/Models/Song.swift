@@ -9,6 +9,7 @@ import SwiftUI
 
 struct UserData: Codable {
     var IsFavorite: Bool
+    var PlayCount: Int
 }
 
 class Song: Codable, Equatable {
@@ -21,8 +22,9 @@ class Song: Codable, Equatable {
     let Artists: [String]
     var UserData: UserData
     var coverImageData: Data?
+    let DateCreated: String?
     
-    init(Id: String, Name: String, IndexNumber: Int, Album: String, AlbumId: String, RunTimeTicks: Int, Artists: [String], UserData: UserData) {
+    init(Id: String, Name: String, IndexNumber: Int, Album: String, AlbumId: String, RunTimeTicks: Int, Artists: [String], UserData: UserData, DateCreated: String?) {
         self.Id = Id
         self.Name = Name
         self.IndexNumber = IndexNumber
@@ -31,6 +33,7 @@ class Song: Codable, Equatable {
         self.RunTimeTicks = RunTimeTicks
         self.Artists = Artists
         self.UserData = UserData
+        self.DateCreated = DateCreated
     }
     
     var streamUrl: URL? {

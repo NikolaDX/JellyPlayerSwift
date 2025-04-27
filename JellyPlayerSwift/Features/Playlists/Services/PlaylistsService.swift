@@ -51,7 +51,8 @@ class PlaylistsService {
     
     func fetchPlaylistSongs(playlistId: String) async -> [Song] {
         if let data = await jellyfinService.fetchSpecific(queryItems: [
-            URLQueryItem(name: "IncludeItemTypes", value: "Audio")
+            URLQueryItem(name: "IncludeItemTypes", value: "Audio"),
+            URLQueryItem(name: "Fields", value: "DateCreated")
         ], toFetch: "Playlists/\(playlistId)/Items") {
             do {
                 let raw = try JSONSerialization.jsonObject(with: data) as? [String: Any]

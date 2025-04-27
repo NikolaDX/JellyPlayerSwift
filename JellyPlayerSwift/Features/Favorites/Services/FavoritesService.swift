@@ -25,6 +25,7 @@ class FavoritesService {
     func fetchFavoriteSongs() async -> [Song] {
         if let data = await jellyfinService.fetchItems(queryItems: [
             URLQueryItem(name: "IncludeItemTypes", value: "Audio"),
+            URLQueryItem(name: "Fields", value: "DateCreated"),
             URLQueryItem(name: "IsFavorite", value: "true"),
             URLQueryItem(name: "Recursive", value: "true"),
             URLQueryItem(name: "SortBy", value: "Name"),
