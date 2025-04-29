@@ -8,12 +8,13 @@
 import SwiftUI
 
 struct SongsView: View {
-    @State private var songs: [Song]
+    @Binding var songs: [Song]
     
     @State private var selectedSortOption: String = "Name"
     @State private var selectedSortOrder: String = "Ascending"
     @State private var filterText: String = ""
-    @State private var showingAddSong: Bool = false
+    @State private var showingAddToPlaylist: Bool = false
+    @State private var songToAdd: Song? = nil
     
     private var filteredSongs: [Song] {
         filterText.isEmpty ? sortedSongs : sortedSongs.filter {
@@ -46,10 +47,6 @@ struct SongsView: View {
         } else {
             return sorted
         }
-    }
-    
-    init(songs: [Song]) {
-        self.songs = songs
     }
     
     var body: some View {
@@ -86,7 +83,10 @@ struct SongsView: View {
                         }
                         
                         ContextButton(isDestructive: false, text: "Add to playlist", systemImage: "plus.circle") {
-                            showingAddSong = true
+                            songToAdd = nil
+                            DispatchQueue.main.async {
+                                songToAdd = song
+                            }
                         }
                         
                         ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
@@ -96,13 +96,18 @@ struct SongsView: View {
                             }
                         }
                     }
-                    .sheet(isPresented: $showingAddSong) {
-                        AddSongToPlaylistView(song)
-                    }
             }
             .foregroundStyle(.primary)
         }
+        .onChange(of: songToAdd) {
+            if let _ = songToAdd {
+                showingAddToPlaylist = true
+            }
+        }
         .searchable(text: $filterText, prompt: "Search for a song...")
+        .sheet(isPresented: $showingAddToPlaylist) {
+            AddSongToPlaylistView(songToAdd!)
+        }
         .toolbar {
             Menu("Sort by", systemImage: "arrow.up.arrow.down") {
                 Menu("Sort order") {
@@ -149,5 +154,6 @@ struct SongsView: View {
 }
 
 #Preview {
-    SongsView(songs: [])
+    @Previewable @State var songs: [Song] = []
+    SongsView(songs: $songs)
 }

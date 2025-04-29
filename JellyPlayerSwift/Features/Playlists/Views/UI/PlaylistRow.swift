@@ -26,6 +26,7 @@ struct PlaylistRow: View {
             
             Subheadline("\(playlist.NumberOfSongs ?? 0) \(playlist.NumberOfSongs == 1 ? "song" : "songs")")
         }
+        .contentShape(Rectangle())
     }
 }
 

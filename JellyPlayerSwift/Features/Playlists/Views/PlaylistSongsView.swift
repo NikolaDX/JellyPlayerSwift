@@ -11,6 +11,7 @@ struct PlaylistSongsView: View {
     @ObservedObject private var viewModel: ViewModel
     @State private var showingAddToPlaylist: Bool = false
     @State private var showingAddSong: Bool = false
+    @State private var songToAdd: Song? = nil
     
     init(playlist: Playlist) {
         viewModel = ViewModel(playlist: playlist)
@@ -49,7 +50,10 @@ struct PlaylistSongsView: View {
                             }
                             
                             ContextButton(isDestructive: false, text: "Add to playlist", systemImage: "plus.circle") {
-                                showingAddSong = true
+                                songToAdd = nil
+                                DispatchQueue.main.async {
+                                    songToAdd = song
+                                }
                             }
                             
                             ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
@@ -57,13 +61,15 @@ struct PlaylistSongsView: View {
                             }
                             
                         }
-                        .sheet(isPresented: $showingAddSong) {
-                            AddSongToPlaylistView(song)
-                        }
                 }
                 .foregroundStyle(.primary)
             }
             .onDelete(perform: deleteRows)
+        }
+        .onChange(of: songToAdd) {
+            if let _ = songToAdd {
+                showingAddSong = true
+            }
         }
         .navigationTitle(viewModel.playlist.Name)
         .searchable(text: $viewModel.filterText, prompt: "Search for a song...")
@@ -104,6 +110,9 @@ struct PlaylistSongsView: View {
         }
         .sheet(isPresented: $showingAddToPlaylist) {
             AddItemsView(playlistId: viewModel.playlist.Id, refreshAction: viewModel.fetchSongs)
+        }
+        .sheet(isPresented: $showingAddSong) {
+            AddSongToPlaylistView(songToAdd!)
         }
         .task {
             viewModel.fetchSongs()
