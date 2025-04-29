@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct PlaylistSongsView: View {
-    @State private var viewModel: ViewModel
+    @ObservedObject private var viewModel: ViewModel
     @State private var showingAddToPlaylist: Bool = false
+    @State private var showingAddSong: Bool = false
     
     init(playlist: Playlist) {
         viewModel = ViewModel(playlist: playlist)
@@ -23,11 +24,41 @@ struct PlaylistSongsView: View {
                 } label: {
                     SongRow(song)
                         .contextMenu {
-                            Button(role: .destructive) {
+                            ContextButton(isDestructive: true, text: "Remove from playlist", systemImage: "trash") {
                                 viewModel.removeSongsFromPlaylist(songIds: [song.Id], playlistId: viewModel.playlist.Id)
-                            } label: {
-                                Label("Remove from playlist", systemImage: "trash")
                             }
+                            
+                            if song.UserData.IsFavorite {
+                                ContextButton(isDestructive: true, text: "Remove from favorites", systemImage: "star.slash") {
+                                    viewModel.removeFromFavorites(song: song)
+                                }
+                            } else {
+                                ContextButton(isDestructive: false, text: "Add to favorites", systemImage: "star") {
+                                    viewModel.addToFavorites(song: song)
+                                }
+                            }
+                            
+                            if song.localFilePath != nil {
+                                ContextButton(isDestructive: true, text: "Remove download", systemImage: "trash") {
+                                    viewModel.removeDownload(song: song)
+                                }
+                            } else {
+                                ContextButton(isDestructive: false, text: "Download", systemImage: "arrow.down.circle") {
+                                    viewModel.downloadSong(song: song)
+                                }
+                            }
+                            
+                            ContextButton(isDestructive: false, text: "Add to playlist", systemImage: "plus.circle") {
+                                showingAddSong = true
+                            }
+                            
+                            ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
+                                viewModel.generateInstantMix(songId: song.Id)
+                            }
+                            
+                        }
+                        .sheet(isPresented: $showingAddSong) {
+                            AddSongToPlaylistView(song)
                         }
                 }
                 .foregroundStyle(.primary)
@@ -51,6 +82,7 @@ struct PlaylistSongsView: View {
                 
                 Menu("Sort by") {
                     Picker("Sort by", selection: $viewModel.selectedSortOption) {
+                        Text("Default").tag("Default")
                         Text("Name").tag("Name")
                         Text("Album").tag("Album")
                         Text("Artist").tag("Artist")

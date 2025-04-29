@@ -38,5 +38,22 @@ extension PlaylistsView {
                 }
             }
         }
+        
+        func generateInsantMix(playlistId: String) {
+            let playlistsService = PlaylistsService()
+            Task {
+                let instantMixSongs = await playlistsService.generateInstantMix(playlistId: playlistId)
+                if !instantMixSongs.isEmpty {
+                    PlaybackService.shared.playAndBuildQueue(instantMixSongs[0], songsToPlay: instantMixSongs)
+                }
+            }
+        }
+        
+        func downloadPlaylist(playlistId: String) {
+            let playlistsService = PlaylistsService()
+            Task {
+                await playlistsService.downloadPlaylistSongs(playlistId: playlistId)
+            }
+        }
     }
 }

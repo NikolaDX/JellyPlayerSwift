@@ -8,14 +8,12 @@
 import SwiftUI
 
 struct SongsView: View {
-    let songs: [Song]
-    
-    let sortingOptions: [String] = ["Name", "Album", "Artist", "DateAdded", "PlayCount"]
-    let sortOrder: [String] = ["Ascending", "Descending"]
+    @State private var songs: [Song]
     
     @State private var selectedSortOption: String = "Name"
     @State private var selectedSortOrder: String = "Ascending"
     @State private var filterText: String = ""
+    @State private var showingAddSong: Bool = false
     
     private var filteredSongs: [Song] {
         filterText.isEmpty ? sortedSongs : sortedSongs.filter {
@@ -50,12 +48,57 @@ struct SongsView: View {
         }
     }
     
+    init(songs: [Song]) {
+        self.songs = songs
+    }
+    
     var body: some View {
         List(filteredSongs, id: \.Id) { song in
             Button {
                 PlaybackService.shared.playAndBuildQueue(song, songsToPlay: sortedSongs)
             } label: {
                 SongRow(song)
+                    .contextMenu {
+                        if song.UserData.IsFavorite {
+                            ContextButton(isDestructive: true, text: "Remove from favorites", systemImage: "star.slash") {
+                                Task { @MainActor in
+                                    await FavoritesService().removeFromFavorites(song: song)
+                                    refreshSongList(song: song)
+                                }
+                            }
+                        } else {
+                            ContextButton(isDestructive: false, text: "Add to favorites", systemImage: "star") {
+                                Task { @MainActor in
+                                    await FavoritesService().addSongToFavorites(song: song)
+                                    refreshSongList(song: song)
+                                }
+                            }
+                        }
+                        
+                        if song.localFilePath != nil {
+                            ContextButton(isDestructive: true, text: "Remove download", systemImage: "trash") {
+                                DownloadService.shared.removeDownload(song)
+                            }
+                        } else {
+                            ContextButton(isDestructive: false, text: "Download", systemImage: "arrow.down.circle") {
+                                DownloadService.shared.downloadSong(song)
+                            }
+                        }
+                        
+                        ContextButton(isDestructive: false, text: "Add to playlist", systemImage: "plus.circle") {
+                            showingAddSong = true
+                        }
+                        
+                        ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
+                            Task {
+                                let songsToPlay = await SongsService().generateInstantMix(songId: song.Id)
+                                PlaybackService.shared.playAndBuildQueue(songsToPlay[0], songsToPlay: songsToPlay)
+                            }
+                        }
+                    }
+                    .sheet(isPresented: $showingAddSong) {
+                        AddSongToPlaylistView(song)
+                    }
             }
             .foregroundStyle(.primary)
         }
@@ -94,6 +137,15 @@ struct SongsView: View {
             }
         }
     }
+    
+    
+    func refreshSongList(song: Song) {
+        if let index = songs.firstIndex(where: {$0.Id == song.Id}) {
+            songs.remove(at: index)
+            songs.insert(song, at: index)
+        }
+    }
+    
 }
 
 #Preview {

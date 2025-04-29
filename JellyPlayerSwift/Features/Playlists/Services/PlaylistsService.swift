@@ -105,4 +105,29 @@ class PlaylistsService {
             httpBody: [:]
         )
     }
+    
+    func generateInstantMix(playlistId: String) async -> [Song] {
+        if let data = await jellyfinService.fetchSpecific(queryItems: [], toFetch: "Playlists/\(playlistId)/InstantMix") {
+            do {
+                let raw = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+                if let itemsArray = raw?["Items"] as? [[String: Any]] {
+                    return itemsArray.compactMap { itemDict in
+                        guard let itemData = try? JSONSerialization.data(withJSONObject: itemDict) else { return nil }
+                        return try? JSONDecoder().decode(Song.self, from: itemData)
+                    }
+                }
+            } catch {
+                print("Failed to parse response: \(error)")
+            }
+        }
+        
+        return []
+    }
+    
+    func downloadPlaylistSongs(playlistId: String) async {
+        let playlistSongs = await fetchPlaylistSongs(playlistId: playlistId)
+        for song in playlistSongs {
+            DownloadService.shared.downloadSong(song)
+        }
+    }
 }

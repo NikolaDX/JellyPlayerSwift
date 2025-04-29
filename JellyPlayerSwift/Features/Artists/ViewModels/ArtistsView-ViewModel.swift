@@ -36,5 +36,15 @@ extension ArtistsView {
                 self.artists = await artistsService.fetchArtists()
             }
         }
+        
+        func generateInsantMix(artistId: String) {
+            let artistsService = ArtistsService()
+            Task {
+                let instantMixSongs = await artistsService.generateInstantMix(artistId: artistId)
+                if !instantMixSongs.isEmpty {
+                    PlaybackService.shared.playAndBuildQueue(instantMixSongs[0], songsToPlay: instantMixSongs)
+                }
+            }
+        }
     }
 }

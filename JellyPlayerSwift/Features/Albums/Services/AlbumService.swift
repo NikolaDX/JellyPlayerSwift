@@ -70,10 +70,46 @@ class AlbumService {
                     }
                 }
             } catch {
-                print("Failed to parse playlist response: \(error)")
+                print("Failed to parse response: \(error)")
             }
         }
         
         return []
+    }
+    
+    func generateInstantMix(albumId: String) async -> [Song] {
+        if let data = await jellyfinService.fetchSpecific(queryItems: [], toFetch: "Albums/\(albumId)/InstantMix") {
+            do {
+                let raw = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+                if let itemsArray = raw?["Items"] as? [[String: Any]] {
+                    return itemsArray.compactMap { itemDict in
+                        guard let itemData = try? JSONSerialization.data(withJSONObject: itemDict) else { return nil }
+                        return try? JSONDecoder().decode(Song.self, from: itemData)
+                    }
+                }
+            } catch {
+                print("Failed to parse response: \(error)")
+            }
+        }
+        
+        return []
+    }
+    
+    func generateAndPlayInstantMix(albumId: String) {
+        Task {
+            let songsToPlay = await AlbumService().generateInstantMix(albumId: albumId)
+            if !songsToPlay.isEmpty {
+                PlaybackService.shared.playAndBuildQueue(songsToPlay[0], songsToPlay: songsToPlay)
+            }
+        }
+    }
+    
+    func downloadAlbum(albumId: String) {
+        Task {
+            let albumSongs = await fetchAlbumSongs(albumId: albumId)
+            for song in albumSongs {
+                DownloadService.shared.downloadSong(song)
+            }
+        }
     }
 }

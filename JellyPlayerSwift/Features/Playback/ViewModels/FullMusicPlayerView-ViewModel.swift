@@ -111,9 +111,13 @@ extension FullMusicPlayerView {
             if let song = currentSong {
                 let favoritesService = FavoritesService()
                 if song.UserData.IsFavorite {
-                    favoritesService.removeFromFavorites(song: song)
+                    Task { @MainActor in
+                        await favoritesService.removeFromFavorites(song: song)
+                    }
                 } else {
-                    favoritesService.addSongToFavorites(song: song)
+                    Task { @MainActor in
+                        await favoritesService.addSongToFavorites(song: song)
+                    }
                 }
             }
         }

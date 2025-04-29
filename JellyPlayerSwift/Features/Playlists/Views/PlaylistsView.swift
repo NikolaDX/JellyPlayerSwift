@@ -20,10 +20,16 @@ struct PlaylistsView: View {
                     PlaylistRow(playlist)
                 }
                 .contextMenu {
-                    Button(role: .destructive) {
+                    ContextButton(isDestructive: true, text: "Delete playlist", systemImage: "trash") {
                         viewModel.deletePlaylist(playlistId: playlist.Id)
-                    } label: {
-                        Label("Delete playlist", systemImage: "trash")
+                    }
+                    
+                    ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
+                        viewModel.generateInsantMix(playlistId: playlist.Id)
+                    }
+                    
+                    ContextButton(isDestructive: false, text: "Download playlist", systemImage: "arrow.down.circle") {
+                        viewModel.downloadPlaylist(playlistId: playlist.Id)
                     }
                 }
             }

@@ -47,4 +47,22 @@ class ArtistsService {
         
         return []
     }
+    
+    func generateInstantMix(artistId: String) async -> [Song] {
+        if let data = await jellyfinService.fetchSpecific(queryItems: [], toFetch: "Artists/\(artistId)/InstantMix") {
+            do {
+                let raw = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+                if let itemsArray = raw?["Items"] as? [[String: Any]] {
+                    return itemsArray.compactMap { itemDict in
+                        guard let itemData = try? JSONSerialization.data(withJSONObject: itemDict) else { return nil }
+                        return try? JSONDecoder().decode(Song.self, from: itemData)
+                    }
+                }
+            } catch {
+                print("Failed to parse response: \(error)")
+            }
+        }
+        
+        return []
+    }
 }

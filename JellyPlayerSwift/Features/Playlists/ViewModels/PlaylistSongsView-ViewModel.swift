@@ -5,12 +5,11 @@
 //  Created by Nikola Ristic on 4/25/25.
 //
 
-import Foundation
+import SwiftUI
 
 extension PlaylistSongsView {
-    @Observable
-    class ViewModel {
-        var songs: [Song] = []
+    class ViewModel: ObservableObject {
+        @Published var songs: [Song] = []
         
         let playlist: Playlist
         
@@ -18,9 +17,9 @@ extension PlaylistSongsView {
             self.playlist = playlist
         }
         
-        var selectedSortOption: String = "Name"
-        var selectedSortOrder: String = "Ascending"
-        var filterText: String = ""
+        @Published var selectedSortOption: String = "Default"
+        @Published var selectedSortOrder: String = "Ascending"
+        @Published var filterText: String = ""
         
         var filteredSongs: [Song] {
             filterText.isEmpty ? sortedSongs : sortedSongs.filter {
@@ -34,6 +33,8 @@ extension PlaylistSongsView {
             let sorted: [Song]
             
             switch selectedSortOption {
+            case "Default":
+                sorted = songs
             case "Name":
                 sorted = songs.sorted { $0.Name < $1.Name }
             case "Album":
@@ -88,6 +89,40 @@ extension PlaylistSongsView {
             if !songs.isEmpty {
                 let shuffledSongs = songs.shuffled()
                 PlaybackService.shared.playAndBuildQueue(shuffledSongs[0], songsToPlay: shuffledSongs)
+            }
+        }
+        
+        func addToFavorites(song: Song) {
+            let favoritesService = FavoritesService()
+            Task { @MainActor in
+                await favoritesService.addSongToFavorites(song: song)
+                objectWillChange.send()
+            }
+        }
+        
+        func removeFromFavorites(song: Song) {
+            let favoritesService = FavoritesService()
+            Task { @MainActor in
+                await favoritesService.removeFromFavorites(song: song)
+                objectWillChange.send()
+            }
+        }
+        
+        func downloadSong(song: Song) {
+            DownloadService.shared.downloadSong(song)
+        }
+        
+        func removeDownload(song: Song) {
+            DownloadService.shared.removeDownload(song)
+        }
+        
+        func generateInstantMix(songId: String) {
+            let songsService = SongsService()
+            Task {
+                let songsToPlay = await songsService.generateInstantMix(songId: songId)
+                if !songsToPlay.isEmpty {
+                    PlaybackService.shared.playAndBuildQueue(songsToPlay[0], songsToPlay: songsToPlay)
+                }
             }
         }
     }

@@ -22,6 +22,11 @@ struct ArtistsView: View {
                                         .padding(.horizontal)
                                 }
                                 .foregroundStyle(.primary)
+                                .contextMenu {
+                                    ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
+                                        viewModel.generateInsantMix(artistId: artist.Id)
+                                    }
+                                }
                             }
                         }
                     }

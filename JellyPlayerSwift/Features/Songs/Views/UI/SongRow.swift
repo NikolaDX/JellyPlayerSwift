@@ -32,31 +32,6 @@ struct SongRow: View {
                 .monospacedDigit()
         }
         .contentShape(Rectangle())
-        .contextMenu {
-            if song.localFilePath != nil {
-                Button(role: .destructive) {
-                    DownloadService.shared.removeDownload(song)
-                } label: {
-                    Label("Remove download", systemImage: "trash")
-                }
-            } else {
-                Button {
-                    DownloadService.shared.downloadSong(song)
-                } label: {
-                    Label("Download", systemImage: "arrow.down.circle")
-                }
-            }
-            
-            Button {
-                showingAddToPlaylist = true
-            } label: {
-                Label("Add to playlist", systemImage: "plus.circle.fill")
-            }
-        }
-        .sheet(isPresented: $showingAddToPlaylist) {
-            AddSongToPlaylistView(song)
-        }
-        
     }
     
     func formatTime(_ time: Int) -> String {

@@ -11,17 +11,9 @@ struct AlbumsGridView: View {
     let albums: [Album]
     @Namespace private var albumViewAnimation
     @State private var isDragging: Bool = false
-    @State private var filterText: String = ""
-    
-    private var filteredAlbums: [Album] {
-        filterText.isEmpty ? albums: albums.filter {
-            $0.Name.localizedCaseInsensitiveContains(filterText) ||
-            $0.AlbumArtist.localizedCaseInsensitiveContains(filterText)
-        }
-    }
     
     private var albumsByLetter: [String: [Album]] {
-        Dictionary(grouping: filteredAlbums) { album in
+        Dictionary(grouping: albums) { album in
             String(album.Name.prefix(1).uppercased())
         }
     }
@@ -31,10 +23,7 @@ struct AlbumsGridView: View {
     }
     
     var body: some View {
-        ScrollView {
-            InputField(text: $filterText, censored: false, placeholder: "Search for an album...")
-                .padding()
-            
+        ScrollView {            
             ForEach(sortedLetters, id: \.self) { letter in
                 LazyVStack(alignment: .leading) {
                     Section {
@@ -48,6 +37,15 @@ struct AlbumsGridView: View {
                                         .matchedTransitionSource(id: album.Id, in: albumViewAnimation)
                                 }
                                 .foregroundStyle(.primary)
+                                .contextMenu {
+                                    ContextButton(isDestructive: false, text: "Insant mix", systemImage: "safari") {
+                                        AlbumService().generateAndPlayInstantMix(albumId: album.Id)
+                                    }
+                                    
+                                    ContextButton(isDestructive: false, text: "Download album", systemImage: "arrow.down.circle") {
+                                        AlbumService().downloadAlbum(albumId: album.Id)
+                                    }
+                                }
                             }
                         }
                     } header: {

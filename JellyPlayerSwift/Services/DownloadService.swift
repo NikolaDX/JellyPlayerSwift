@@ -46,7 +46,9 @@ class DownloadService: NSObject, ObservableObject, URLSessionDownloadDelegate {
         downloadTasks[task] = song
         downloadProgress[task.taskIdentifier] = 0
         task.resume()
-        isDownloading = true
+        Task { @MainActor in
+            isDownloading = true
+        }
     }
     
     func removeDownload(_ download: Song) {
@@ -98,8 +100,8 @@ class DownloadService: NSObject, ObservableObject, URLSessionDownloadDelegate {
     
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         let progress = Double(totalBytesWritten) / Double(totalBytesExpectedToWrite)
-        downloadProgress[downloadTask.taskIdentifier] = progress
         DispatchQueue.main.async {
+            self.downloadProgress[downloadTask.taskIdentifier] = progress
             self.averageDownloadProgress = self.downloadProgress.values.reduce(0, +) / Double(self.downloadProgress.count)
         }
     }
