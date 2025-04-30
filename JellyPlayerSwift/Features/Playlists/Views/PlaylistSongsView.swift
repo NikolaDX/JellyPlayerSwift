@@ -88,7 +88,7 @@ struct PlaylistSongsView: View {
                 
                 Menu("Sort by") {
                     Picker("Sort by", selection: $viewModel.selectedSortOption) {
-                        Text("Default").tag("Default")
+                        Text("Playlist order").tag("PlaylistOrder")
                         Text("Name").tag("Name")
                         Text("Album").tag("Album")
                         Text("Artist").tag("Artist")

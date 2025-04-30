@@ -25,10 +25,12 @@ class PlaybackService {
     private var playbackObserverToken: Any?
     private var playerItemStatusObserver: NSKeyValueObservation?
     private var queue: [Song] = []
+    private var defaultQueue: [Song] = []
     private var currentIndex: Int = 0
+    private var queueShuffled: Bool = UserDefaults.standard.bool(forKey: shuffleKey)
     private var cancellables = Set<AnyCancellable>()
     private var isShuffleEnabled: Bool = true
-    private var repeatMode: RepeatMode = .none
+    private var repeatMode: RepeatMode = RepeatMode(rawValue: UserDefaults.standard.string(forKey: repeatKey) ?? "None") ?? .none
     
     private let playSongDebouncer = DebounceService(delay: 0.2)
     
@@ -166,6 +168,9 @@ class PlaybackService {
                     self?.currentSong = song
                     self?.isPlaying = true
                     self?.isShuffleEnabled = true
+                    if ((self?.queueShuffled) != nil) {
+                        self?.shuffleQueue()
+                    }
                 }
             }
         }
@@ -183,9 +188,11 @@ class PlaybackService {
         guard !songsToPlay.isEmpty else { return }
         
         flushQueue()
+        defaultQueue = []
         
         for s in songsToPlay {
             queue.append(s)
+            defaultQueue.append(s)
             if (s == song) {
                 currentIndex = songsToPlay.firstIndex(of: song)!
             }
@@ -234,10 +241,27 @@ class PlaybackService {
 
     func shuffleQueue() {
         guard isShuffleEnabled else { return }
-        
-        queue.shuffle()
-        if let currentId = currentSong?.Id, let index = queue.firstIndex(where: { $0.Id == currentId }) {
-            queue.swapAt(currentIndex, index)
+        queueShuffled.toggle()
+        UserDefaults.standard.set(queueShuffled, forKey: shuffleKey)
+        if queueShuffled {
+            queue.shuffle()
+            for index in queue.indices {
+                if queue[index].Id == currentSong?.Id {
+                    queue.swapAt(0, index)
+                    currentIndex = 0
+                    return
+                }
+            }
+        } else {
+            if !defaultQueue.isEmpty {
+                queue = defaultQueue
+                for index in queue.indices {
+                    if queue[index].Id == currentSong?.Id {
+                        currentIndex = index
+                        return
+                    }
+                }
+            }
         }
     }
 
@@ -303,11 +327,16 @@ class PlaybackService {
         repeatMode
     }
     
+    func getQueueShuffled() -> Bool {
+        queueShuffled
+    }
+    
     func changeQueueMode() {
         let allCases = RepeatMode.allCases
         if let index = allCases.firstIndex(of: repeatMode) {
             let nextIndex = (index + 1) % allCases.count
             repeatMode = allCases[nextIndex]
+            UserDefaults.standard.set(repeatMode.rawValue, forKey: repeatKey)
         }
     }
     

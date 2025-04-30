@@ -10,3 +10,5 @@ import Foundation
 let serverKey = "serverUrl"
 let userKey = "userId"
 let accessKey = "accessToken"
+let repeatKey = "repeatMode"
+let shuffleKey = "shuffleMode"

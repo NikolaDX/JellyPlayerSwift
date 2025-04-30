@@ -90,7 +90,7 @@ struct FullMusicPlayerView: View {
                             falseLabel: Image(systemName: "play.circle.fill")) {
                                 viewModel.togglePlayPause()
                             }
-                            .font(.system(size: buttonSize * 2))
+                            .font(.system(size: buttonSize * 2.2))
                         
                         IconButton(
                             icon: Image(systemName: "forward.fill")) {
@@ -99,10 +99,8 @@ struct FullMusicPlayerView: View {
                     }
                     .font(.system(size: buttonSize))
                     
-                    HStack(alignment: .bottom, spacing: buttonSize * 1.5) {
-                        IconButton(icon: Image(systemName: "dice")) {
-                            viewModel.shuffleQueue()
-                        }
+                    HStack(alignment: .bottom, spacing: buttonSize * 1.2) {
+                        ShuffleQueueButton()
                         
                         RepeatModeButton()
                         
@@ -118,7 +116,7 @@ struct FullMusicPlayerView: View {
                             viewModel.toggleQueue()
                         }
                     }
-                    .font(.system(size: buttonSize))
+                    .font(.system(size: buttonSize * 1.2))
                 }
             }
             .padding()

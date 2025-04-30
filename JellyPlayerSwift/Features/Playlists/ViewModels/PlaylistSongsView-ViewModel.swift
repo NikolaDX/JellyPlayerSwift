@@ -17,7 +17,7 @@ extension PlaylistSongsView {
             self.playlist = playlist
         }
         
-        @Published var selectedSortOption: String = "Default"
+        @Published var selectedSortOption: String = "PlaylistOrder"
         @Published var selectedSortOrder: String = "Ascending"
         @Published var filterText: String = ""
         
@@ -33,7 +33,7 @@ extension PlaylistSongsView {
             let sorted: [Song]
             
             switch selectedSortOption {
-            case "Default":
+            case "PlaylistOrder":
                 sorted = songs
             case "Name":
                 sorted = songs.sorted { $0.Name < $1.Name }
