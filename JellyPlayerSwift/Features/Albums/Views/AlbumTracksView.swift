@@ -31,8 +31,11 @@ struct AlbumTracksView: View {
                         Text(viewModel.album.AlbumArtist)
                             .foregroundStyle(.secondary)
                             .font(.headline)
-                            .padding(.bottom, spaceBetween)
+                            
                     }
+                    
+                    Subheadline("\(viewModel.album.PremiereDate?.prefix(4) ?? "")")
+                        .padding(.bottom, spaceBetween)
                     
                     HStack(spacing: 20) {
                         NiceIconButton("Play", buttonImage: "play.fill") {
@@ -67,5 +70,5 @@ struct AlbumTracksView: View {
 
 #Preview {
     @Previewable @Namespace var albumViewAnimation
-    AlbumTracksView(album: Album(Id: "id", Name: "Name", AlbumArtist: "Artist", AlbumArtists: []))
+    AlbumTracksView(album: Album(Id: "id", Name: "Name", AlbumArtist: "Artist", AlbumArtists: [], DateCreated: "", PremiereDate: ""))
 }

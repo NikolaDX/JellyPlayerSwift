@@ -20,16 +20,6 @@ extension ArtistsView {
             }
         }
         
-        var artistsByLetter: [String: [Artist]] {
-            Dictionary(grouping: filteredArtists) { artist in
-                String(artist.Name.prefix(1).uppercased())
-            }
-        }
-        
-        var sortedLetters: [String] {
-            artistsByLetter.keys.sorted()
-        }
-        
         func fetchArtists() {
             let artistsService = ArtistsService()
             Task { @MainActor in

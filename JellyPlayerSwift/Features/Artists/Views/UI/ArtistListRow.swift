@@ -15,17 +15,11 @@ struct ArtistListRow: View {
     }
     
     var body: some View {
-        VStack {
-            HStack {
-                ArtistImage(artist: artist)
-                Headline(artist.Name)
-                Spacer()
-                Image(systemName: "chevron.right")
-            }
-            
-            Divider()
+        HStack {
+            ArtistImage(artist: artist)
+            Headline(artist.Name)
+            Spacer()
         }
-        .padding(.horizontal)
     }
 }
 

@@ -18,12 +18,9 @@ struct ArtistHeader: View {
     }
     
     var body: some View {
-        KFImage(artist.coverUrl)
-            .resizable()
-            .overlay(Color.black.opacity(0.3))
-            .stretchy()
-            .overlay(ArtistTitleOverlay(artistName: artist.Name), alignment: .bottomLeading)
-            .frame(height: UIScreen.main.bounds.height / frameHeight)
+        Cover(url: artist.coverUrl)
+            .clipShape(.rect(cornerRadius: 10))
+            .padding()
     }
 }
 

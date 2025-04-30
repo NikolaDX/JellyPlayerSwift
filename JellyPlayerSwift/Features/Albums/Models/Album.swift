@@ -16,6 +16,8 @@ struct Album: Codable, Hashable {
     let Name: String
     let AlbumArtist: String
     let AlbumArtists: [Artist]
+    let DateCreated: String?
+    let PremiereDate: String?
     
     var coverUrl: URL? {
         if let serverUrl = UserDefaults.standard.string(forKey: serverKey) {

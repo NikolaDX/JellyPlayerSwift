@@ -25,7 +25,7 @@ class AlbumService {
     func fetchAlbums() async -> [Album] {
         if let data = await jellyfinService.fetchItems(queryItems: [
             URLQueryItem(name: "IncludeItemTypes", value: "MusicAlbum"),
-            URLQueryItem(name: "Fields", value: "Genres,AlbumArtistIds,AlbumArtists"),
+            URLQueryItem(name: "Fields", value: "Genres,AlbumArtistIds,AlbumArtists,DateCreated"),
             URLQueryItem(name: "Recursive", value: "true"),
             URLQueryItem(name: "SortBy", value: "Name"),
             URLQueryItem(name: "SortOrder", value: "Ascending")

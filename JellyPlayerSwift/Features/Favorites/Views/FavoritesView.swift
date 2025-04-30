@@ -11,7 +11,7 @@ struct FavoritesView: View {
     @State private var viewModel = ViewModel()
     
     var body: some View {
-        SongsView(songs: $viewModel.favoriteSongs)
+        SongsView(songs: viewModel.favoriteSongs)
             .navigationTitle("Favorites")
             .task {
                 viewModel.fetchSongs()

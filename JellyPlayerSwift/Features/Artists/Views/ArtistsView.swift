@@ -11,28 +11,17 @@ struct ArtistsView: View {
     @State private var viewModel = ViewModel()
     
     var body: some View {
-        ScrollView {
-            LazyVStack(alignment: .leading, spacing: 16) {
-                ForEach(viewModel.sortedLetters, id: \.self) { letter in
-                    Section(header: Headline(letter).padding(.leading)) {
-                        LazyVStack(alignment: .leading, spacing: 20) {
-                            ForEach(viewModel.artistsByLetter[letter] ?? [], id: \.Id) { artist in
-                                NavigationLink(destination: ArtistDetailsView(artist: artist)) {
-                                    ArtistListRow(artist: artist)
-                                        .padding(.horizontal)
-                                }
-                                .foregroundStyle(.primary)
-                                .contextMenu {
-                                    ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
-                                        viewModel.generateInsantMix(artistId: artist.Id)
-                                    }
-                                }
-                            }
-                        }
-                    }
+        List(viewModel.filteredArtists, id: \.Id) { artist in
+            NavigationLink(destination: ArtistDetailsView(artist: artist)) {
+                ArtistListRow(artist: artist)
+                    .padding(.horizontal)
+            }
+            .foregroundStyle(.primary)
+            .contextMenu {
+                ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
+                    viewModel.generateInsantMix(artistId: artist.Id)
                 }
             }
-            .padding(.top)
         }
         .navigationTitle("Artists")
         .searchable(text: $viewModel.filterText, prompt: "Search for an artist...")

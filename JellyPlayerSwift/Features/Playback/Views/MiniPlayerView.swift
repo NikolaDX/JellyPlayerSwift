@@ -58,7 +58,7 @@ struct MiniPlayerView: View {
                                 viewModel.previousSong()
                                 dragOffset = 0
                             }
-                        } else if verticalAmount < -50 {
+                        } else if verticalAmount < -20 {
                             withAnimation(.easeInOut) {
                                 viewModel.showingPlayer = true
                                 dragOffset = 0

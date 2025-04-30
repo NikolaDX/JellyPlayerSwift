@@ -11,51 +11,91 @@ struct AlbumsGridView: View {
     let albums: [Album]
     @Namespace private var albumViewAnimation
     @State private var isDragging: Bool = false
+    @State private var filterText: String = ""
+    @State private var selectedSortOption: String = "Name"
+    @State private var selectedSortOrder: String = "Ascending"
     
-    private var albumsByLetter: [String: [Album]] {
-        Dictionary(grouping: albums) { album in
-            String(album.Name.prefix(1).uppercased())
+    private var filteredAlbums: [Album] {
+        filterText.isEmpty ? sortedAlbums : sortedAlbums.filter {
+            $0.Name.localizedCaseInsensitiveContains(filterText) ||
+            $0.AlbumArtist.localizedCaseInsensitiveContains(filterText)
         }
     }
     
-    private var sortedLetters: [String] {
-        albumsByLetter.keys.sorted()
+    private var sortedAlbums: [Album] {
+        let sorted: [Album]
+        
+        switch selectedSortOption {
+        case "Name":
+            sorted = albums.sorted { $0.Name < $1.Name }
+        case "Artist":
+            sorted = albums.sorted { $0.AlbumArtist < $1.AlbumArtist }
+        case "DateAdded":
+            sorted = albums.sorted { $0.DateCreated ?? "" < $1.DateCreated ?? "" }
+        case "DateReleased":
+            sorted = albums.sorted { $0.PremiereDate ?? "" < $1.PremiereDate ?? "" }
+        default:
+            sorted = albums
+        }
+    
+        
+        if selectedSortOrder == "Descending" {
+            return sorted.reversed()
+        } else {
+            return sorted
+        }
     }
     
     var body: some View {
-        ScrollView {            
-            ForEach(sortedLetters, id: \.self) { letter in
-                LazyVStack(alignment: .leading) {
-                    Section {
-                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))]) {
-                            ForEach(albumsByLetter[letter] ?? [], id: \.Id) { album in
-                                NavigationLink {
-                                    AlbumTracksView(album: album)
-                                        .navigationTransition(.zoom(sourceID: album.Id, in: albumViewAnimation))
-                                } label: {
-                                    AlbumCard(album: album)
-                                        .matchedTransitionSource(id: album.Id, in: albumViewAnimation)
-                                }
-                                .foregroundStyle(.primary)
-                                .contextMenu {
-                                    ContextButton(isDestructive: false, text: "Insant mix", systemImage: "safari") {
-                                        AlbumService().generateAndPlayInstantMix(albumId: album.Id)
-                                    }
-                                    
-                                    ContextButton(isDestructive: false, text: "Download album", systemImage: "arrow.down.circle") {
-                                        AlbumService().downloadAlbum(albumId: album.Id)
-                                    }
-                                }
-                            }
+        ScrollView {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))]) {
+                ForEach(filteredAlbums, id: \.Id) { album in
+                    NavigationLink {
+                        AlbumTracksView(album: album)
+                            .navigationTransition(.zoom(sourceID: album.Id, in: albumViewAnimation))
+                    } label: {
+                        AlbumCard(album: album)
+                            .matchedTransitionSource(id: album.Id, in: albumViewAnimation)
+                    }
+                    .foregroundStyle(.primary)
+                    .contextMenu {
+                        ContextButton(isDestructive: false, text: "Insant mix", systemImage: "safari") {
+                            AlbumService().generateAndPlayInstantMix(albumId: album.Id)
                         }
-                    } header: {
-                        Headline(letter)
-                            .padding(.leading)
+                        
+                        ContextButton(isDestructive: false, text: "Download album", systemImage: "arrow.down.circle") {
+                            AlbumService().downloadAlbum(albumId: album.Id)
+                        }
                     }
                 }
             }
             .padding()
         }
+        .searchable(text: $filterText, prompt: "Search for an album...")
+        .toolbar {
+            Menu("Sort by", systemImage: "arrow.up.arrow.down") {
+                Menu("Sort order") {
+                    Picker("Sort order", selection: $selectedSortOrder) {
+                        Text("Ascending").tag("Ascending")
+                        Text("Descending").tag("Descending")
+                    }
+                }
+                
+                Menu("Sort by") {
+                    Picker("Sort by", selection: $selectedSortOption) {
+                        Text("Name").tag("Name")
+                        Text("Artist").tag("Artist")
+                        Text("Date added").tag("DateAdded")
+                        Text("Date released").tag("DateReleased")
+                    }
+                }
+            }
+        }
+    }
+    
+    private func offsetY(_ proxy: GeometryProxy) -> CGFloat {
+        let minY = proxy.frame(in: .scrollView(axis: .vertical)).minY
+        return minY > 0 ? 0 : -minY
     }
 }
 

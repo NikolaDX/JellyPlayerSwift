@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SongsView: View {
-    @Binding var songs: [Song]
+    let songs: [Song]
     
     @State private var selectedSortOption: String = "Name"
     @State private var selectedSortOrder: String = "Ascending"
@@ -60,14 +60,12 @@ struct SongsView: View {
                             ContextButton(isDestructive: true, text: "Remove from favorites", systemImage: "star.slash") {
                                 Task { @MainActor in
                                     await FavoritesService().removeFromFavorites(song: song)
-                                    refreshSongList(song: song)
                                 }
                             }
                         } else {
                             ContextButton(isDestructive: false, text: "Add to favorites", systemImage: "star") {
                                 Task { @MainActor in
                                     await FavoritesService().addSongToFavorites(song: song)
-                                    refreshSongList(song: song)
                                 }
                             }
                         }
@@ -143,17 +141,8 @@ struct SongsView: View {
         }
     }
     
-    
-    func refreshSongList(song: Song) {
-        if let index = songs.firstIndex(where: {$0.Id == song.Id}) {
-            songs.remove(at: index)
-            songs.insert(song, at: index)
-        }
-    }
-    
 }
 
 #Preview {
-    @Previewable @State var songs: [Song] = []
-    SongsView(songs: $songs)
+    SongsView(songs: [])
 }

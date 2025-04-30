@@ -15,26 +15,29 @@ struct ArtistDetailsView: View {
     }
     
     var body: some View {
-        ScrollView {
-            ArtistHeader(artist: viewModel.artist)
-            HStack(spacing: 20) {
-                NiceIconButton("Play", buttonImage: "play.fill") {
-                    Task {
-                        await viewModel.playArtist()
+        GeometryReader { proxy in
+            ScrollView {
+                ArtistHeader(artist: viewModel.artist)
+                    .frame(maxHeight: proxy.size.height / 1.5)
+                HStack(spacing: 20) {
+                    NiceIconButton("Play", buttonImage: "play.fill") {
+                        Task {
+                            await viewModel.playArtist()
+                        }
+                    }
+                    
+                    NiceIconButton("Shuffle", buttonImage: "shuffle") {
+                        Task {
+                            await viewModel.shuffleArtist()
+                        }
                     }
                 }
+                .padding()
                 
-                NiceIconButton("Shuffle", buttonImage: "shuffle") {
-                    Task {
-                        await viewModel.shuffleArtist()
-                    }
-                }
+                AlbumsGridView(albums: viewModel.artistAlbums)
             }
-            .padding(20)
-            
-            AlbumsGridView(albums: viewModel.artistAlbums)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .navigationTitle(viewModel.artist.Name)
         .task {
             viewModel.fetchArtistAlbums()
         }

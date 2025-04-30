@@ -37,5 +37,5 @@ struct AlbumCard: View {
 
 #Preview {
     @Previewable @Namespace var albumNamespace
-    AlbumCard(album: Album(Id: "id", Name: "Name", AlbumArtist: "Artist", AlbumArtists: []))
+    AlbumCard(album: Album(Id: "id", Name: "Name", AlbumArtist: "Artist", AlbumArtists: [], DateCreated: "", PremiereDate: ""))
 }

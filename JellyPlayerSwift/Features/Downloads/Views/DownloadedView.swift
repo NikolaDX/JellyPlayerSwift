@@ -11,7 +11,7 @@ struct DownloadedView: View {
     @ObservedObject var downloadService: DownloadService
     
     var body: some View {
-        SongsView(songs: $downloadService.downloads)
+        SongsView(songs: downloadService.downloads)
             .navigationTitle("Downloaded")
     }
 }

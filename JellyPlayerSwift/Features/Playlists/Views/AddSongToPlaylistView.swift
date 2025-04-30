@@ -18,10 +18,8 @@ struct AddSongToPlaylistView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 15) {
-                Heading("Add song to a playlist")
-                
+        NavigationStack {
+            List {
                 if viewModel.isLoading {
                     ProgressView()
                 }
@@ -29,23 +27,22 @@ struct AddSongToPlaylistView: View {
                 if let error = viewModel.errorMessage {
                     ErrorText(error)
                 }
-                
+            
                 ForEach(viewModel.playlists, id: \.Id) { playlist in
                     PlaylistRow(playlist)
                         .onTapGesture {
                             viewModel.addSongToPlaylist(songId: song.Id, playlistId: playlist.Id)
                         }
-                    Divider()
                 }
             }
-            .padding(20)
-        }
-        .task {
-            viewModel.fetchPlaylists()
-        }
-        .alert("Adding successful!", isPresented: $viewModel.showingSuccessMessage) {
-            Button("Great!", role: .cancel) {
-                dismiss()
+            .task {
+                viewModel.fetchPlaylists()
+            }
+            .navigationTitle("Add song to a playlist")
+            .alert("Adding successful!", isPresented: $viewModel.showingSuccessMessage) {
+                Button("Great!", role: .cancel) {
+                    dismiss()
+                }
             }
         }
     }
