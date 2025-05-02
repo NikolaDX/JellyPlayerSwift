@@ -16,15 +16,22 @@ struct SettingsView: View {
                 VStack(alignment: .leading, spacing: 15) {
                     Heading("Server setup")
                     InputField(text: $viewModel.serverText, censored: false, placeholder: "Server URL")
-                    
                     NiceButton("Set server") {
-                        viewModel.showingLogin = true
+                        Task { @MainActor in
+                            await viewModel.setServerProcedure()
+                        }
                     }
-                    
                 }
                 .navigationTitle("Settings")
                 .sheet(isPresented: $viewModel.showingLogin) {
                     AuthenticationView(serverUrl: viewModel.serverText)
+                        .presentationDetents([.medium])
+                        .presentationDragIndicator(.visible)
+                }
+                .alert("Server invalid", isPresented: $viewModel.showingServerInvalid) {
+                    Button("Ok") { }
+                } message: {
+                    Text("The URL you provided is not a valid Jellyfin server URL.")
                 }
                 .padding(20)
             }

@@ -207,4 +207,31 @@ class JellyfinService {
         
         let (_, _) = try await URLSession.shared.data(for: request)
     }
+    
+    func isValidJellyfinServer(_ serverURL: String) async -> Bool {
+        guard let url = URL(string: serverURL + "/System/Info/Public") else {
+            return false
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.timeoutInterval = 5
+
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                return false
+            }
+
+            if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+               json["ServerName"] != nil, json["Version"] != nil {
+                return true
+            } else {
+                return false
+            }
+        } catch {
+            return false
+        }
+    }
 }

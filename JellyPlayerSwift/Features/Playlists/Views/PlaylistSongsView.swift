@@ -8,10 +8,14 @@
 import SwiftUI
 
 struct PlaylistSongsView: View {
-    @ObservedObject private var viewModel: ViewModel
+    @State private var viewModel: ViewModel
     @State private var showingAddToPlaylist: Bool = false
     @State private var showingAddSong: Bool = false
     @State private var songToAdd: Song? = nil
+    @State private var songToRemove: Song? = nil
+    @State private var showingRemoveDownloadAlert: Bool = false
+    @State private var songToRemoveFromPlaylist: Song? = nil
+    @State private var showingRemoveFromPlaylist: Bool = false
     
     init(playlist: Playlist) {
         viewModel = ViewModel(playlist: playlist)
@@ -26,7 +30,8 @@ struct PlaylistSongsView: View {
                     SongRow(song)
                         .contextMenu {
                             ContextButton(isDestructive: true, text: "Remove from playlist", systemImage: "trash") {
-                                viewModel.removeSongsFromPlaylist(songIds: [song.Id], playlistId: viewModel.playlist.Id)
+                                songToRemoveFromPlaylist = song
+                                showingRemoveFromPlaylist = true
                             }
                             
                             if song.UserData.IsFavorite {
@@ -41,7 +46,8 @@ struct PlaylistSongsView: View {
                             
                             if song.localFilePath != nil {
                                 ContextButton(isDestructive: true, text: "Remove download", systemImage: "trash") {
-                                    viewModel.removeDownload(song: song)
+                                    songToRemove = song
+                                    showingRemoveDownloadAlert = true
                                 }
                             } else {
                                 ContextButton(isDestructive: false, text: "Download", systemImage: "arrow.down.circle") {
@@ -113,6 +119,22 @@ struct PlaylistSongsView: View {
         }
         .sheet(isPresented: $showingAddSong) {
             AddSongToPlaylistView(songToAdd!)
+        }
+        .alert("Remove download", isPresented: $showingRemoveDownloadAlert, presenting: songToRemove) { song in
+            Button("Remove", role: .destructive) {
+                viewModel.removeDownload(song: song)
+            }
+            Button("Cancel", role: .cancel) { }
+        } message: { song in
+            Text("Are you sure you want to remove the download for \"\(song.Name)\"?")
+        }
+        .alert("Remove from playlist", isPresented: $showingRemoveFromPlaylist, presenting: songToRemoveFromPlaylist) { song in
+            Button("Remove", role: .destructive) {
+                viewModel.removeSongsFromPlaylist(songIds: [song.Id], playlistId: viewModel.playlist.Id)
+            }
+            Button("Cancel", role: .cancel) { }
+        } message: { song in
+            Text("Are you sure you want to remove \"\(song.Name)\" from playlist?")
         }
         .task {
             viewModel.fetchSongs()

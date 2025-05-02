@@ -8,8 +8,9 @@
 import SwiftUI
 
 extension PlaylistSongsView {
-    class ViewModel: ObservableObject {
-        @Published var songs: [Song] = []
+    @Observable
+    class ViewModel {
+        var songs: [Song] = []
         
         let playlist: Playlist
         
@@ -17,9 +18,9 @@ extension PlaylistSongsView {
             self.playlist = playlist
         }
         
-        @Published var selectedSortOption: String = "PlaylistOrder"
-        @Published var selectedSortOrder: String = "Ascending"
-        @Published var filterText: String = ""
+        var selectedSortOption: String = "PlaylistOrder"
+        var selectedSortOrder: String = "Ascending"
+        var filterText: String = ""
         
         var filteredSongs: [Song] {
             filterText.isEmpty ? sortedSongs : sortedSongs.filter {
@@ -96,7 +97,6 @@ extension PlaylistSongsView {
             let favoritesService = FavoritesService()
             Task { @MainActor in
                 await favoritesService.addSongToFavorites(song: song)
-                objectWillChange.send()
             }
         }
         
@@ -104,7 +104,6 @@ extension PlaylistSongsView {
             let favoritesService = FavoritesService()
             Task { @MainActor in
                 await favoritesService.removeFromFavorites(song: song)
-                objectWillChange.send()
             }
         }
         

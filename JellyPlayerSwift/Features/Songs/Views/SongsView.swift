@@ -15,6 +15,8 @@ struct SongsView: View {
     @State private var filterText: String = ""
     @State private var showingAddToPlaylist: Bool = false
     @State private var songToAdd: Song? = nil
+    @State private var songToRemove: Song? = nil
+    @State private var showingRemoveDownloadAlert: Bool = false
     
     private var filteredSongs: [Song] {
         filterText.isEmpty ? sortedSongs : sortedSongs.filter {
@@ -72,7 +74,8 @@ struct SongsView: View {
                         
                         if song.localFilePath != nil {
                             ContextButton(isDestructive: true, text: "Remove download", systemImage: "trash") {
-                                DownloadService.shared.removeDownload(song)
+                                songToRemove = song
+                                showingRemoveDownloadAlert = true
                             }
                         } else {
                             ContextButton(isDestructive: false, text: "Download", systemImage: "arrow.down.circle") {
@@ -138,6 +141,14 @@ struct SongsView: View {
                     PlaybackService.shared.playAndBuildQueue(songsToPlay[0], songsToPlay: songsToPlay)
                 }
             }
+        }
+        .alert("Remove download", isPresented: $showingRemoveDownloadAlert, presenting: songToRemove) { song in
+            Button("Remove", role: .destructive) {
+                DownloadService.shared.removeDownload(song)
+            }
+            Button("Cancel", role: .cancel) { }
+        } message: { song in
+            Text("Are you sure you want to remove the download for \"\(song.Name)\"?")
         }
     }
     
