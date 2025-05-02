@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        DownloadProgressView(downloadService: DownloadService.shared)
+        DownloadProgressView()
         TabsScreen()
         .safeAreaInset(edge: .bottom) {
             VStack {

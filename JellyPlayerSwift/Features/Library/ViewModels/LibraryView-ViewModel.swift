@@ -24,7 +24,7 @@ extension LibraryView {
             LibraryOption(title: "Songs", iconName: "music.note", viewToShow: AnyView(SongsLibraryView())),
             LibraryOption(title: "Genres", iconName: "guitars", viewToShow: AnyView(GenresView())),
             LibraryOption(title: "Favorites", iconName: "star", viewToShow: AnyView(FavoritesView())),
-            LibraryOption(title: "Downloaded", iconName: "arrow.down.circle", viewToShow: AnyView(DownloadedView(downloadService: DownloadService.shared)))
+            LibraryOption(title: "Downloaded", iconName: "arrow.down.circle", viewToShow: AnyView(DownloadedView()))
         ]
     }
 }

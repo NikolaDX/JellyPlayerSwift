@@ -2,14 +2,14 @@
 //  DownloadedView.swift
 //  JellyPlayerSwift
 //
-//  Created by Nikola Ristic on 4/24/25.
+//  Created by Nikola Ristic on 5/2/25.
 //
 
 import SwiftUI
 
 struct DownloadedView: View {
-    @ObservedObject var downloadService: DownloadService
-    
+    @ObservedObject var downloadService = DownloadService.shared
+        
     var body: some View {
         SongsView(songs: downloadService.downloads)
             .navigationTitle("Downloaded")
@@ -17,5 +17,5 @@ struct DownloadedView: View {
 }
 
 #Preview {
-    DownloadedView(downloadService: DownloadService.shared)
+    DownloadedView()
 }

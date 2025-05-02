@@ -107,27 +107,27 @@ class PlaybackService {
     private func setupRemoteControls() {
         let remoteCommandCenter = MPRemoteCommandCenter.shared()
         
-        remoteCommandCenter.playCommand.addTarget { event in
+        remoteCommandCenter.playCommand.addTarget { _ in
             self.play()
             return .success
         }
         
-        remoteCommandCenter.pauseCommand.addTarget { event in
+        remoteCommandCenter.pauseCommand.addTarget { _ in
             self.pause()
             return .success
         }
         
-        remoteCommandCenter.togglePlayPauseCommand.addTarget { event in
+        remoteCommandCenter.togglePlayPauseCommand.addTarget { _ in
             self.togglePlayPause()
             return .success
         }
         
-        remoteCommandCenter.nextTrackCommand.addTarget { event in
+        remoteCommandCenter.nextTrackCommand.addTarget { _ in
             self.next()
             return .success
         }
         
-        remoteCommandCenter.previousTrackCommand.addTarget { event in
+        remoteCommandCenter.previousTrackCommand.addTarget { _ in
             self.previous()
             return .success
         }

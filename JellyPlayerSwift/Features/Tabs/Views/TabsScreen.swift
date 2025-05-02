@@ -11,8 +11,7 @@ struct TabsScreen: View {
     var body: some View {
         TabView {
             Tab("Home", systemImage: "house.fill") {
-                AlbumsView()
-                    .modifier(MiniPlayerModifier())
+                HomeScreenView()
             }
             
             Tab("Library", systemImage: "music.note") {

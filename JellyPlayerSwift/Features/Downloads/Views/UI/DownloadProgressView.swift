@@ -1,14 +1,14 @@
 //
-//  DownloadProgress.swift
+//  DownloadProgressView.swift
 //  JellyPlayerSwift
 //
-//  Created by Nikola Ristic on 4/25/25.
+//  Created by Nikola Ristic on 5/2/25.
 //
 
 import SwiftUI
 
 struct DownloadProgressView: View {
-    @ObservedObject var downloadService: DownloadService
+    @ObservedObject var downloadService = DownloadService.shared
 
     var body: some View {
         if downloadService.isDownloading {
@@ -19,5 +19,5 @@ struct DownloadProgressView: View {
 }
 
 #Preview {
-    DownloadProgressView(downloadService: DownloadService.shared)
+    DownloadProgressView()
 }

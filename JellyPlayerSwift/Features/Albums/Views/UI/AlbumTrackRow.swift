@@ -35,6 +35,7 @@ struct AlbumTrackRow: View {
             
             Divider()
         }
+        .contentShape(Rectangle())
     }
     
     func formatTime(_ time: Int) -> String {
