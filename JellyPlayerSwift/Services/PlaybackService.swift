@@ -27,7 +27,7 @@ class PlaybackService {
     private var queue: [Song] = []
     private var defaultQueue: [Song] = []
     private var currentIndex: Int = 0
-    private var queueShuffled: Bool = UserDefaults.standard.bool(forKey: shuffleKey)
+    private var queueShuffled: Bool = false
     private var cancellables = Set<AnyCancellable>()
     private var isShuffleEnabled: Bool = true
     private var repeatMode: RepeatMode = RepeatMode(rawValue: UserDefaults.standard.string(forKey: repeatKey) ?? "None") ?? .none
@@ -60,7 +60,7 @@ class PlaybackService {
     private func setupBackgroundSession() {
         let audioSession = AVAudioSession.sharedInstance()
         do {
-            try audioSession.setCategory(.playback)
+            try audioSession.setCategory(.playback, mode: .default)
             try audioSession.setActive(true)
         } catch {
             print(error.localizedDescription)
@@ -117,6 +117,11 @@ class PlaybackService {
             return .success
         }
         
+        remoteCommandCenter.togglePlayPauseCommand.addTarget { event in
+            self.togglePlayPause()
+            return .success
+        }
+        
         remoteCommandCenter.nextTrackCommand.addTarget { event in
             self.next()
             return .success
@@ -168,9 +173,6 @@ class PlaybackService {
                     self?.currentSong = song
                     self?.isPlaying = true
                     self?.isShuffleEnabled = true
-                    if ((self?.queueShuffled) != nil) {
-                        self?.shuffleQueue()
-                    }
                 }
             }
         }
@@ -215,7 +217,9 @@ class PlaybackService {
             return
         }
         
+        let songToRemove = queue[index]
         queue.remove(at: index)
+        defaultQueue = defaultQueue.filter { $0 != songToRemove }
         if index <= currentIndex {
             currentIndex = max(0, currentIndex - 1)
         }
@@ -242,7 +246,6 @@ class PlaybackService {
     func shuffleQueue() {
         guard isShuffleEnabled else { return }
         queueShuffled.toggle()
-        UserDefaults.standard.set(queueShuffled, forKey: shuffleKey)
         if queueShuffled {
             queue.shuffle()
             for index in queue.indices {
