@@ -134,7 +134,7 @@ struct PlaylistSongsView: View {
             }
             Button("Cancel", role: .cancel) { }
         } message: { song in
-            Text("Are you sure you want to remove \"\(song.Name)\" from playlist?")
+            Text("Are you sure you want to remove \"\(song.Name)\" from this playlist?")
         }
         .task {
             viewModel.fetchSongs()

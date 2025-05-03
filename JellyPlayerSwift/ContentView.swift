@@ -8,19 +8,29 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject var themeService = ThemeService()
+    
     var body: some View {
-        DownloadProgressView()
-        TabsScreen()
-        .safeAreaInset(edge: .bottom) {
-            VStack {
-                MiniPlayerView()
-                    .padding()
-                    .padding(.bottom,
-                             UIDevice.current.userInterfaceIdiom == .pad
-                             ? 0 : 55
-                    )
-            }
+        Group {
+            DownloadProgressView()
+            TabsScreen()
+                .safeAreaInset(edge: .bottom) {
+                    VStack {
+                        MiniPlayerView()
+                            .padding()
+                            .padding(.bottom,
+                                     UIDevice.current.userInterfaceIdiom == .pad
+                                     ? 0 : 55
+                            )
+                    }
+                }
         }
+        .preferredColorScheme(
+            themeService.selectedMode == .system ? nil :
+                (themeService.selectedMode == .light ? .light : .dark)
+        )
+        .tint(themeService.selectedAccentColor)
+        .environmentObject(themeService)
     }
 }
 

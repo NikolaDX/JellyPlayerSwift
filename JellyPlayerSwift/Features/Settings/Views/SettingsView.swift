@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @EnvironmentObject var themeService: ThemeService
     @State private var viewModel = ViewModel()
     
     var body: some View {
@@ -20,6 +21,36 @@ struct SettingsView: View {
                         Task { @MainActor in
                             await viewModel.setServerProcedure()
                         }
+                    }
+                    
+                    Heading("Appearance")
+                    
+                    Headline("App theme")
+                    Picker("App theme", selection: $themeService.selectedMode) {
+                        ForEach(ThemeMode.allCases) { mode in
+                            Text(mode.rawValue.capitalized).tag(mode)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    
+                    Headline("Accent color")
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 44))], spacing: 12) {
+                        ForEach(themeService.availableAccentColors, id: \.self) { color in
+                            Circle()
+                                .fill(color)
+                                .frame(width: 32, height: 32)
+                                .overlay(
+                                    Circle()
+                                        .stroke(Color.primary, lineWidth: themeService.selectedAccentColor == color ? 3 : 0)
+                                )
+                                .onTapGesture {
+                                    themeService.selectedAccentColor = color
+                                }
+                        }
+                        
+                        ColorPicker("Custom color", selection: $themeService.selectedAccentColor, supportsOpacity: false)
+                            .labelsHidden()
+                            .padding(.top, 10)
                     }
                 }
                 .navigationTitle("Settings")
