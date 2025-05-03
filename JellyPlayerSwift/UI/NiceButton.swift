@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct NiceButton: View {
+    @EnvironmentObject private var themeService: ThemeService
     private var buttonAction: () -> Void
     private var buttonLabel: String
     
@@ -21,7 +22,7 @@ struct NiceButton: View {
             buttonAction()
         } label: {
             Text(buttonLabel)
-                .foregroundStyle(.blue)
+                .foregroundStyle(themeService.selectedAccentColor)
                 .padding(15)
                 .padding(.horizontal, 20)
                 .background(.secondary.opacity(0.2))

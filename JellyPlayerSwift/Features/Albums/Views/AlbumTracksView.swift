@@ -9,10 +9,22 @@ import SwiftUI
 
 struct AlbumTracksView: View {
     @State private var viewModel: ViewModel
+    @State private var songToRemove: Song? = nil
+    @State private var showingRemoveDownloadAlert: Bool = false
+    @State private var songToAdd: Song? = nil
+    @State private var showingAddToPlaylist: Bool = false
+    @StateObject private var favoritesService: FavoritesService
+    @StateObject private var downloadService: DownloadService
     let spaceBetween: Double = 20
     
+    
     init(album: Album) {
-        viewModel = ViewModel(album: album)
+        let favorites = FavoritesService()
+        let downloads = DownloadService.shared
+        
+        _favoritesService = StateObject(wrappedValue: favorites)
+        _downloadService = StateObject(wrappedValue: downloads)
+        viewModel = ViewModel(album: album, favoritesService: favorites, downloadService: downloads)
     }
     
     var body: some View {
@@ -57,10 +69,59 @@ struct AlbumTracksView: View {
                             .onTapGesture {
                                 viewModel.playSong(song)
                             }
+                            .contextMenu {
+                                if song.UserData.IsFavorite {
+                                    ContextButton(isDestructive: true, text: "Remove from favorites", systemImage: "star.slash") {
+                                        viewModel.removeFromFavorites(song)
+                                    }
+                                } else {
+                                    ContextButton(isDestructive: false, text: "Add to favorites", systemImage: "star") {
+                                        viewModel.addToFavorites(song)
+                                    }
+                                }
+                                
+                                if song.localFilePath != nil {
+                                    ContextButton(isDestructive: true, text: "Remove download", systemImage: "trash") {
+                                        songToRemove = song
+                                        showingRemoveDownloadAlert = true
+                                    }
+                                } else {
+                                    ContextButton(isDestructive: false, text: "Download", systemImage: "arrow.down.circle") {
+                                        viewModel.downloadSong(song)
+                                    }
+                                }
+                                
+                                ContextButton(isDestructive: false, text: "Add to playlist", systemImage: "plus.circle") {
+                                    songToAdd = nil
+                                    DispatchQueue.main.async {
+                                        songToAdd = song
+                                    }
+                                }
+                                
+                                ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
+                                    viewModel.generateInstantMix(song)
+                                }
+                            }
                     }
                 }
                 .padding(spaceBetween)
             }
+        }
+        .onChange(of: songToAdd) {
+            if let _ = songToAdd {
+                showingAddToPlaylist = true
+            }
+        }
+        .sheet(isPresented: $showingAddToPlaylist) {
+            AddSongToPlaylistView(songToAdd!)
+        }
+        .alert("Remove download", isPresented: $showingRemoveDownloadAlert, presenting: songToRemove) { song in
+            Button("Remove", role: .destructive) {
+                downloadService.removeDownload(song)
+            }
+            Button("Cancel", role: .cancel) { }
+        } message: { song in
+            Text("Are you sure you want to remove the download for \"\(song.Name)\"?")
         }
         .onAppear {
             viewModel.fetchSongs()

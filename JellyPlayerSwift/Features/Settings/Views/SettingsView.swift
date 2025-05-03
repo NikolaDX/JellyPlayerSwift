@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     @EnvironmentObject var themeService: ThemeService
     @State private var viewModel = ViewModel()
+    @StateObject private var streamQualityService = StreamQualityService.shared
     
     var body: some View {
         NavigationStack {
@@ -50,8 +51,25 @@ struct SettingsView: View {
                         
                         ColorPicker("Custom color", selection: $themeService.selectedAccentColor, supportsOpacity: false)
                             .labelsHidden()
-                            .padding(.top, 10)
                     }
+                    
+                    Heading("Stream quality")
+                    
+                    Headline("Wi-Fi quality")
+                    Picker("Wi-Fi quality", selection: $streamQualityService.selectedWifiQuality) {
+                        ForEach(streamQualityService.availableQualityOptions, id: \.self) { quality in
+                            Text("\(quality) kbps").tag(quality)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    
+                    Headline("Cellular quality")
+                    Picker("Cellular quality", selection: $streamQualityService.selectedCellularQuality) {
+                        ForEach(streamQualityService.availableQualityOptions, id: \.self) { quality in
+                            Text("\(quality) kbps").tag(quality)
+                        }
+                    }
+                    .pickerStyle(.segmented)
                 }
                 .navigationTitle("Settings")
                 .sheet(isPresented: $viewModel.showingLogin) {

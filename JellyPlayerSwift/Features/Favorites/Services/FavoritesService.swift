@@ -7,7 +7,7 @@
 
 import Foundation
 
-class FavoritesService {
+class FavoritesService: ObservableObject {
     private var serverUrl: String? {
         get { return UserDefaults.standard.string(forKey: serverKey) }
     }
@@ -51,6 +51,9 @@ class FavoritesService {
         do {
             try await jellyfinService.addToServer(queryItems: [], path: "FavoriteItems/\(song.Id)")
             song.UserData.IsFavorite = true
+            Task { @MainActor in
+                objectWillChange.send()
+            }
         } catch {
             print("Error adding to favorites: \(error.localizedDescription)")
         }
@@ -60,6 +63,9 @@ class FavoritesService {
         do {
             try await jellyfinService.removeFromServer(queryItems: [], path: "FavoriteItems/\(song.Id)")
             song.UserData.IsFavorite = false
+            Task { @MainActor in
+                objectWillChange.send()
+            }
         } catch {
             print("Error removing from favorites: \(error.localizedDescription)")
         }

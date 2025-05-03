@@ -10,6 +10,9 @@ import SwiftUI
 struct SongsView: View {
     let songs: [Song]
     
+    @StateObject var favoritesService = FavoritesService()
+    @StateObject var downloadService = DownloadService.shared
+    
     @State private var selectedSortOption: String = "Name"
     @State private var selectedSortOrder: String = "Ascending"
     @State private var filterText: String = ""
@@ -61,13 +64,13 @@ struct SongsView: View {
                         if song.UserData.IsFavorite {
                             ContextButton(isDestructive: true, text: "Remove from favorites", systemImage: "star.slash") {
                                 Task { @MainActor in
-                                    await FavoritesService().removeFromFavorites(song: song)
+                                    await favoritesService.removeFromFavorites(song: song)
                                 }
                             }
                         } else {
                             ContextButton(isDestructive: false, text: "Add to favorites", systemImage: "star") {
                                 Task { @MainActor in
-                                    await FavoritesService().addSongToFavorites(song: song)
+                                    await favoritesService.addSongToFavorites(song: song)
                                 }
                             }
                         }
@@ -79,7 +82,7 @@ struct SongsView: View {
                             }
                         } else {
                             ContextButton(isDestructive: false, text: "Download", systemImage: "arrow.down.circle") {
-                                DownloadService.shared.downloadSong(song)
+                                downloadService.downloadSong(song)
                             }
                         }
                         
@@ -144,7 +147,7 @@ struct SongsView: View {
         }
         .alert("Remove download", isPresented: $showingRemoveDownloadAlert, presenting: songToRemove) { song in
             Button("Remove", role: .destructive) {
-                DownloadService.shared.removeDownload(song)
+                downloadService.removeDownload(song)
             }
             Button("Cancel", role: .cancel) { }
         } message: { song in

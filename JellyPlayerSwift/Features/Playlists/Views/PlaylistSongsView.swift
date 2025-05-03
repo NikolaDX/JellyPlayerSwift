@@ -16,9 +16,16 @@ struct PlaylistSongsView: View {
     @State private var showingRemoveDownloadAlert: Bool = false
     @State private var songToRemoveFromPlaylist: Song? = nil
     @State private var showingRemoveFromPlaylist: Bool = false
+    @StateObject private var favoritesService: FavoritesService
+    @StateObject private var downloadService: DownloadService
     
     init(playlist: Playlist) {
-        viewModel = ViewModel(playlist: playlist)
+        let favorites = FavoritesService()
+        let downloads = DownloadService.shared
+        
+        _favoritesService = StateObject(wrappedValue: favorites)
+        _downloadService = StateObject(wrappedValue: downloads)
+        viewModel = ViewModel(playlist: playlist, favoritesService: favorites, downloadService: downloads)
     }
     
     var body: some View {
@@ -149,5 +156,5 @@ struct PlaylistSongsView: View {
 }
 
 #Preview {
-    PlaylistSongsView(playlist: Playlist(Id: "Id", Name: "Name"))
+    PlaylistSongsView(playlist: Playlist(Id: "Id", Name: "Name", DateCreated: ""))
 }

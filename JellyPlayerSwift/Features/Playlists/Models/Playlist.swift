@@ -11,14 +11,16 @@ struct PlaylistResponse: Codable {
     let Items: [Playlist]
 }
 
-class Playlist: Codable {
+class Playlist: Codable, Equatable {
     let Id: String
     let Name: String
+    let DateCreated: String
     var NumberOfSongs: Int?
     
-    init(Id: String, Name: String) {
+    init(Id: String, Name: String, DateCreated: String) {
         self.Id = Id
         self.Name = Name
+        self.DateCreated = DateCreated
     }
     
     var coverUrl: URL? {
@@ -27,5 +29,9 @@ class Playlist: Codable {
         } else {
             return nil
         }
+    }
+    
+    static func ==(lhs: Playlist, rhs: Playlist) -> Bool {
+        lhs.Id == rhs.Id
     }
 }

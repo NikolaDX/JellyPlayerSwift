@@ -38,7 +38,13 @@ class Song: Codable, Equatable {
     
     var streamUrl: URL? {
         if let serverUrl = UserDefaults.standard.string(forKey: serverKey), let accessToken = UserDefaults.standard.string(forKey: accessKey) {
-            return URL(string: "\(serverUrl)/Audio/\(Id)/stream?Static=true&MaxStreamingBitrate=320000&api_key=\(accessToken)")
+            var streamQuality: String = ""
+            if NetworkService.shared.usesWifi {
+                streamQuality = StreamQualityService.shared.selectedWifiQuality
+            } else {
+                streamQuality = StreamQualityService.shared.selectedCellularQuality
+            }
+            return URL(string: "\(serverUrl)/Audio/\(Id)/stream?Static=true&MaxStreamingBitrate=\(streamQuality)000&api_key=\(accessToken)")
         } else {
             return nil
         }

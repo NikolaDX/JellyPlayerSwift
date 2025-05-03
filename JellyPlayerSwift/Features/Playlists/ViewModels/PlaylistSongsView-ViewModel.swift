@@ -12,10 +12,15 @@ extension PlaylistSongsView {
     class ViewModel {
         var songs: [Song] = []
         
+        private var favoritesService: FavoritesService
+        private var downloadService: DownloadService
+        
         let playlist: Playlist
         
-        init(playlist: Playlist) {
+        init(playlist: Playlist, favoritesService: FavoritesService, downloadService: DownloadService) {
             self.playlist = playlist
+            self.favoritesService = favoritesService
+            self.downloadService = downloadService
         }
         
         var selectedSortOption: String = "PlaylistOrder"
@@ -94,25 +99,23 @@ extension PlaylistSongsView {
         }
         
         func addToFavorites(song: Song) {
-            let favoritesService = FavoritesService()
             Task { @MainActor in
                 await favoritesService.addSongToFavorites(song: song)
             }
         }
         
         func removeFromFavorites(song: Song) {
-            let favoritesService = FavoritesService()
             Task { @MainActor in
                 await favoritesService.removeFromFavorites(song: song)
             }
         }
         
         func downloadSong(song: Song) {
-            DownloadService.shared.downloadSong(song)
+            downloadService.downloadSong(song)
         }
         
         func removeDownload(song: Song) {
-            DownloadService.shared.removeDownload(song)
+            downloadService.removeDownload(song)
         }
         
         func generateInstantMix(songId: String) {

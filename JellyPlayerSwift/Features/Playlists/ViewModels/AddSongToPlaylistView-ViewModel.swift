@@ -28,7 +28,11 @@ extension AddSongToPlaylistView {
             let playlistsSerivce = PlaylistsService()
             Task { @MainActor in
                 do {
-                    try await playlistsSerivce.addSongsToPlaylist(songIds: [songId], playlistId: playlistId)
+                    let playlistSongs = await playlistsSerivce.fetchPlaylistSongs(playlistId: playlistId)
+                    
+                    if !playlistSongs.contains(where: { $0.Id == songId }) {
+                        try await playlistsSerivce.addSongsToPlaylist(songIds: [songId], playlistId: playlistId)
+                    }
                     self.showingSuccessMessage = true
                 } catch {
                     self.errorMessage = error.localizedDescription

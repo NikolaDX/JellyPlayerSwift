@@ -88,6 +88,9 @@ class DownloadService: NSObject, ObservableObject, URLSessionDownloadDelegate {
                 }
                 self.downloads.append(song)
                 self.saveDownloads(songs: self.downloads)
+                Task { @MainActor in
+                    self.objectWillChange.send()
+                }
             }
         } catch {
             print("Error moving downloaded file: \(error.localizedDescription)")

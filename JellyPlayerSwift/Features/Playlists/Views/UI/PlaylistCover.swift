@@ -22,5 +22,5 @@ struct PlaylistCover: View {
 }
 
 #Preview {
-    PlaylistCover(Playlist(Id: "Id", Name: "Name"))
+    PlaylistCover(Playlist(Id: "Id", Name: "Name", DateCreated: ""))
 }

@@ -12,6 +12,8 @@ struct PlaylistsView: View {
     @State private var showingPlaylistCreation: Bool = false
     @State private var playlistToRemove: Playlist? = nil
     @State private var showingRemovePlaylist: Bool = false
+    @State private var playlistToRename: Playlist? = nil
+    @State private var showingRenamePlaylist: Bool = false
     
     var body: some View {
         List {
@@ -34,6 +36,13 @@ struct PlaylistsView: View {
                     ContextButton(isDestructive: false, text: "Download playlist", systemImage: "arrow.down.circle") {
                         viewModel.downloadPlaylist(playlistId: playlist.Id)
                     }
+                    
+                    ContextButton(isDestructive: false, text: "Rename playlist", systemImage: "pencil") {
+                        playlistToRename = nil
+                        DispatchQueue.main.async {
+                            playlistToRename = playlist
+                        }
+                    }
                 }
             }
             .onDelete(perform: deleteRows)
@@ -45,6 +54,22 @@ struct PlaylistsView: View {
                 showingPlaylistCreation = true
             }
             
+            Menu("Sort by", systemImage: "arrow.up.arrow.down") {
+                Menu("Sort order") {
+                    Picker("Sort order", selection: $viewModel.selectedSortOrder) {
+                        Text("Ascending").tag("Ascending")
+                        Text("Descending").tag("Descending")
+                    }
+                }
+                
+                Menu("Sort by") {
+                    Picker("Sort by", selection: $viewModel.selectedSortOption) {
+                        Text("Name").tag("Name")
+                        Text("Date created").tag("DateCreated")
+                    }
+                }
+            }
+            
             EditButton()
         }
         .onChange(of: showingPlaylistCreation) { _, newValue in
@@ -52,8 +77,27 @@ struct PlaylistsView: View {
                 viewModel.fetchPlaylists()
             }
         }
+        .onChange(of: playlistToRename) {
+            if let _ = playlistToRename {
+                showingRenamePlaylist = true
+            }
+        }
+        .onChange(of: showingRenamePlaylist) { _, newValue in
+            if !newValue {
+                DispatchQueue.main.async {
+                    viewModel.fetchPlaylists()
+                }
+            }
+        }
         .sheet(isPresented: $showingPlaylistCreation) {
             CreatePlaylistView()
+                .presentationDetents([.medium])
+                .presentationDragIndicator(.visible)
+        }
+        .sheet(isPresented: $showingRenamePlaylist) {
+            RenamePlaylistView(playlistId: playlistToRename!.Id)
+                .presentationDetents([.medium])
+                .presentationDragIndicator(.visible)
         }
         .alert("Remove playlist", isPresented: $showingRemovePlaylist, presenting: playlistToRemove) { playlist in
             Button("Remove", role: .destructive) {

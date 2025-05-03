@@ -13,8 +13,13 @@ extension AlbumTracksView {
         let album: Album
         var songs: [Song] = []
         
-        init(album: Album) {
+        private var favoritesService: FavoritesService
+        private var downloadService: DownloadService
+        
+        init(album: Album, favoritesService: FavoritesService, downloadService: DownloadService) {
             self.album = album
+            self.favoritesService = favoritesService
+            self.downloadService = downloadService
         }
         
         func fetchSongs() {
@@ -37,6 +42,33 @@ extension AlbumTracksView {
             let minutes = Int(time) / 60
             let seconds = Int(time) % 60
             return String(format: "%02d:%02d", minutes, seconds)
+        }
+        
+        func addToFavorites(_ song: Song) {
+            Task { @MainActor in
+                await favoritesService.addSongToFavorites(song: song)
+            }
+        }
+        
+        func removeFromFavorites(_ song: Song) {
+            Task { @MainActor in
+                await favoritesService.removeFromFavorites(song: song)
+            }
+        }
+        
+        func downloadSong(_ song: Song) {
+            downloadService.downloadSong(song)
+        }
+        
+        func removeDownload(_ song: Song) {
+            downloadService.removeDownload(song)
+        }
+        
+        func generateInstantMix(_ song: Song) {
+            Task {
+                let songsToPlay = await SongsService().generateInstantMix(songId: song.Id)
+                PlaybackService.shared.playAndBuildQueue(songsToPlay[0], songsToPlay: songsToPlay)
+            }
         }
     }
 }

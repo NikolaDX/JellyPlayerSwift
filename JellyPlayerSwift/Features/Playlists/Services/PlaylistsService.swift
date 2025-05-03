@@ -25,6 +25,7 @@ class PlaylistsService {
     func fetchPlaylists() async -> [Playlist] {
         if let data = await jellyfinService.fetchItems(queryItems: [
             URLQueryItem(name: "IncludeItemTypes", value: "Playlist"),
+            URLQueryItem(name: "Fields", value: "DateCreated"),
             URLQueryItem(name: "Recursive", value: "true"),
             URLQueryItem(name: "SortBy", value: "Name"),
             URLQueryItem(name: "SortOrder", value: "Ascending")
@@ -71,6 +72,10 @@ class PlaylistsService {
     }
     
     func createPlaylist(playlistName: String) async throws {
+        if playlistName.isEmpty {
+            throw "Playlist name can't be empty!"
+        }
+        
         try await jellyfinService.addToServerWithHttpBody(
             queryItems: [],
             path: "Playlists",
@@ -131,5 +136,16 @@ class PlaylistsService {
         }
     }
     
-    
+    func renamePlaylist(playlistId: String, newName: String) async throws {
+        if newName.isEmpty {
+            throw "Playlist name can't be empty!"
+        }
+        
+        try await jellyfinService.addToServerWithHttpBody(
+            queryItems: [],
+            path: "Playlists/\(playlistId)",
+            httpBody: [
+                "Name": newName
+        ])
+    }
 }

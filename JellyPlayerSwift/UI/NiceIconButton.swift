@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct NiceIconButton: View {
+    @EnvironmentObject private var themeService: ThemeService
     private var buttonAction: () -> Void
     private var buttonLabel: String
     private var buttonImage: String
@@ -23,7 +24,7 @@ struct NiceIconButton: View {
             buttonAction()
         } label: {
             Label(buttonLabel, systemImage: buttonImage)
-                .foregroundStyle(.blue)
+                .foregroundStyle(themeService.selectedAccentColor)
                 .padding(15)
                 .padding(.horizontal, 20)
                 .background(.secondary.opacity(0.2))

@@ -31,5 +31,5 @@ struct PlaylistRow: View {
 }
 
 #Preview {
-    PlaylistRow(Playlist(Id: "Id", Name: "Name"))
+    PlaylistRow(Playlist(Id: "Id", Name: "Name", DateCreated: ""))
 }

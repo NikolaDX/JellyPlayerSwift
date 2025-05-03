@@ -12,10 +12,31 @@ extension PlaylistsView {
     class ViewModel {
         var playlists: [Playlist] = []
         
+        var selectedSortOption: String = "Name"
+        var selectedSortOrder: String = "Ascending"
         var filterText: String = ""
         
+        var sortedPlaylists: [Playlist] {
+            let sorted: [Playlist]
+            
+            switch selectedSortOption {
+            case "Name":
+                sorted = playlists.sorted { $0.Name < $1.Name }
+            case "DateCreated":
+                sorted = playlists.sorted { $0.DateCreated < $1.DateCreated }
+            default:
+                sorted = playlists
+            }
+            
+            if selectedSortOrder == "Descending" {
+                return sorted.reversed()
+            } else {
+                return sorted
+            }
+        }
+        
         var filteredPlaylists: [Playlist] {
-            filterText.isEmpty ? playlists : playlists.filter {
+            filterText.isEmpty ? sortedPlaylists : sortedPlaylists.filter {
                 $0.Name.localizedCaseInsensitiveContains(filterText)
             }
         }
