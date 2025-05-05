@@ -60,6 +60,8 @@ struct SongsView: View {
                 PlaybackService.shared.playAndBuildQueue(song, songsToPlay: sortedSongs)
             } label: {
                 SongRow(song)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel("Song: \(song.Name) by \(song.Artists.joined(separator: ", "))")
                     .contextMenu {
                         if song.UserData.IsFavorite {
                             ContextButton(isDestructive: true, text: "Remove from favorites", systemImage: "star.slash") {
@@ -67,12 +69,14 @@ struct SongsView: View {
                                     await favoritesService.removeFromFavorites(song: song)
                                 }
                             }
+                            .accessibilityHint("Remove this song from favorites")
                         } else {
                             ContextButton(isDestructive: false, text: "Add to favorites", systemImage: "star") {
                                 Task { @MainActor in
                                     await favoritesService.addSongToFavorites(song: song)
                                 }
                             }
+                            .accessibilityHint("Add this song to favorites")
                         }
                         
                         if song.localFilePath != nil {
@@ -80,10 +84,12 @@ struct SongsView: View {
                                 songToRemove = song
                                 showingRemoveDownloadAlert = true
                             }
+                            .accessibilityHint("Remove this song from downloads")
                         } else {
                             ContextButton(isDestructive: false, text: "Download", systemImage: "arrow.down.circle") {
                                 downloadService.downloadSong(song)
                             }
+                            .accessibilityHint("Download this song for offline listening")
                         }
                         
                         ContextButton(isDestructive: false, text: "Add to playlist", systemImage: "plus.circle") {
@@ -92,6 +98,7 @@ struct SongsView: View {
                                 songToAdd = song
                             }
                         }
+                        .accessibilityHint("Add this song to playlist")
                         
                         ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
                             Task {
@@ -99,6 +106,7 @@ struct SongsView: View {
                                 PlaybackService.shared.playAndBuildQueue(songsToPlay[0], songsToPlay: songsToPlay)
                             }
                         }
+                        .accessibilityHint("Create mix based on this song")
                     }
             }
             .foregroundStyle(.primary)
@@ -119,6 +127,7 @@ struct SongsView: View {
                         Text("Ascending").tag("Ascending")
                         Text("Descending").tag("Descending")
                     }
+                    .accessibilityHint("Select sort order")
                 }
                 
                 Menu("Sort by") {
@@ -129,6 +138,7 @@ struct SongsView: View {
                         Text("Date added").tag("DateAdded")
                         Text("Play count").tag("PlayCount")
                     }
+                    .accessibilityHint("Select sort option")
                 }
             }
             
@@ -137,6 +147,8 @@ struct SongsView: View {
                     PlaybackService.shared.playAndBuildQueue(songs[0], songsToPlay: songs)
                 }
             }
+            .accessibilityHint("Play all songs")
+            
             
             IconButton(icon: Image(systemName: "shuffle")) {
                 if !songs.isEmpty {
@@ -144,6 +156,8 @@ struct SongsView: View {
                     PlaybackService.shared.playAndBuildQueue(songsToPlay[0], songsToPlay: songsToPlay)
                 }
             }
+            .accessibilityLabel("Shuffle")
+            .accessibilityHint("Shuffle all songs")
         }
         .alert("Remove download", isPresented: $showingRemoveDownloadAlert, presenting: songToRemove) { song in
             Button("Remove", role: .destructive) {

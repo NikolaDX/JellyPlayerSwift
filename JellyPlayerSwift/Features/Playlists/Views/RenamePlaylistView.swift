@@ -19,6 +19,7 @@ struct RenamePlaylistView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 15) {
                 Heading("New playlist name:")
+                    .accessibilityHint("Enter new playlist name below")
                 
                 InputField(text: $viewModel.newPlaylistName, censored: false, placeholder: "Playlist name")
                 
@@ -26,14 +27,17 @@ struct RenamePlaylistView: View {
                     NiceButton("Rename playlist") {
                         viewModel.renamePlaylist()
                     }
+                    .accessibilityLabel("Attempt to rename this playlist")
                     
                     if viewModel.isLoading {
                         ProgressView()
+                            .accessibilityLabel("Renaming playlist. Please wait...")
                     }
                 }
                 
                 if let error = viewModel.errorMessage {
                     ErrorText(error)
+                        .accessibilityLabel("Error: \(error)")
                 }
                 
             }

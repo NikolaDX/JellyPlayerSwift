@@ -15,12 +15,14 @@ struct ArtistsView: View {
             NavigationLink(destination: ArtistDetailsView(artist: artist)) {
                 ArtistListRow(artist: artist)
                     .padding(.horizontal)
+                    .accessibilityLabel("Artist: \(artist.Name)")
             }
             .foregroundStyle(.primary)
             .contextMenu {
                 ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
                     viewModel.generateInsantMix(artistId: artist.Id)
                 }
+                .accessibilityHint("Create mix based on songs from this artist")
             }
         }
         .navigationTitle("Artists")

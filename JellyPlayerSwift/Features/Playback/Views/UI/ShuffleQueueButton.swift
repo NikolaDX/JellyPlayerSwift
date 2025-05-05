@@ -22,6 +22,7 @@ struct ShuffleQueueButton: View {
                 Image(systemName: "shuffle.circle")
             }
         }
+        .accessibilityLabel("Shuffle mode: \(queueShuffled ? "Shuffled" : "Not shuffled")")
     }
     
     func shuffleQueue() {

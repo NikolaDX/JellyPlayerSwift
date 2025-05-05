@@ -40,15 +40,18 @@ struct PlaylistSongsView: View {
                                 songToRemoveFromPlaylist = song
                                 showingRemoveFromPlaylist = true
                             }
+                            .accessibilityHint("Remove song from this playlist")
                             
                             if song.UserData.IsFavorite {
                                 ContextButton(isDestructive: true, text: "Remove from favorites", systemImage: "star.slash") {
                                     viewModel.removeFromFavorites(song: song)
                                 }
+                                .accessibilityHint("Remove this song from favorites")
                             } else {
                                 ContextButton(isDestructive: false, text: "Add to favorites", systemImage: "star") {
                                     viewModel.addToFavorites(song: song)
                                 }
+                                .accessibilityHint("Add this song to favorites")
                             }
                             
                             if song.localFilePath != nil {
@@ -56,10 +59,12 @@ struct PlaylistSongsView: View {
                                     songToRemove = song
                                     showingRemoveDownloadAlert = true
                                 }
+                                .accessibilityHint("Remove this song from downloads")
                             } else {
                                 ContextButton(isDestructive: false, text: "Download", systemImage: "arrow.down.circle") {
                                     viewModel.downloadSong(song: song)
                                 }
+                                .accessibilityHint("Download this song for offline listening")
                             }
                             
                             ContextButton(isDestructive: false, text: "Add to playlist", systemImage: "plus.circle") {
@@ -68,13 +73,16 @@ struct PlaylistSongsView: View {
                                     songToAdd = song
                                 }
                             }
+                            .accessibilityHint("Add this song to another playlist")
                             
                             ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
                                 viewModel.generateInstantMix(songId: song.Id)
                             }
-                            
+                            .accessibilityHint("Create mix based on this song")
                         }
                 }
+                .accessibilityLabel("Song: \(song.Name) by \(song.Artists.joined(separator: ", "))")
+                .accessibilityHint("Double-tap to play")
                 .foregroundStyle(.primary)
             }
             .onDelete(perform: deleteRows)
@@ -90,6 +98,7 @@ struct PlaylistSongsView: View {
             IconButton(icon: Image(systemName: "plus.circle.fill")) {
                 showingAddToPlaylist = true
             }
+            .accessibilityHint("Add songs to this playlist")
             
             Menu("Sort by", systemImage: "arrow.up.arrow.down") {
                 Menu("Sort order") {
@@ -97,6 +106,7 @@ struct PlaylistSongsView: View {
                         Text("Ascending").tag("Ascending")
                         Text("Descending").tag("Descending")
                     }
+                    .accessibilityHint("Select sort order")
                 }
                 
                 Menu("Sort by") {
@@ -108,18 +118,23 @@ struct PlaylistSongsView: View {
                         Text("Date added").tag("DateAdded")
                         Text("Play count").tag("PlayCount")
                     }
+                    .accessibilityHint("Select sort option")
                 }
             }
             
             IconButton(icon: Image(systemName: "play.fill")) {
                 viewModel.playAll()
             }
+            .accessibilityHint("Play all songs from this playlist")
             
             IconButton(icon: Image(systemName: "shuffle")) {
                 viewModel.shufflePlay()
             }
+            .accessibilityLabel("Shuffle")
+            .accessibilityHint("Shuffle all songs from this playlist")
             
             EditButton()
+                .accessibilityHint("Remove songs from playlist")
         }
         .sheet(isPresented: $showingAddToPlaylist) {
             AddItemsView(playlistId: viewModel.playlist.Id, refreshAction: viewModel.fetchSongs)

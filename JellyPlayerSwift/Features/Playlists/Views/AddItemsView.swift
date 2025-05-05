@@ -22,7 +22,9 @@ struct AddItemsView: View {
         NavigationStack {
             List(viewModel.songs, id: \.Id, selection: $songsSelection) { song in
                 SongRow(song)
+                    .accessibilityLabel("Song: \(song.Name) by \(song.Artists.joined(separator: ", "))")
             }
+            .accessibilityLabel("Songs list")
             .environment(\.editMode, $editMode)
             .navigationTitle("Add songs")
             .toolbar {
@@ -30,6 +32,7 @@ struct AddItemsView: View {
                     viewModel.addSongsToPlaylist(songIds: Array(songsSelection))
                     dismiss()
                 }
+                .accessibilityHint("Add selected songs to this playlist")
             }
         }
         

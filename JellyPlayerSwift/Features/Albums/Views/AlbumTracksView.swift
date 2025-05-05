@@ -34,20 +34,25 @@ struct AlbumTracksView: View {
                     AlbumCover(album: viewModel.album)
                         .frame(maxHeight: proxy.size.height / 2)
                         .padding(.bottom, spaceBetween)
+                        .accessibilityLabel("Album cover")
+                        .accessibilityRemoveTraits(.isImage)
                     
                     Text(viewModel.album.Name)
                         .font(.title)
                         .fontWeight(.bold)
+                        .accessibilityLabel("Album name: \(viewModel.album.Name)")
                     
                     NavigationLink(destination: ArtistDetailsView(artist: viewModel.album.AlbumArtists[0])) {
                         Text(viewModel.album.AlbumArtist)
                             .foregroundStyle(.secondary)
                             .font(.headline)
-                            
                     }
+                    .accessibilityLabel("Artist: \(viewModel.album.AlbumArtist)")
+                    .accessibilityHint("Double-tap to see all albums from this artist")
                     
                     Subheadline("\(viewModel.album.PremiereDate?.prefix(4) ?? "")")
                         .padding(.bottom, spaceBetween)
+                        .accessibilityLabel("Release year: \(viewModel.album.PremiereDate?.prefix(4) ?? "")")
                     
                     HStack(spacing: 20) {
                         NiceIconButton("Play", buttonImage: "play.fill") {
@@ -55,12 +60,15 @@ struct AlbumTracksView: View {
                                 viewModel.playSong(viewModel.songs[0])
                             }
                         }
+                        .accessibilityHint("Play all songs from this album")
                         
                         NiceIconButton("Shuffle", buttonImage: "shuffle") {
                             if (!viewModel.songs.isEmpty) {
                                 viewModel.shufflePlay()
                             }
                         }
+                        .accessibilityLabel("Shuffle")
+                        .accessibilityHint("Shuffle all songs from this album")
                     }
                     .padding(.bottom, spaceBetween)
                     
@@ -69,15 +77,20 @@ struct AlbumTracksView: View {
                             .onTapGesture {
                                 viewModel.playSong(song)
                             }
+                            .accessibilityElement(children: .combine)
+                            .accessibilityLabel("Song: \(song.Name)")
+                            .accessibilityHint("Double-tap to play")
                             .contextMenu {
                                 if song.UserData.IsFavorite {
                                     ContextButton(isDestructive: true, text: "Remove from favorites", systemImage: "star.slash") {
                                         viewModel.removeFromFavorites(song)
                                     }
+                                    .accessibilityHint("Remove this song from favorites")
                                 } else {
                                     ContextButton(isDestructive: false, text: "Add to favorites", systemImage: "star") {
                                         viewModel.addToFavorites(song)
                                     }
+                                    .accessibilityHint("Add this song to favroties")
                                 }
                                 
                                 if song.localFilePath != nil {
@@ -85,10 +98,12 @@ struct AlbumTracksView: View {
                                         songToRemove = song
                                         showingRemoveDownloadAlert = true
                                     }
+                                    .accessibilityHint("Remove this song from downloads")
                                 } else {
                                     ContextButton(isDestructive: false, text: "Download", systemImage: "arrow.down.circle") {
                                         viewModel.downloadSong(song)
                                     }
+                                    .accessibilityHint("Download this song for offline listening")
                                 }
                                 
                                 ContextButton(isDestructive: false, text: "Add to playlist", systemImage: "plus.circle") {
@@ -97,16 +112,19 @@ struct AlbumTracksView: View {
                                         songToAdd = song
                                     }
                                 }
+                                .accessibilityHint("Add this song to playlist")
                                 
                                 ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
                                     viewModel.generateInstantMix(song)
                                 }
+                                .accessibilityHint("Create mix based on this song")
                             }
                     }
                 }
                 .padding(spaceBetween)
             }
         }
+        .clipped()
         .onChange(of: songToAdd) {
             if let _ = songToAdd {
                 showingAddToPlaylist = true

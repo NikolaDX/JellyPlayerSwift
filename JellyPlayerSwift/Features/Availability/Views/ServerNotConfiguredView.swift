@@ -24,6 +24,7 @@ struct ServerNotConfiguredView: View {
                     .background(.secondary.opacity(0.2))
                     .clipShape(.rect(cornerRadius: 10))
             }
+            .accessibilityHint("Head to the settings page")
             .foregroundStyle(.primary)
         }
     }

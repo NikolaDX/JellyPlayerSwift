@@ -23,6 +23,7 @@ struct RepeatModeButton: View {
                 Image(systemName: "repeat.1.circle.fill")
             }
         }
+        .accessibilityLabel("Repeat mode: \(repeatMode.rawValue)")
     }
     
     func changeRepeatMode() {

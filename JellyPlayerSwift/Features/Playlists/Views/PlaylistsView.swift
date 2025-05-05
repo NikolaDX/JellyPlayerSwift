@@ -23,19 +23,23 @@ struct PlaylistsView: View {
                 } label: {
                     PlaylistRow(playlist)
                 }
+                .accessibilityLabel("Playlist: \(playlist.Name), contains \(playlist.NumberOfSongs ?? 0) songs.")
                 .contextMenu {
                     ContextButton(isDestructive: true, text: "Delete playlist", systemImage: "trash") {
                         playlistToRemove = playlist
                         showingRemovePlaylist = true
                     }
+                    .accessibilityHint("Deletes playlist permanently")
                     
                     ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
                         viewModel.generateInsantMix(playlistId: playlist.Id)
                     }
+                    .accessibilityHint("Creates mix based on songs from this playlist")
                     
                     ContextButton(isDestructive: false, text: "Download playlist", systemImage: "arrow.down.circle") {
                         viewModel.downloadPlaylist(playlistId: playlist.Id)
                     }
+                    .accessibilityHint("Downloads playlist songs for offline listening")
                     
                     ContextButton(isDestructive: false, text: "Rename playlist", systemImage: "pencil") {
                         playlistToRename = nil
@@ -43,6 +47,7 @@ struct PlaylistsView: View {
                             playlistToRename = playlist
                         }
                     }
+                    .accessibilityHint("Change the name of the playlist")
                 }
             }
             .onDelete(perform: deleteRows)
@@ -53,6 +58,7 @@ struct PlaylistsView: View {
             IconButton(icon: Image(systemName: "plus.circle.fill")) {
                 showingPlaylistCreation = true
             }
+            .accessibilityHint("Create a new playlist")
             
             Menu("Sort by", systemImage: "arrow.up.arrow.down") {
                 Menu("Sort order") {
@@ -60,6 +66,7 @@ struct PlaylistsView: View {
                         Text("Ascending").tag("Ascending")
                         Text("Descending").tag("Descending")
                     }
+                    .accessibilityHint("Select sort order")
                 }
                 
                 Menu("Sort by") {
@@ -67,10 +74,13 @@ struct PlaylistsView: View {
                         Text("Name").tag("Name")
                         Text("Date created").tag("DateCreated")
                     }
+                    .accessibilityHint("Select sort option")
                 }
             }
+            .accessibilityHint("Sort songs in this playlist")
             
             EditButton()
+                .accessibilityLabel("Edit playlists")
         }
         .onChange(of: showingPlaylistCreation) { _, newValue in
             if !newValue {

@@ -24,6 +24,8 @@ struct QueueView: View {
                 
                 Spacer()
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Current song: \(viewModel.queue[viewModel.currentIndex].Name) by \(viewModel.queue[viewModel.currentIndex].Artists.joined(separator: ", "))")
             
             ScrollViewReader { proxy in
                 List {
@@ -38,6 +40,16 @@ struct QueueView: View {
                             viewModel.playSong(songIndex: index)
                         }
                         .deleteDisabled(index == viewModel.currentIndex)
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel("Song: \(viewModel.queue[index].Name) by \(viewModel.queue[index].Artists.joined(separator: ", "))")
+                        .accessibilityHint("Double-tap to play")
+                        .accessibilityAddTraits(.isButton)
+                        .contextMenu {
+                            ContextButton(isDestructive: true, text: "Remove from queue", systemImage: "trash") {
+                                viewModel.removeFromQueue(index: index)
+                            }
+                            .accessibilityHint("Remove this song from queue")
+                        }
                     }
                     .onDelete { indexSet in
                         if !indexSet.contains(viewModel.currentIndex) {

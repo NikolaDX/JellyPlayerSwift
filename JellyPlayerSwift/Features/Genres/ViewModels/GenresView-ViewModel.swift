@@ -14,7 +14,7 @@ extension GenresView {
         
         var filterText: String = ""
         
-        var filteredGenrers: [Genre] {
+        var filteredGenres: [Genre] {
             filterText.isEmpty ? genres : genres.filter {
                 $0.Name.localizedCaseInsensitiveContains(filterText)
             }

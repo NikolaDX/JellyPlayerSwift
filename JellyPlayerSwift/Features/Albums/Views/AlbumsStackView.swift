@@ -9,7 +9,7 @@ import Kingfisher
 import SwiftUI
 
 
-struct AlbumsView: View {
+struct AlbumsStackView: View {
     @State private var viewModel = ViewModel()
     @State private var scrollOffset: CGFloat = 0
     @Binding var navigationPath: NavigationPath
@@ -44,6 +44,23 @@ struct AlbumsView: View {
                                     }
                                     .frame(width: proxy.size.width, height: proxy.size.height)
                                     .matchedTransitionSource(id: album.Id, in: albumViewAnimation)
+                                    .accessibilityElement(children: .combine)
+                                    .accessibilityHidden(index != Int(round(scrollOffset)))
+                                    .accessibilityLabel("\(album.Name) by \(album.AlbumArtist)")
+                                    .accessibilityAddTraits(.isButton)
+                                    .accessibilityHint("Swipe up or down to switch albums. Double tap to open.")
+                                    .accessibilityAdjustableAction { direction in
+                                        switch direction {
+                                        case .increment:
+                                            scrollOffset = viewModel.clamp(scrollOffset - 1, lower: 0, upper: CGFloat(viewModel.albums.count - 1))
+                                        case .decrement:
+                                            scrollOffset = viewModel.clamp(scrollOffset + 1, lower: 0, upper: CGFloat(viewModel.albums.count - 1))
+                                        default:
+                                            print("Not handled")
+                                        }
+                                    }
+                                    .frame(width: proxy.size.width, height: proxy.size.height)
+                                    .matchedTransitionSource(id: album.Id, in: albumViewAnimation)
                             }
                         }
                     }
@@ -57,14 +74,12 @@ struct AlbumsView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .gesture(
             DragGesture()
-                .onChanged { value in
-                    let dragSensitivity: CGFloat = 450
-                    let delta = -value.translation.height / dragSensitivity
-                    scrollOffset = viewModel.clamp(scrollOffset - delta, lower: 0, upper: CGFloat(viewModel.albums.count - 1))
-                }
-                .onEnded { _ in
-                    withAnimation(.easeOut(duration: 0.25)) {
-                        scrollOffset = round(scrollOffset)
+                .onEnded { value in
+                    let verticalAmount = value.translation.height
+                    if verticalAmount > -20 {
+                        scrollOffset = viewModel.clamp(scrollOffset + 1, lower: 0, upper: CGFloat(viewModel.albums.count - 1))
+                    } else if verticalAmount < -20 {
+                        scrollOffset = viewModel.clamp(scrollOffset - 1, lower: 0, upper: CGFloat(viewModel.albums.count - 1))
                     }
                 }
             )
@@ -76,5 +91,5 @@ struct AlbumsView: View {
 
 #Preview {
     @Previewable @State var navigationPath = NavigationPath()
-    AlbumsView(navigationPath: $navigationPath)
+    AlbumsStackView(navigationPath: $navigationPath)
 }

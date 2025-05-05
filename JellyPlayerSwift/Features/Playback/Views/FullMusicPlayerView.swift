@@ -48,6 +48,7 @@ struct FullMusicPlayerView: View {
                         Spacer()
                     }
                     .transition(.slide.combined(with: .opacity))
+                    .accessibilityHidden(true)
                 }
                 
                 Spacer()
@@ -56,11 +57,13 @@ struct FullMusicPlayerView: View {
                     HStack {
                         Text(viewModel.formattedCurrentTime)
                             .font(.headline)
+                            .accessibilityLabel("Current progress: \(viewModel.formattedCurrentTime)")
                         
                         Spacer()
                         
                         Text(viewModel.formattedDuration)
                             .font(.headline)
+                            .accessibilityLabel("Song duration: \(viewModel.formattedDuration)")
                     }
                     
                     Slider(value: $viewModel.sliderTime, in: 0...viewModel.duration, onEditingChanged: { editing in
@@ -77,12 +80,31 @@ struct FullMusicPlayerView: View {
                         }
                     }
                     .tint(viewModel.coverDominantColor)
+                    .accessibilityLabel("Playback position")
+                    .accessibilityValue(viewModel.formattedCurrentTime)
+                    .accessibilityHint("Swipe up or down with one finger to adjust playback position")
+                    .accessibilityAdjustableAction { direction in
+                        let step = 5.0
+                        switch direction {
+                        case .increment:
+                            let newTime = min(viewModel.sliderTime + step, viewModel.duration)
+                            viewModel.seek(to: newTime)
+                            viewModel.sliderTime = newTime
+                        case .decrement:
+                            let newTime = max(viewModel.sliderTime - step, 0)
+                            viewModel.seek(to: newTime)
+                            viewModel.sliderTime = newTime
+                        default:
+                            break
+                        }
+                    }
                     
                     HStack(alignment: .center, spacing: buttonSize) {
                         IconButton(
                             icon: Image(systemName: "backward.fill")) {
                                 viewModel.previousSong()
                             }
+                            .accessibilityLabel("Previous song")
                         
                         ConditionalIconButton(
                             condition: viewModel.isPlaying,
@@ -91,11 +113,13 @@ struct FullMusicPlayerView: View {
                                 viewModel.togglePlayPause()
                             }
                             .font(.system(size: buttonSize * 2.2))
+                            .accessibilityLabel("Toggle play-pause")
                         
                         IconButton(
                             icon: Image(systemName: "forward.fill")) {
                                 viewModel.nextSong()
                             }
+                            .accessibilityLabel("Next song")
                     }
                     .font(.system(size: buttonSize))
                     
@@ -107,14 +131,17 @@ struct FullMusicPlayerView: View {
                         IconButton(icon: Image(systemName: "chevron.down")) {
                             dismiss()
                         }
+                        .accessibilityLabel("Hide full music player")
                         
                         FavoriteButton(isFavorite: viewModel.isFavorite) {
                             viewModel.toggleFavorite()
                         }
+                        .accessibilityLabel("Toggle favorite")
                         
                         IconButton(icon: Image(systemName: "music.note.list")) {
                             viewModel.toggleQueue()
                         }
+                        .accessibilityLabel("Show queue")
                     }
                     .font(.system(size: buttonSize * 1.2))
                 }

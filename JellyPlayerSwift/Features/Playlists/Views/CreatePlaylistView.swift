@@ -15,6 +15,7 @@ struct CreatePlaylistView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 15) {
                 Heading("Playlist name:")
+                    .accessibilityHint("Enter new playlist name below")
                 
                 InputField(text: $viewModel.playlistName, censored: false, placeholder: "Playlist name")
                 
@@ -22,14 +23,17 @@ struct CreatePlaylistView: View {
                     NiceButton("Create playlist") {
                         viewModel.createPlaylist()
                     }
+                    .accessibilityHint("Attempt to create new playlist")
                     
                     if viewModel.isLoading {
                         ProgressView()
+                            .accessibilityLabel("Creating playlist. Please wait...")
                     }
                 }
                 
                 if let error = viewModel.errorMessage {
                     ErrorText(error)
+                        .accessibilityLabel("Error: \(error)")
                 }
                 
             }

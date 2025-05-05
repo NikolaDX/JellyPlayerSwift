@@ -36,6 +36,10 @@ extension QueueView {
             playbackService.playAtIndex(songIndex)
         }
         
+        func removeFromQueue(index: Int) {
+            playbackService.removeFromQueue(at: index)
+        }
+        
         func removeAtIndexes(_ indexSet: IndexSet) {
             for index in indexSet {
                 playbackService.removeFromQueue(at: index)

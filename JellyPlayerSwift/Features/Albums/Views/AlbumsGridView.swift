@@ -57,15 +57,19 @@ struct AlbumsGridView: View {
                         AlbumCard(album: album)
                             .matchedTransitionSource(id: album.Id, in: albumViewAnimation)
                     }
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel("Album: \(album.Name) by \(album.AlbumArtist)")
                     .foregroundStyle(.primary)
                     .contextMenu {
                         ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
                             AlbumService().generateAndPlayInstantMix(albumId: album.Id)
                         }
+                        .accessibilityHint("Create mix based on songs from this album")
                         
                         ContextButton(isDestructive: false, text: "Download album", systemImage: "arrow.down.circle") {
                             AlbumService().downloadAlbum(albumId: album.Id)
                         }
+                        .accessibilityHint("Download songs from this album for offline listening")
                     }
                 }
             }
@@ -79,6 +83,7 @@ struct AlbumsGridView: View {
                         Text("Ascending").tag("Ascending")
                         Text("Descending").tag("Descending")
                     }
+                    .accessibilityHint("Select sort order")
                 }
                 
                 Menu("Sort by") {
@@ -88,6 +93,7 @@ struct AlbumsGridView: View {
                         Text("Date added").tag("DateAdded")
                         Text("Date released").tag("DateReleased")
                     }
+                    .accessibilityHint("Select sort option")
                 }
             }
         }

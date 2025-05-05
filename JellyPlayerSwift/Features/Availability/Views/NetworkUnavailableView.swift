@@ -24,6 +24,7 @@ struct NetworkUnavailableView: View {
                     .background(.secondary.opacity(0.2))
                     .clipShape(.rect(cornerRadius: 10))
             }
+            .accessibilityHint("Head to the downloads page")
             .foregroundStyle(.primary)
         }
     }

@@ -19,10 +19,12 @@ struct AuthenticationView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 15) {
                 Heading("Username:")
+                    .accessibilityHint("Enter your username below")
                 
                 InputField(text: $viewModel.username, censored: false, placeholder: "Username")
                 
                 Heading("Password:")
+                    .accessibilityHint("Enter your password below")
                 
                 InputField(text: $viewModel.password, censored: true, placeholder: "Password")
                 
@@ -32,14 +34,17 @@ struct AuthenticationView: View {
                             await viewModel.logIn()
                         }
                     }
+                    .accessibilityHint("Attempt to log into server")
                     
                     if viewModel.isLoading {
                         ProgressView()
+                            .accessibilityLabel("Logging in. Please wait...")
                     }
                 }
                 
                 if let error = viewModel.errorMessage {
                     ErrorText(error)
+                        .accessibilityLabel("Error: \(error)")
                 }
                 
             }

@@ -22,10 +22,12 @@ struct AddSongToPlaylistView: View {
             List {
                 if viewModel.isLoading {
                     ProgressView()
+                        .accessibilityLabel("Adding song to the playlist. Please wait...")
                 }
                 
                 if let error = viewModel.errorMessage {
                     ErrorText(error)
+                        .accessibilityLabel("Error: \(error)")
                 }
             
                 ForEach(viewModel.playlists, id: \.Id) { playlist in
@@ -33,6 +35,9 @@ struct AddSongToPlaylistView: View {
                         .onTapGesture {
                             viewModel.addSongToPlaylist(songId: song.Id, playlistId: playlist.Id)
                         }
+                        .accessibilityLabel("Playlist: \(playlist.Name)")
+                        .accessibilityAddTraits(.isButton)
+                        .accessibilityHint("Add song to this playlist")
                 }
             }
             .task {

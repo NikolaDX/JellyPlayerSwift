@@ -23,12 +23,15 @@ struct GenreDetailsView: View {
                         await viewModel.playGenre()
                     }
                 }
+                .accessibilityHint("Play all songs of this genre")
                 
                 IconButton(icon: Image(systemName: "shuffle")) {
                     Task {
                         await viewModel.shuffleGenre()
                     }
                 }
+                .accessibilityLabel("Shuffle")
+                .accessibilityHint("Shuffle of songs of this genre")
             }
             .task {
                 viewModel.fetchGenreAlbums()

@@ -24,6 +24,7 @@ struct ContentView: View {
         .environmentObject(themeService)
         .environmentObject(languageService)
         .environment(\.locale, Locale(identifier: languageService.selectedLanguage.rawValue))
+        .environment(\.layoutDirection, languageService.selectedLanguage == .arabic ? .rightToLeft : .leftToRight)
     }
 }
 

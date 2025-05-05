@@ -1,6 +1,16 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ by %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ by %2$@"
+          }
+        }
+      }
+    },
     "%@ kbps" : {
       "localizations" : {
         "ar" : {
@@ -534,6 +544,9 @@
         }
       }
     },
+    "Add selected songs to this playlist" : {
+
+    },
     "Add song to a playlist" : {
       "localizations" : {
         "ar" : {
@@ -616,6 +629,9 @@
         }
       }
     },
+    "Add song to this playlist" : {
+
+    },
     "Add songs" : {
       "localizations" : {
         "ar" : {
@@ -697,6 +713,21 @@
           }
         }
       }
+    },
+    "Add songs to this playlist" : {
+
+    },
+    "Add this song to another playlist" : {
+
+    },
+    "Add this song to favorites" : {
+
+    },
+    "Add this song to favroties" : {
+
+    },
+    "Add this song to playlist" : {
+
     },
     "Add to favorites" : {
       "extractionState" : "manual",
@@ -864,6 +895,9 @@
         }
       }
     },
+    "Adding song to the playlist. Please wait..." : {
+
+    },
     "Adding successful!" : {
       "localizations" : {
         "ar" : {
@@ -1024,6 +1058,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "專輯"
+          }
+        }
+      }
+    },
+    "Album cover" : {
+
+    },
+    "Album name: %@" : {
+
+    },
+    "Album: %@ by %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Album: %1$@ by %2$@"
           }
         }
       }
@@ -1691,6 +1741,12 @@
         }
       }
     },
+    "Artist image" : {
+
+    },
+    "Artist: %@" : {
+
+    },
     "Artists" : {
       "localizations" : {
         "ar" : {
@@ -1855,6 +1911,15 @@
         }
       }
     },
+    "Attempt to create new playlist" : {
+
+    },
+    "Attempt to log into server" : {
+
+    },
+    "Attempt to rename this playlist" : {
+
+    },
     "Cancel" : {
       "localizations" : {
         "ar" : {
@@ -2018,6 +2083,9 @@
           }
         }
       }
+    },
+    "Change the name of the playlist" : {
+
     },
     "Chinese (Simplified)" : {
       "localizations" : {
@@ -2195,6 +2263,12 @@
         }
       }
     },
+    "Color: %@" : {
+
+    },
+    "Configure app theme and accent color below" : {
+
+    },
     "Configure server from the settings menu." : {
       "localizations" : {
         "ar" : {
@@ -2276,6 +2350,9 @@
           }
         }
       }
+    },
+    "Configure stream quality for Wi-Fi and cellular below" : {
+
     },
     "Connect to the internet, or listen to downloaded music." : {
       "localizations" : {
@@ -2359,6 +2436,18 @@
         }
       }
     },
+    "Create a new playlist" : {
+
+    },
+    "Create mix based on songs from this album" : {
+
+    },
+    "Create mix based on songs from this artist" : {
+
+    },
+    "Create mix based on this song" : {
+
+    },
     "Create playlist" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2438,6 +2527,25 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "建立播放清單"
+          }
+        }
+      }
+    },
+    "Creates mix based on songs from this playlist" : {
+
+    },
+    "Creating playlist. Please wait..." : {
+
+    },
+    "Current progress: %@" : {
+
+    },
+    "Current song: %@ by %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Current song: %1$@ by %2$@"
           }
         }
       }
@@ -2936,6 +3044,9 @@
         }
       }
     },
+    "Deletes playlist permanently" : {
+
+    },
     "Descending" : {
       "localizations" : {
         "ar" : {
@@ -3099,6 +3210,18 @@
           }
         }
       }
+    },
+    "Double tap to toggle play/pause. Swipe up to see actions." : {
+
+    },
+    "Double-tap to play" : {
+
+    },
+    "Double-tap to see all albums from this artist" : {
+
+    },
+    "Double-tap to select this color" : {
+
     },
     "Download" : {
       "extractionState" : "manual",
@@ -3349,6 +3472,15 @@
         }
       }
     },
+    "Download progress: %lf percent" : {
+
+    },
+    "Download songs from this album for offline listening" : {
+
+    },
+    "Download this song for offline listening" : {
+
+    },
     "Downloaded" : {
       "localizations" : {
         "ar" : {
@@ -3430,6 +3562,12 @@
           }
         }
       }
+    },
+    "Downloads playlist songs for offline listening" : {
+
+    },
+    "Edit playlists" : {
+
     },
     "English" : {
       "localizations" : {
@@ -3518,6 +3656,21 @@
           }
         }
       }
+    },
+    "Enter new playlist name below" : {
+
+    },
+    "Enter your password below" : {
+
+    },
+    "Enter your server URL below" : {
+
+    },
+    "Enter your username below" : {
+
+    },
+    "Error: %@" : {
+
     },
     "Favorites" : {
       "localizations" : {
@@ -3688,6 +3841,12 @@
           }
         }
       }
+    },
+    "Full Music Player" : {
+
+    },
+    "Genre: %@" : {
+
     },
     "Genres" : {
       "localizations" : {
@@ -3940,6 +4099,15 @@
           }
         }
       }
+    },
+    "Head to the downloads page" : {
+
+    },
+    "Head to the settings page" : {
+
+    },
+    "Hide full music player" : {
+
     },
     "Hindi" : {
       "localizations" : {
@@ -4870,6 +5038,12 @@
         }
       }
     },
+    "Log into server" : {
+
+    },
+    "Logging in. Please wait..." : {
+
+    },
     "Login successful!" : {
       "localizations" : {
         "ar" : {
@@ -5116,6 +5290,12 @@
           }
         }
       }
+    },
+    "Next song" : {
+
+    },
+    "Next Song" : {
+
     },
     "Ok" : {
       "localizations" : {
@@ -5365,6 +5545,9 @@
         }
       }
     },
+    "Paused" : {
+
+    },
     "Play" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5448,6 +5631,21 @@
         }
       }
     },
+    "Play all songs" : {
+
+    },
+    "Play all songs from this album" : {
+
+    },
+    "Play all songs from this artist" : {
+
+    },
+    "Play all songs from this playlist" : {
+
+    },
+    "Play all songs of this genre" : {
+
+    },
     "Play count" : {
       "localizations" : {
         "ar" : {
@@ -5529,6 +5727,12 @@
           }
         }
       }
+    },
+    "Playback position" : {
+
+    },
+    "Playing" : {
+
     },
     "Playlist creation successful!" : {
       "localizations" : {
@@ -5942,6 +6146,19 @@
         }
       }
     },
+    "Playlist: %@" : {
+
+    },
+    "Playlist: %@, contains %lld songs." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Playlist: %1$@, contains %2$lld songs."
+          }
+        }
+      }
+    },
     "Playlists" : {
       "localizations" : {
         "ar" : {
@@ -6112,6 +6329,12 @@
           }
         }
       }
+    },
+    "Previous song" : {
+
+    },
+    "Previous Song" : {
+
     },
     "Remove" : {
       "localizations" : {
@@ -6524,6 +6747,21 @@
         }
       }
     },
+    "Remove song from this playlist" : {
+
+    },
+    "Remove songs from playlist" : {
+
+    },
+    "Remove this song from downloads" : {
+
+    },
+    "Remove this song from favorites" : {
+
+    },
+    "Remove this song from queue" : {
+
+    },
     "Rename playlist" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -6606,6 +6844,12 @@
           }
         }
       }
+    },
+    "Renaming playlist. Please wait..." : {
+
+    },
+    "Repeat mode: %@" : {
+
     },
     "Russian" : {
       "localizations" : {
@@ -7104,6 +7348,30 @@
           }
         }
       }
+    },
+    "Select accent color for your app" : {
+
+    },
+    "Select app theme below" : {
+
+    },
+    "Select language for this app" : {
+
+    },
+    "Select sort option" : {
+
+    },
+    "Select sort order" : {
+
+    },
+    "Select the app language below" : {
+
+    },
+    "Select your preffered cellular streaming quality" : {
+
+    },
+    "Select your preffered Wi-Fi streaming quality" : {
+
     },
     "Serbian" : {
       "localizations" : {
@@ -7605,6 +7873,9 @@
         }
       }
     },
+    "Show queue" : {
+
+    },
     "Shuffle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -7688,6 +7959,24 @@
         }
       }
     },
+    "Shuffle all songs" : {
+
+    },
+    "Shuffle all songs from this album" : {
+
+    },
+    "Shuffle all songs from this artist" : {
+
+    },
+    "Shuffle all songs from this playlist" : {
+
+    },
+    "Shuffle mode: %@" : {
+
+    },
+    "Shuffle of songs of this genre" : {
+
+    },
     "song" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -7767,6 +8056,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "歌曲"
+          }
+        }
+      }
+    },
+    "Song duration: %@" : {
+
+    },
+    "Song: %@" : {
+
+    },
+    "Song: %@ by %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Song: %1$@ by %2$@"
           }
         }
       }
@@ -7936,6 +8241,9 @@
         }
       }
     },
+    "Songs list" : {
+
+    },
     "Sort by" : {
       "localizations" : {
         "ar" : {
@@ -8099,6 +8407,9 @@
           }
         }
       }
+    },
+    "Sort songs in this playlist" : {
+
     },
     "Spanish" : {
       "localizations" : {
@@ -8271,6 +8582,12 @@
         }
       }
     },
+    "Swipe up or down to switch albums. Double tap to open." : {
+
+    },
+    "Swipe up or down with one finger to adjust playback position" : {
+
+    },
     "System" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -8435,6 +8752,12 @@
           }
         }
       }
+    },
+    "Toggle favorite" : {
+
+    },
+    "Toggle play-pause" : {
+
     },
     "Username" : {
       "extractionState" : "manual",

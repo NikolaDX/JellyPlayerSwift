@@ -18,12 +18,12 @@ struct MiniPlayerView: View {
             HStack {
                 HStack {
                     SongCover(song)
-                    
                     VStack(alignment: .leading) {
                         Headline(viewModel.title)
                         Subheadline(viewModel.artist)
                     }
                 }
+                .accessibilityHidden(true)
                 .offset(x: dragOffset)
                 
                 Spacer()
@@ -39,6 +39,23 @@ struct MiniPlayerView: View {
             }
             .padding(5)
             .contentShape(Rectangle())
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("\(viewModel.title) by \(viewModel.artist)")
+            .accessibilityValue(viewModel.isPlaying ? "Playing" : "Paused")
+            .accessibilityHint("Double tap to toggle play/pause. Swipe up to see actions.")
+            .accessibilityActions {
+                Button("Next Song") {
+                    viewModel.nextSong()
+                }
+                
+                Button("Previous Song") {
+                    viewModel.previousSong()
+                }
+                
+                Button("Full Music Player") {
+                    viewModel.showingPlayer = true
+                }
+            }
             .gesture(
                 DragGesture(minimumDistance: 20)
                     .onChanged { value in

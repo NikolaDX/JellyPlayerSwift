@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension AlbumsView {
+extension AlbumsStackView {
     @Observable
     class ViewModel {
         var albums: [Album] = []
