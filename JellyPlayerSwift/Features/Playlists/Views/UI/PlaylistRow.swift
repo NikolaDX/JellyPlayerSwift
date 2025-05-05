@@ -9,9 +9,11 @@ import SwiftUI
 
 struct PlaylistRow: View {
     private let playlist: Playlist
+    private let numberOfSongs: Int
     
     init(_ playlist: Playlist) {
         self.playlist = playlist
+        self.numberOfSongs = playlist.NumberOfSongs ?? 0
     }
     
     var body: some View {
@@ -24,7 +26,10 @@ struct PlaylistRow: View {
             
             Spacer()
             
-            Subheadline("\(playlist.NumberOfSongs ?? 0) \(playlist.NumberOfSongs == 1 ? "song" : "songs")")
+            Text("\(numberOfSongs) song")
+                .lineLimit(1)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
         }
         .contentShape(Rectangle())
     }

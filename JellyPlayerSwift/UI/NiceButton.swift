@@ -21,7 +21,7 @@ struct NiceButton: View {
         Button {
             buttonAction()
         } label: {
-            Text(buttonLabel)
+            Text(LocalizedStringKey(buttonLabel))
                 .foregroundStyle(themeService.selectedAccentColor)
                 .padding(15)
                 .padding(.horizontal, 20)

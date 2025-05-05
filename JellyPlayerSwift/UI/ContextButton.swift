@@ -24,7 +24,7 @@ struct ContextButton: View {
         Button(role: isDestructive ? .destructive : .cancel) {
             action()
         } label: {
-            Label(text, systemImage: systemImage)
+            Label(LocalizedStringKey(text), systemImage: systemImage)
         }
     }
 }

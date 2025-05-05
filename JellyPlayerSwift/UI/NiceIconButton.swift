@@ -23,7 +23,7 @@ struct NiceIconButton: View {
         Button {
             buttonAction()
         } label: {
-            Label(buttonLabel, systemImage: buttonImage)
+            Label(LocalizedStringKey(buttonLabel), systemImage: buttonImage)
                 .foregroundStyle(themeService.selectedAccentColor)
                 .padding(15)
                 .padding(.horizontal, 20)

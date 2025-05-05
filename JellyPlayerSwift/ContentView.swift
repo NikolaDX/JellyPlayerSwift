@@ -9,7 +9,25 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var themeService = ThemeService()
+    @StateObject var languageService = LanguageService()
     
+    var body: some View {
+        Group {
+            AppMainView()
+        }
+        .id(languageService.selectedLanguage)
+        .preferredColorScheme(
+            themeService.selectedMode == .system ? nil :
+                (themeService.selectedMode == .light ? .light : .dark)
+        )
+        .tint(themeService.selectedAccentColor)
+        .environmentObject(themeService)
+        .environmentObject(languageService)
+        .environment(\.locale, Locale(identifier: languageService.selectedLanguage.rawValue))
+    }
+}
+
+struct AppMainView: View {
     var body: some View {
         Group {
             DownloadProgressView()
@@ -25,12 +43,6 @@ struct ContentView: View {
                     }
                 }
         }
-        .preferredColorScheme(
-            themeService.selectedMode == .system ? nil :
-                (themeService.selectedMode == .light ? .light : .dark)
-        )
-        .tint(themeService.selectedAccentColor)
-        .environmentObject(themeService)
     }
 }
 

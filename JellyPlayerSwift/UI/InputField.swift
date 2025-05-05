@@ -37,10 +37,10 @@ struct InputField: View {
     
     var body: some View {
         if censored {
-            SecureField(placeholder, text: $text)
+            SecureField(LocalizedStringKey(placeholder), text: $text)
                 .fieldStyle()
         } else {
-            TextField(placeholder, text: $text)
+            TextField(LocalizedStringKey(placeholder), text: $text)
                 .fieldStyle()
         }
             

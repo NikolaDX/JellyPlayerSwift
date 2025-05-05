@@ -15,7 +15,7 @@ struct Subheadline: View {
     }
     
     var body: some View {
-        Text(text)
+        Text(LocalizedStringKey(text))
             .lineLimit(1)
             .font(.subheadline)
             .foregroundStyle(.secondary)

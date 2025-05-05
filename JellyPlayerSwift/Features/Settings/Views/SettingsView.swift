@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject var themeService: ThemeService
+    @EnvironmentObject var languageService: LanguageService
     @State private var viewModel = ViewModel()
     @StateObject private var streamQualityService = StreamQualityService.shared
     
@@ -29,7 +30,7 @@ struct SettingsView: View {
                     Headline("App theme")
                     Picker("App theme", selection: $themeService.selectedMode) {
                         ForEach(ThemeMode.allCases) { mode in
-                            Text(mode.rawValue.capitalized).tag(mode)
+                            Text(LocalizedStringKey(mode.rawValue.capitalized)).tag(mode)
                         }
                     }
                     .pickerStyle(.segmented)
@@ -70,6 +71,15 @@ struct SettingsView: View {
                         }
                     }
                     .pickerStyle(.segmented)
+                    
+                    Heading("Language")
+                    
+                    Picker("Language", selection: $languageService.selectedLanguage) {
+                        ForEach(Language.allCases) { language in
+                            Text(LocalizedStringKey(language.localizedName)).tag(language)
+                        }
+                    }
+                    
                 }
                 .navigationTitle("Settings")
                 .sheet(isPresented: $viewModel.showingLogin) {

@@ -59,7 +59,7 @@ struct AlbumsGridView: View {
                     }
                     .foregroundStyle(.primary)
                     .contextMenu {
-                        ContextButton(isDestructive: false, text: "Insant mix", systemImage: "safari") {
+                        ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
                             AlbumService().generateAndPlayInstantMix(albumId: album.Id)
                         }
                         
