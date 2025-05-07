@@ -313,7 +313,7 @@ class PlaybackService {
     }
     
     func previous() {
-        if currentTime > 5 {
+        if currentTime > 2 {
             seek(to: 0)
         } else {
             currentIndex -= 1;
