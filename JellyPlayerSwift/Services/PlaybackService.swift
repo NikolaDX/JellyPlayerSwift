@@ -313,11 +313,15 @@ class PlaybackService {
     }
     
     func previous() {
-        currentIndex -= 1;
-        if currentIndex < 0 {
-            currentIndex = queue.count - 1;
+        if currentTime > 5 {
+            seek(to: 0)
+        } else {
+            currentIndex -= 1;
+            if currentIndex < 0 {
+                currentIndex = queue.count - 1;
+            }
+            playSong(queue[currentIndex])
         }
-        playSong(queue[currentIndex])
     }
     
     private func onSongEnded() {
