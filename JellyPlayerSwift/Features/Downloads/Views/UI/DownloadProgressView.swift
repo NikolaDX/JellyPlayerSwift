@@ -14,7 +14,7 @@ struct DownloadProgressView: View {
         if downloadService.isDownloading {
             ProgressView(value: downloadService.averageDownloadProgress, total: 1.0)
                 .padding(.horizontal)
-                .accessibilityLabel("Download progress: \(downloadService.averageDownloadProgress * 100) percent")
+                .accessibilityLabel("Download progress: \(Int(downloadService.averageDownloadProgress * 100)) percent")
         }
     }
 }

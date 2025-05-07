@@ -70,7 +70,7 @@ struct SettingsView: View {
                         .accessibilityHint("Configure stream quality for Wi-Fi and cellular below")
                     
                     Headline("Wi-Fi quality")
-                        .accessibilityHint("Select your preffered Wi-Fi streaming quality")
+                        .accessibilityHint("Select your preferred Wi-Fi streaming quality")
                     
                     Picker("Wi-Fi quality", selection: $streamQualityService.selectedWifiQuality) {
                         ForEach(streamQualityService.availableQualityOptions, id: \.self) { quality in
@@ -80,7 +80,7 @@ struct SettingsView: View {
                     .pickerStyle(.segmented)
                     
                     Headline("Cellular quality")
-                        .accessibilityHint("Select your preffered cellular streaming quality")
+                        .accessibilityHint("Select your preferred cellular streaming quality")
                     
                     Picker("Cellular quality", selection: $streamQualityService.selectedCellularQuality) {
                         ForEach(streamQualityService.availableQualityOptions, id: \.self) { quality in

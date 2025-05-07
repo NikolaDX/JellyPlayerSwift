@@ -9,11 +9,23 @@ import AVFoundation
 import Combine
 import Foundation
 import MediaPlayer
+import SwiftUICore
 
 enum RepeatMode: String, CaseIterable {
-    case none = "None"
+    case none = "Never repeat"
     case repeatAll = "Repeat All"
-    case repeatOne = "Repeat One"
+    case repeatOne = "Repeat Once"
+    
+    var accessibilityLabelKey: LocalizedStringKey {
+        switch self {
+        case .none:
+            return "Never repeat"
+        case .repeatAll:
+            return "Repeat All"
+        case .repeatOne:
+            return "Repeat One"
+        }
+    }
 }
 
 @Observable

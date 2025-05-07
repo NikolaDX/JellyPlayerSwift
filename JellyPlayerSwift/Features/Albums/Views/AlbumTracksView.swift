@@ -90,7 +90,7 @@ struct AlbumTracksView: View {
                                     ContextButton(isDestructive: false, text: "Add to favorites", systemImage: "star") {
                                         viewModel.addToFavorites(song)
                                     }
-                                    .accessibilityHint("Add this song to favroties")
+                                    .accessibilityHint("Add this song to favorites")
                                 }
                                 
                                 if song.localFilePath != nil {

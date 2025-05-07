@@ -11,6 +11,11 @@ struct RepeatModeButton: View {
     @State private var repeatMode = PlaybackService.shared.getRepeatMode()
     
     var body: some View {
+        buttonView
+            .id(repeatMode)
+    }
+    
+    var buttonView: some View {
         Button {
             changeRepeatMode()
         } label: {
@@ -23,7 +28,8 @@ struct RepeatModeButton: View {
                 Image(systemName: "repeat.1.circle.fill")
             }
         }
-        .accessibilityLabel("Repeat mode: \(repeatMode.rawValue)")
+        .accessibilityLabel("Repeat mode")
+        .accessibilityValue(repeatMode.accessibilityLabelKey)
     }
     
     func changeRepeatMode() {

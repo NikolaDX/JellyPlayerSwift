@@ -151,6 +151,8 @@ class DownloadService: NSObject, ObservableObject, URLSessionDownloadDelegate {
             return "ogg"
         case "audio/flac":
             return "flac"
+        case "audio/opus":
+            return "opus"
         default:
             return "mp3"
         }

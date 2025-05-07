@@ -31,7 +31,7 @@ struct GenreDetailsView: View {
                     }
                 }
                 .accessibilityLabel("Shuffle")
-                .accessibilityHint("Shuffle of songs of this genre")
+                .accessibilityHint("Shuffle songs of this genre")
             }
             .task {
                 viewModel.fetchGenreAlbums()

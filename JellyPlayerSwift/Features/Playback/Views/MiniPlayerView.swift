@@ -42,7 +42,7 @@ struct MiniPlayerView: View {
             .accessibilityElement(children: .combine)
             .accessibilityLabel("\(viewModel.title) by \(viewModel.artist)")
             .accessibilityValue(viewModel.isPlaying ? "Playing" : "Paused")
-            .accessibilityHint("Double tap to toggle play/pause. Swipe up to see actions.")
+            .accessibilityHint("Double tap to toggle play-pause. Swipe up to access actions.")
             .accessibilityActions {
                 Button("Next Song") {
                     viewModel.nextSong()
