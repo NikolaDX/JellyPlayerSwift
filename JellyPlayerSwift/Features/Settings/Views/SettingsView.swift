@@ -74,7 +74,11 @@ struct SettingsView: View {
                     
                     Picker("Wi-Fi quality", selection: $streamQualityService.selectedWifiQuality) {
                         ForEach(streamQualityService.availableQualityOptions, id: \.self) { quality in
-                            Text("\(quality) kbps").tag(quality)
+                            if quality == "Max" {
+                                Text("Max").tag(quality)
+                            } else {
+                                Text("\(quality) kbps").tag(quality)
+                            }
                         }
                     }
                     .pickerStyle(.segmented)

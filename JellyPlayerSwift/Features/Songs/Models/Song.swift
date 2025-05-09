@@ -44,7 +44,11 @@ class Song: Codable, Equatable {
             } else {
                 streamQuality = StreamQualityService.shared.selectedCellularQuality
             }
-            return URL(string: "\(serverUrl)/Audio/\(Id)/stream?Static=true&MaxStreamingBitrate=\(streamQuality)000&api_key=\(accessToken)")
+            if streamQuality == "Max" {
+                return URL(string: "\(serverUrl)/Audio/\(Id)/stream?Static=true&api_key=\(accessToken)")
+            } else {
+                return URL(string: "\(serverUrl)/Audio/\(Id)/stream?Static=true&MaxStreamingBitrate=\(streamQuality)000&api_key=\(accessToken)")
+            }
         } else {
             return nil
         }

@@ -22,7 +22,7 @@ class StreamQualityService: ObservableObject {
         }
     }
     
-    let availableQualityOptions: [String] = ["320", "256", "128"]
+    let availableQualityOptions: [String] = ["Max", "320", "256", "128"]
     
     private init() {
         selectedWifiQuality = UserDefaults.standard.string(forKey: wifiQualityKey) ?? "320"

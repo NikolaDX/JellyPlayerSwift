@@ -17,6 +17,7 @@ struct MiniPlayerView: View {
     @Namespace var playerViewAnimation
     
     private let fullPlayerThreshold: CGFloat = -30
+    private let miniPlayerDragLimit: CGFloat = 30
     private let maxDownwardDrag: CGFloat = 20
     
     var body: some View {
@@ -31,8 +32,8 @@ struct MiniPlayerView: View {
                         }
                     }
                     .accessibilityHidden(true)
-                    .offset(x: dragOffset)
-                    
+                    .offset(x: clamp(dragOffset, lower: -miniPlayerDragLimit, upper: miniPlayerDragLimit))
+
                     Spacer()
                     
                     if viewModel.playbackService.isLoading {
@@ -70,7 +71,7 @@ struct MiniPlayerView: View {
                     }
                 }
                 .allowsHitTesting(true)
-                .gesture(
+                .highPriorityGesture(
                     DragGesture(minimumDistance: 10)
                         .onChanged { value in
                             dragOffset = value.translation.width
@@ -115,6 +116,7 @@ struct MiniPlayerView: View {
                             }
                         }
                 )
+                .contentShape(Rectangle())
             }
             .onTapGesture {
                 viewModel.showingPlayer = true

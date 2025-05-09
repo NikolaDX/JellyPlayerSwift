@@ -56,7 +56,7 @@ struct FullMusicPlayerView: View {
                 VStack(spacing: 10) {
                     if viewModel.playbackService.isLoading {
                         ProgressView()
-                            .accessibilityLabel("Loading, please wait...")
+                            .accessibilityLabel("Loading...")
                     } else {
                         HStack {
                             Text(viewModel.formattedCurrentTime)
