@@ -5,12 +5,13 @@
 //  Created by Nikola Ristic on 4/23/25.
 //
 
-import Foundation
+import SwiftUICore
 
 extension ArtistsView {
     @Observable
     class ViewModel {
         var artists: [Artist] = []
+        var isLoading: Bool = false
         
         var filterText: String = ""
         
@@ -21,9 +22,13 @@ extension ArtistsView {
         }
         
         func fetchArtists() {
+            isLoading = true
             let artistsService = ArtistsService()
             Task { @MainActor in
                 self.artists = await artistsService.fetchArtists()
+                withAnimation {
+                    isLoading = false
+                }
             }
         }
         

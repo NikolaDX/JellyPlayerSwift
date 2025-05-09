@@ -5,22 +5,27 @@
 //  Created by Nikola Ristic on 4/24/25.
 //
 
-import Foundation
+import SwiftUICore
 
 extension GenreDetailsView {
     @Observable
     class ViewModel {
         let genre: Genre
         var genreAlbums: [Album] = []
+        var isLoading: Bool = false
         
         init(genre: Genre) {
             self.genre = genre
         }
         
         func fetchGenreAlbums() {
+            isLoading = true
             let genresService = GenresService()
             Task { @MainActor in
                 self.genreAlbums = await genresService.fetchGenreAlbums(genreId: genre.Id)
+                withAnimation {
+                    isLoading = false
+                }
             }
         }
         

@@ -15,27 +15,29 @@ struct GenreDetailsView: View {
     }
     
     var body: some View {
-        AlbumsGridView(albums: viewModel.genreAlbums)
-            .navigationTitle(viewModel.genre.Name)
-            .toolbar {
-                IconButton(icon: Image(systemName: "play.fill")) {
-                    Task {
-                        await viewModel.playGenre()
+        AsyncView(isLoading: $viewModel.isLoading) {
+            AlbumsGridView(albums: viewModel.genreAlbums)
+                .navigationTitle(viewModel.genre.Name)
+                .toolbar {
+                    IconButton(icon: Image(systemName: "play.fill")) {
+                        Task {
+                            await viewModel.playGenre()
+                        }
                     }
-                }
-                .accessibilityHint("Play all songs of this genre")
-                
-                IconButton(icon: Image(systemName: "shuffle")) {
-                    Task {
-                        await viewModel.shuffleGenre()
+                    .accessibilityHint("Play all songs of this genre")
+                    
+                    IconButton(icon: Image(systemName: "shuffle")) {
+                        Task {
+                            await viewModel.shuffleGenre()
+                        }
                     }
+                    .accessibilityLabel("Shuffle")
+                    .accessibilityHint("Shuffle songs of this genre")
                 }
-                .accessibilityLabel("Shuffle")
-                .accessibilityHint("Shuffle songs of this genre")
-            }
-            .task {
-                viewModel.fetchGenreAlbums()
-            }
+        }
+        .task {
+            viewModel.fetchGenreAlbums()
+        }
     }
 }
 

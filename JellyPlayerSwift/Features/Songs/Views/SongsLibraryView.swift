@@ -11,11 +11,13 @@ struct SongsLibraryView: View {
     @State private var viewModel = ViewModel()
     
     var body: some View {
-        SongsView(songs: viewModel.songs)
-            .navigationTitle("Songs")
-            .task {
-                viewModel.fetchSongs()
-            }
+        AsyncView(isLoading: $viewModel.isLoading) {
+            SongsView(songs: viewModel.songs)
+        }
+        .navigationTitle("Songs")
+        .task {
+            viewModel.fetchSongs()
+        }
     }
 }
 

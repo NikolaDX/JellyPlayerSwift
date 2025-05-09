@@ -11,15 +11,17 @@ struct GenresView: View {
     @State private var viewModel = ViewModel()
     
     var body: some View {
-        List(viewModel.filteredGenres, id: \.Id) { genre in
-            NavigationLink(destination: GenreDetailsView(genre: genre)) {
-                Headline(genre.Name)
+        AsyncView(isLoading: $viewModel.isLoading) {
+            List(viewModel.filteredGenres, id: \.Id) { genre in
+                NavigationLink(destination: GenreDetailsView(genre: genre)) {
+                    Headline(genre.Name)
+                }
+                .foregroundStyle(.primary)
+                .accessibilityLabel("Genre: \(genre.Name)")
             }
-            .foregroundStyle(.primary)
-            .accessibilityLabel("Genre: \(genre.Name)")
+            .navigationTitle("Genres")
+            .searchable(text: $viewModel.filterText, prompt: "Search for a genre...")
         }
-        .navigationTitle("Genres")
-        .searchable(text: $viewModel.filterText, prompt: "Search for a genre...")
         .task {
             viewModel.fetchGenres()
         }

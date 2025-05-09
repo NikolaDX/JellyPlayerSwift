@@ -5,13 +5,14 @@
 //  Created by Nikola Ristic on 4/15/25.
 //
 
-import Foundation
+import SwiftUICore
 
 extension AlbumTracksView {
     @Observable
     class ViewModel {
         let album: Album
         var songs: [Song] = []
+        var isLoading: Bool = false
         
         private var favoritesService: FavoritesService
         private var downloadService: DownloadService
@@ -23,9 +24,13 @@ extension AlbumTracksView {
         }
         
         func fetchSongs() {
+            isLoading = true
             let albumService = AlbumService()
             Task { @MainActor in
                 songs = await albumService.fetchAlbumSongs(albumId: album.Id)
+                withAnimation {
+                    isLoading = false
+                }
             }
         }
         

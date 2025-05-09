@@ -8741,6 +8741,12 @@
         }
       }
     },
+    "Loading, please wait..." : {
+
+    },
+    "Loading..." : {
+
+    },
     "Log in" : {
       "extractionState" : "manual",
       "localizations" : {

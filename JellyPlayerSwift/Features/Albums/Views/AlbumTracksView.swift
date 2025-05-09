@@ -54,71 +54,73 @@ struct AlbumTracksView: View {
                         .padding(.bottom, spaceBetween)
                         .accessibilityLabel("Release year: \(viewModel.album.PremiereDate?.prefix(4) ?? "")")
                     
-                    HStack(spacing: 20) {
-                        NiceIconButton("Play", buttonImage: "play.fill") {
-                            if (!viewModel.songs.isEmpty) {
-                                viewModel.playSong(viewModel.songs[0])
+                    AsyncView(isLoading: $viewModel.isLoading) {
+                        HStack(spacing: 20) {
+                            NiceIconButton("Play", buttonImage: "play.fill") {
+                                if (!viewModel.songs.isEmpty) {
+                                    viewModel.playSong(viewModel.songs[0])
+                                }
                             }
+                            .accessibilityHint("Play all songs from this album")
+                            
+                            NiceIconButton("Shuffle", buttonImage: "shuffle") {
+                                if (!viewModel.songs.isEmpty) {
+                                    viewModel.shufflePlay()
+                                }
+                            }
+                            .accessibilityLabel("Shuffle")
+                            .accessibilityHint("Shuffle all songs from this album")
                         }
-                        .accessibilityHint("Play all songs from this album")
+                        .padding(.bottom, spaceBetween)
                         
-                        NiceIconButton("Shuffle", buttonImage: "shuffle") {
-                            if (!viewModel.songs.isEmpty) {
-                                viewModel.shufflePlay()
-                            }
+                        ForEach(viewModel.songs, id: \.Id) { song in
+                            AlbumTrackRow(song)
+                                .onTapGesture {
+                                    viewModel.playSong(song)
+                                }
+                                .accessibilityElement(children: .combine)
+                                .accessibilityLabel("Song: \(song.Name)")
+                                .accessibilityHint("Double-tap to play")
+                                .contextMenu {
+                                    if song.UserData.IsFavorite {
+                                        ContextButton(isDestructive: true, text: "Remove from favorites", systemImage: "star.slash") {
+                                            viewModel.removeFromFavorites(song)
+                                        }
+                                        .accessibilityHint("Remove this song from favorites")
+                                    } else {
+                                        ContextButton(isDestructive: false, text: "Add to favorites", systemImage: "star") {
+                                            viewModel.addToFavorites(song)
+                                        }
+                                        .accessibilityHint("Add this song to favorites")
+                                    }
+                                    
+                                    if song.localFilePath != nil {
+                                        ContextButton(isDestructive: true, text: "Remove download", systemImage: "trash") {
+                                            songToRemove = song
+                                            showingRemoveDownloadAlert = true
+                                        }
+                                        .accessibilityHint("Remove this song from downloads")
+                                    } else {
+                                        ContextButton(isDestructive: false, text: "Download", systemImage: "arrow.down.circle") {
+                                            viewModel.downloadSong(song)
+                                        }
+                                        .accessibilityHint("Download this song for offline listening")
+                                    }
+                                    
+                                    ContextButton(isDestructive: false, text: "Add to playlist", systemImage: "plus.circle") {
+                                        songToAdd = nil
+                                        DispatchQueue.main.async {
+                                            songToAdd = song
+                                        }
+                                    }
+                                    .accessibilityHint("Add this song to playlist")
+                                    
+                                    ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
+                                        viewModel.generateInstantMix(song)
+                                    }
+                                    .accessibilityHint("Create mix based on this song")
+                                }
                         }
-                        .accessibilityLabel("Shuffle")
-                        .accessibilityHint("Shuffle all songs from this album")
-                    }
-                    .padding(.bottom, spaceBetween)
-                    
-                    ForEach(viewModel.songs, id: \.Id) { song in
-                        AlbumTrackRow(song)
-                            .onTapGesture {
-                                viewModel.playSong(song)
-                            }
-                            .accessibilityElement(children: .combine)
-                            .accessibilityLabel("Song: \(song.Name)")
-                            .accessibilityHint("Double-tap to play")
-                            .contextMenu {
-                                if song.UserData.IsFavorite {
-                                    ContextButton(isDestructive: true, text: "Remove from favorites", systemImage: "star.slash") {
-                                        viewModel.removeFromFavorites(song)
-                                    }
-                                    .accessibilityHint("Remove this song from favorites")
-                                } else {
-                                    ContextButton(isDestructive: false, text: "Add to favorites", systemImage: "star") {
-                                        viewModel.addToFavorites(song)
-                                    }
-                                    .accessibilityHint("Add this song to favorites")
-                                }
-                                
-                                if song.localFilePath != nil {
-                                    ContextButton(isDestructive: true, text: "Remove download", systemImage: "trash") {
-                                        songToRemove = song
-                                        showingRemoveDownloadAlert = true
-                                    }
-                                    .accessibilityHint("Remove this song from downloads")
-                                } else {
-                                    ContextButton(isDestructive: false, text: "Download", systemImage: "arrow.down.circle") {
-                                        viewModel.downloadSong(song)
-                                    }
-                                    .accessibilityHint("Download this song for offline listening")
-                                }
-                                
-                                ContextButton(isDestructive: false, text: "Add to playlist", systemImage: "plus.circle") {
-                                    songToAdd = nil
-                                    DispatchQueue.main.async {
-                                        songToAdd = song
-                                    }
-                                }
-                                .accessibilityHint("Add this song to playlist")
-                                
-                                ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
-                                    viewModel.generateInstantMix(song)
-                                }
-                                .accessibilityHint("Create mix based on this song")
-                            }
                     }
                 }
                 .padding(spaceBetween)

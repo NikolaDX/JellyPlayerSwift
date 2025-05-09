@@ -5,22 +5,27 @@
 //  Created by Nikola Ristic on 4/23/25.
 //
 
-import Foundation
+import SwiftUICore
 
 extension ArtistDetailsView {
     @Observable
     class ViewModel {
         let artist: Artist
         var artistAlbums: [Album] = []
+        var isLoading: Bool = false
         
         init(artist: Artist) {
             self.artist = artist
         }
         
         func fetchArtistAlbums() {
+            isLoading = true
             let artistsService = ArtistsService()
             Task { @MainActor in
                 self.artistAlbums = await artistsService.fetchArtistAlbums(artistId: artist.Id)
+                withAnimation {
+                    isLoading = false
+                }
             }
         }
         

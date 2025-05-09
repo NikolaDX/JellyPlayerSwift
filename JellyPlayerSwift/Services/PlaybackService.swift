@@ -48,6 +48,7 @@ class PlaybackService {
     
     var currentSong: Song? = nil
     var isPlaying: Bool = false
+    var isLoading: Bool = false
     var currentTime: Double = 0
     
     var duration: Double {
@@ -88,34 +89,44 @@ class PlaybackService {
     }
     
     private func updateNowPlayingInfo(song: Song) {
+        let duration = player?.currentItem?.duration.seconds ?? 0
+        let currentTime = player?.currentTime().seconds ?? 0
         var nowPlayingInfo: [String: Any] = [
             MPMediaItemPropertyTitle: song.Name,
             MPMediaItemPropertyArtist: song.Artists.joined(separator: ", "),
             MPMediaItemPropertyAlbumTitle: song.Album,
             MPMediaItemPropertyPlaybackDuration: duration,
             MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
+            MPNowPlayingInfoPropertyPlaybackRate: player?.rate ?? 1.0
         ]
-        
+
         let artworkService = ArtworkService()
-        
-        artworkService.fetchArtwork(url: song.coverUrl!) { image in
-            if let img = image {
-                let artwork = MPMediaItemArtwork(boundsSize: img.size) { _ in img }
-                nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
+
+        if let img = song.coverImage {
+            let artwork = MPMediaItemArtwork(boundsSize: img.size) { _ in img }
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
+        } else if let coverUrl = song.coverUrl {
+            artworkService.fetchArtwork(url: coverUrl) { image in
+                if let img = image {
+                    let artwork = MPMediaItemArtwork(boundsSize: img.size) { _ in img }
+                    nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
+                }
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
             }
-            
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
         }
-        
+
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+
         playbackObserverToken = player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1, preferredTimescale: 1), queue: .main) { [weak self] time in
-            guard let _ = self else { return }
+            guard let self = self else { return }
 
             nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = CMTimeGetSeconds(time)
-            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1.0
+            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = self.player?.rate ?? 1.0
+
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
         }
     }
-    
+
     private func setupRemoteControls() {
         let remoteCommandCenter = MPRemoteCommandCenter.shared()
         
@@ -162,7 +173,7 @@ class PlaybackService {
         
         playSongDebouncer.run {
             self.cleanup()
-            
+            self.isLoading = true
             let playerItem: AVPlayerItem
             
             if let localPath = song.localFilePath {
@@ -185,6 +196,7 @@ class PlaybackService {
                     self?.currentSong = song
                     self?.isPlaying = true
                     self?.isShuffleEnabled = true
+                    self?.isLoading = false
                 }
             }
         }
@@ -339,7 +351,12 @@ class PlaybackService {
     }
     
     func seek(to time: Double) {
-        self.player?.seek(to: CMTimeMakeWithSeconds(time, preferredTimescale: 600), toleranceBefore: .zero, toleranceAfter: .positiveInfinity)
+        isLoading = true
+        self.player?.seek(to: CMTimeMakeWithSeconds(time, preferredTimescale: 600), toleranceBefore: .zero, toleranceAfter: .positiveInfinity) { success in
+            if success {
+                self.isLoading = false
+            }
+        }
     }
     
     func getRepeatMode() -> RepeatMode {

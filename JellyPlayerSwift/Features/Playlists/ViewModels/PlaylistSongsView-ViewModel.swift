@@ -5,12 +5,13 @@
 //  Created by Nikola Ristic on 4/25/25.
 //
 
-import SwiftUI
+import SwiftUICore
 
 extension PlaylistSongsView {
     @Observable
     class ViewModel {
         var songs: [Song] = []
+        var isLoading: Bool = false
         
         private var favoritesService: FavoritesService
         private var downloadService: DownloadService
@@ -63,9 +64,13 @@ extension PlaylistSongsView {
         }
         
         func fetchSongs() {
+            isLoading = true
             let playlistsService = PlaylistsService()
             Task { @MainActor in
                 songs = await playlistsService.fetchPlaylistSongs(playlistId: playlist.Id)
+                withAnimation {
+                    isLoading = false
+                }
             }
         }
         

@@ -5,12 +5,13 @@
 //  Created by Nikola Ristic on 4/25/25.
 //
 
-import Foundation
+import SwiftUICore
 
 extension PlaylistsView {
     @Observable
     class ViewModel {
         var playlists: [Playlist] = []
+        var isLoading: Bool = false
         
         var selectedSortOption: String = "Name"
         var selectedSortOrder: String = "Ascending"
@@ -42,9 +43,13 @@ extension PlaylistsView {
         }
         
         func fetchPlaylists() {
+            isLoading = true
             let playlistsService = PlaylistsService()
             Task { @MainActor in
                 self.playlists = await playlistsService.fetchPlaylists()
+                withAnimation {
+                    isLoading = false
+                }
             }
         }
         

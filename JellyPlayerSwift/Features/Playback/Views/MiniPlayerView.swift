@@ -35,14 +35,20 @@ struct MiniPlayerView: View {
                     
                     Spacer()
                     
-                    ConditionalIconButton(
-                        condition: viewModel.isPlaying,
-                        trueLabel: Image(systemName: "pause.fill"),
-                        falseLabel: Image(systemName: "play.fill")) {
-                        viewModel.togglePlayPause()
+                    if viewModel.playbackService.isLoading {
+                        ProgressView()
+                            .padding()
+                            .accessibilityLabel("Loading...")
+                    } else {
+                        ConditionalIconButton(
+                            condition: viewModel.isPlaying,
+                            trueLabel: Image(systemName: "pause.fill"),
+                            falseLabel: Image(systemName: "play.fill")) {
+                                viewModel.togglePlayPause()
+                            }
+                            .padding()
+                            .font(.title2)
                     }
-                        .padding()
-                        .font(.title2)
                 }
                 .padding(5)
                 .contentShape(Rectangle())
@@ -67,55 +73,45 @@ struct MiniPlayerView: View {
                 .gesture(
                     DragGesture(minimumDistance: 10)
                         .onChanged { value in
-                            let horizontalAmount = value.translation.width
-                            let verticalAmount = value.translation.height
-                            
-                            if abs(verticalAmount) > abs(horizontalAmount) {
-                                isDragging = true
-                                if verticalAmount > 0 {
-                                    verticalDragOffset = min(maxDownwardDrag, verticalAmount * 0.3)
-                                } else {
-                                    verticalDragOffset = verticalAmount
-                                }
-                            } else {
-                                dragOffset = horizontalAmount
-                            }
+                            dragOffset = value.translation.width
+                            verticalDragOffset = value.translation.height
+                            isDragging = true
                         }
                         .onEnded { value in
                             let horizontalAmount = value.translation.width
                             let verticalAmount = value.translation.height
-                            
+
+                            isDragging = false
+
                             if abs(horizontalAmount) > abs(verticalAmount) {
                                 if horizontalAmount < -50 {
                                     withAnimation(.easeInOut) {
                                         viewModel.nextSong()
-                                        dragOffset = 0
                                     }
                                 } else if horizontalAmount > 50 {
                                     withAnimation(.easeInOut) {
                                         viewModel.previousSong()
-                                        dragOffset = 0
                                     }
-                                } else {
-                                    withAnimation(.easeOut(duration: 0.25)) {
-                                        dragOffset = 0
-                                    }
+                                }
+                                withAnimation {
+                                    dragOffset = 0
+                                    verticalDragOffset = 0
+                                }
+                            }
+                            else if verticalAmount < fullPlayerThreshold {
+                                dragOffset = 0
+                                withAnimation(.spring()) {
+                                    viewModel.showingPlayer = true
+                                    verticalDragOffset = 0
                                 }
                             } else {
-                                if verticalAmount < fullPlayerThreshold {
-                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) {
-                                        viewModel.showingPlayer = true
-                                        verticalDragOffset = 0
-                                        isDragging = false
-                                        dragOffset = 0
-                                    }
-                                } else {
-                                    withAnimation(.easeOut(duration: 0.25)) {
-                                        verticalDragOffset = 0
-                                        isDragging = false
-                                        dragOffset = 0
-                                    }
+                                withAnimation {
+                                    verticalDragOffset = 0
                                 }
+                            }
+                            
+                            withAnimation {
+                                dragOffset = 0
                             }
                         }
                 )
@@ -123,7 +119,7 @@ struct MiniPlayerView: View {
             .onTapGesture {
                 viewModel.showingPlayer = true
             }
-            .fullScreenCover(isPresented: $viewModel.showingPlayer) {
+            .sheet(isPresented: $viewModel.showingPlayer) {
                 FullMusicPlayerView()
                     .navigationTransition(.zoom(sourceID: "playerView", in: playerViewAnimation))
             }

@@ -15,32 +15,34 @@ struct ArtistDetailsView: View {
     }
     
     var body: some View {
-        GeometryReader { proxy in
-            ScrollView {
-                ArtistHeader(artist: viewModel.artist)
-                    .accessibilityLabel("Artist image")
-                    .accessibilityRemoveTraits(.isImage)
-                    .frame(maxHeight: proxy.size.height / 1.5)
-                
-                HStack(spacing: 20) {
-                    NiceIconButton("Play", buttonImage: "play.fill") {
-                        Task {
-                            await viewModel.playArtist()
-                        }
-                    }
-                    .accessibilityHint("Play all songs from this artist")
+        AsyncView(isLoading: $viewModel.isLoading) {
+            GeometryReader { proxy in
+                ScrollView {
+                    ArtistHeader(artist: viewModel.artist)
+                        .accessibilityLabel("Artist image")
+                        .accessibilityRemoveTraits(.isImage)
+                        .frame(maxHeight: proxy.size.height / 1.5)
                     
-                    NiceIconButton("Shuffle", buttonImage: "shuffle") {
-                        Task {
-                            await viewModel.shuffleArtist()
+                    HStack(spacing: 20) {
+                        NiceIconButton("Play", buttonImage: "play.fill") {
+                            Task {
+                                await viewModel.playArtist()
+                            }
                         }
+                        .accessibilityHint("Play all songs from this artist")
+                        
+                        NiceIconButton("Shuffle", buttonImage: "shuffle") {
+                            Task {
+                                await viewModel.shuffleArtist()
+                            }
+                        }
+                        .accessibilityLabel("Shuffle")
+                        .accessibilityHint("Shuffle all songs from this artist")
                     }
-                    .accessibilityLabel("Shuffle")
-                    .accessibilityHint("Shuffle all songs from this artist")
+                    .padding()
+                    
+                    AlbumsGridView(albums: viewModel.artistAlbums)
                 }
-                .padding()
-                
-                AlbumsGridView(albums: viewModel.artistAlbums)
             }
         }
         .navigationTitle(viewModel.artist.Name)

@@ -5,17 +5,22 @@
 //  Created by Nikola Ristic on 4/24/25.
 //
 
-import Foundation
+import SwiftUICore
 
 extension SongsLibraryView {
     @Observable
     class ViewModel {
         var songs: [Song] = []
+        var isLoading: Bool = false
         
         func fetchSongs() {
+            isLoading = true
             let songsService = SongsService()
             Task { @MainActor in
                 self.songs = await songsService.fetchAllSongs()
+                withAnimation {
+                    isLoading = false
+                }
             }
         }
     }

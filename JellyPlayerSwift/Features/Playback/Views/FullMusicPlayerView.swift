@@ -54,16 +54,21 @@ struct FullMusicPlayerView: View {
                 Spacer()
                  
                 VStack(spacing: 10) {
-                    HStack {
-                        Text(viewModel.formattedCurrentTime)
-                            .font(.headline)
-                            .accessibilityLabel("Current progress: \(viewModel.formattedCurrentTime)")
-                        
-                        Spacer()
-                        
-                        Text(viewModel.formattedDuration)
-                            .font(.headline)
-                            .accessibilityLabel("Song duration: \(viewModel.formattedDuration)")
+                    if viewModel.playbackService.isLoading {
+                        ProgressView()
+                            .accessibilityLabel("Loading, please wait...")
+                    } else {
+                        HStack {
+                            Text(viewModel.formattedCurrentTime)
+                                .font(.headline)
+                                .accessibilityLabel("Current progress: \(viewModel.formattedCurrentTime)")
+                            
+                            Spacer()
+                            
+                            Text(viewModel.formattedDuration)
+                                .font(.headline)
+                                .accessibilityLabel("Song duration: \(viewModel.formattedDuration)")
+                        }
                     }
                     
                     Slider(value: $viewModel.sliderTime, in: 0...viewModel.duration, onEditingChanged: { editing in

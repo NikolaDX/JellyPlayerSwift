@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @StateObject var themeService = ThemeService()
     @StateObject var languageService = LanguageService()
+    let playbackService = PlaybackService.shared
     
     var body: some View {
         Group {
@@ -20,6 +21,20 @@ struct ContentView: View {
             themeService.selectedMode == .system ? nil :
                 (themeService.selectedMode == .light ? .light : .dark)
         )
+        .overlay {
+            if playbackService.isLoading {
+                ZStack {
+                    Color.black.opacity(0.3).ignoresSafeArea()
+                    ProgressView("Loading...")
+                        .padding()
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(12)
+                        .accessibilityLabel("Loading...")
+                }
+                .transition(.opacity)
+                .animation(.easeInOut, value: playbackService.isLoading)
+            }
+        }
         .tint(themeService.selectedAccentColor)
         .environmentObject(themeService)
         .environmentObject(languageService)
