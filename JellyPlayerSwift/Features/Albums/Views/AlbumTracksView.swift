@@ -55,7 +55,7 @@ struct AlbumTracksView: View {
                         .accessibilityLabel("Release year: \(viewModel.album.PremiereDate?.prefix(4) ?? "")")
                     
                     AsyncView(isLoading: $viewModel.isLoading) {
-                        HStack(spacing: 20) {
+                        HStack(spacing: 10) {
                             NiceIconButton("Play", buttonImage: "play.fill") {
                                 if (!viewModel.songs.isEmpty) {
                                     viewModel.playSong(viewModel.songs[0])

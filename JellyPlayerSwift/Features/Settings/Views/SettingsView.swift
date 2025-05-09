@@ -88,7 +88,11 @@ struct SettingsView: View {
                     
                     Picker("Cellular quality", selection: $streamQualityService.selectedCellularQuality) {
                         ForEach(streamQualityService.availableQualityOptions, id: \.self) { quality in
-                            Text("\(quality) kbps").tag(quality)
+                            if quality == "Max" {
+                                Text("Max").tag(quality)
+                            } else {
+                                Text("\(quality) kbps").tag(quality)
+                            }
                         }
                     }
                     .pickerStyle(.segmented)
