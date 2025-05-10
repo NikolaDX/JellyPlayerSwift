@@ -43,6 +43,7 @@ class PlaybackService {
     private var cancellables = Set<AnyCancellable>()
     private var isShuffleEnabled: Bool = true
     private var repeatMode: RepeatMode = RepeatMode(rawValue: UserDefaults.standard.string(forKey: repeatKey) ?? "None") ?? .none
+    private var nowPlayingUpdateTimer: Timer?
     
     private let playSongDebouncer = DebounceService(delay: 0.2)
     
@@ -117,14 +118,20 @@ class PlaybackService {
 
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
 
-        playbackObserverToken = player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1, preferredTimescale: 1), queue: .main) { [weak self] time in
+        nowPlayingUpdateTimer?.invalidate()
+
+        nowPlayingUpdateTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self = self else { return }
 
-            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = CMTimeGetSeconds(time)
-            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = self.player?.rate ?? 1.0
-
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+            if let player = self.player {
+                var updatedInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
+                updatedInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = player.currentTime().seconds
+                updatedInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.rate
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = updatedInfo
+            }
         }
+
+        RunLoop.main.add(nowPlayingUpdateTimer!, forMode: .common)
     }
 
     private func setupRemoteControls() {
@@ -389,5 +396,8 @@ class PlaybackService {
 
         playerItemStatusObserver?.invalidate()
         playerItemStatusObserver = nil
+        
+        nowPlayingUpdateTimer?.invalidate()
+        nowPlayingUpdateTimer = nil
     }
 }
