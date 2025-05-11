@@ -2,10 +2,11 @@
   
   <img src="https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/icon.png" alt="JellyPlayer Icon" width="100" />
 
-  # 🎵 JellyPlayer
+  # JellyPlayer
 
   **A sleek and SwiftUI-powered music player for [Jellyfin](https://jellyfin.org/)**  
   Stream your favorite tracks with elegance on iOS.
+  
 </div>
 
 ---
@@ -14,6 +15,10 @@
 ![Jellyfin](https://img.shields.io/badge/Jellyfin-supported-purple?logo=jellyfin)
 ![Platform](https://img.shields.io/badge/platform-iOS%20-lightgrey)
 ![📱](https://img.shields.io/github/license/NikolaDX/JellyPlayerSwift)
+
+## 📸 Screenshots
+
+[Image 1](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/1.png) | [Image 2](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/2.png)
 
 ## ✨ Features
 
@@ -27,10 +32,6 @@
 - 🗣️ Complete **VoiceOver** support
 - 🌐 Multiple **languages** support
 - 📶 Quality limiter for **Wi-Fi** and **cellular**
-
-## 📸 Screenshots
-
-- Screenshots yea
 
 ## 🚀 Installation
 
@@ -49,5 +50,4 @@ This project is licensed under the MIT License.
 
 ---
 
-<div align="center"> Made with ❤️ using SwiftUI · Not affiliated with Jellyfin </div> ```
-
+<div align="center"> Made with ❤️ using SwiftUI · Not affiliated with Jellyfin </div>
