@@ -14,13 +14,6 @@
 ![Platform](https://img.shields.io/badge/platform-iOS%20-lightgrey)
 ![📱](https://img.shields.io/github/license/NikolaDX/JellyPlayerSwift)
 
-## 📸 Screenshots
-
-|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/1.png)|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/2.png)|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/4.png)
-|--|--|--|
-|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/5.png)|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/6.png)|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/7.png)
-|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/8.png)|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/9.png)|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/10.png)
-
 ## ✨ Features
 
 - 🎧 Connect to your **Jellyfin** server and stream music effortlessly
