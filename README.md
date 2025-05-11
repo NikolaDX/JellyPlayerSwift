@@ -18,11 +18,15 @@
 
 ## 📸 Screenshots
 
-<div>
-  <img src="https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/1.png" alt="1" />
-  <img src="https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/2.png" alt="2" />
-  <img src="https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/3.png" alt="3" />
-</div>
+|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/1.png)|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/2.png)
+|-|-|
+|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/3.png)|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/4.png)
+|-|-|
+|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/5.png)|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/6.png)
+|-|-|
+|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/7.png)|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/8.png)
+|-|-|
+|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/9.png)|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/10.png)
 
 ## ✨ Features
 
