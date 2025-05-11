@@ -1,6 +1,6 @@
 <div align="center">
   
-  ![JellyPlayer icon](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/icon.png)
+  <img src="https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/icon.png" alt="JellyPlayer Icon" width="100" />
 
   # 🎵 JellyPlayer
 
@@ -40,3 +40,14 @@ Clone the repository and open in Xcode:
 git clone https://github.com/NikolaDX/JellyPlayerSwift
 cd JellyPlayer
 open JellyPlayer.xcodeproj
+```
+## 🤝 Contributing
+Pull requests are welcome! Feel free to fork the repo and submit your improvements.
+
+## 📄 License
+This project is licensed under the MIT License.
+
+---
+
+<div align="center"> Made with ❤️ using SwiftUI · Not affiliated with Jellyfin </div> ```
+
