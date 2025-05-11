@@ -19,20 +19,19 @@
 ## 📸 Screenshots
 
 |![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/1.png)|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/2.png)|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/4.png)
-|-|-|-|
+|--|--|--|
 |![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/5.png)|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/6.png)|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/7.png)
-|-|-|-|
 |![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/8.png)|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/9.png)|![](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/10.png)
 
 ## ✨ Features
 
 - 🎧 Connect to your **Jellyfin** server and stream music effortlessly
-- 🧭 **Beautiful SwiftUI** with dynamic theming
 - 📁 Browse by **albums**, **artists**, **favorites**, **genres**, or **playlists**
 - 🔊 Seamless playback with support for **background audio**
 - 💾 **Download** songs for **offline** listening
 - 🎨 Native experience for iOS with full **dark mode** and **custom colors** support
 - 📱 Full **iPadOS** support
+- 🧭 Get **insant mix** out of any album, artist, genre, playlist or song
 - 🗣️ Complete **VoiceOver** support
 - 🌐 Multiple **languages** support
 - 📶 Quality limiter for **Wi-Fi** and **cellular**
