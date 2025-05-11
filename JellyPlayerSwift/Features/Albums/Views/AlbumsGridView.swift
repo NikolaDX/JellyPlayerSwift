@@ -10,7 +10,6 @@ import SwiftUI
 struct AlbumsGridView: View {
     let albums: [Album]
     @Namespace private var albumViewAnimation
-    @State private var isDragging: Bool = false
     @State private var filterText: String = ""
     @State private var selectedSortOption: String = "Name"
     @State private var selectedSortOrder: String = "Ascending"

@@ -71,7 +71,7 @@ struct MiniPlayerView: View {
                     }
                 }
                 .allowsHitTesting(true)
-                .highPriorityGesture(
+                .gesture(
                     DragGesture(minimumDistance: 10)
                         .onChanged { value in
                             dragOffset = value.translation.width
@@ -79,10 +79,10 @@ struct MiniPlayerView: View {
                             isDragging = true
                         }
                         .onEnded { value in
+                            isDragging = false
+                            
                             let horizontalAmount = value.translation.width
                             let verticalAmount = value.translation.height
-
-                            isDragging = false
 
                             if abs(horizontalAmount) > abs(verticalAmount) {
                                 if horizontalAmount < -50 {
@@ -94,25 +94,17 @@ struct MiniPlayerView: View {
                                         viewModel.previousSong()
                                     }
                                 }
-                                withAnimation {
-                                    dragOffset = 0
-                                    verticalDragOffset = 0
-                                }
-                            }
-                            else if verticalAmount < fullPlayerThreshold {
+                            } else if verticalAmount < fullPlayerThreshold {
                                 dragOffset = 0
                                 withAnimation(.spring()) {
                                     viewModel.showingPlayer = true
-                                    verticalDragOffset = 0
-                                }
-                            } else {
-                                withAnimation {
                                     verticalDragOffset = 0
                                 }
                             }
                             
                             withAnimation {
                                 dragOffset = 0
+                                verticalDragOffset = 0
                             }
                         }
                 )
