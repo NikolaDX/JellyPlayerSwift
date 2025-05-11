@@ -129,9 +129,10 @@ struct MiniPlayerView: View {
             .clipShape(.rect(cornerRadius: 15))
             .matchedTransitionSource(id: "playerView", in: playerViewAnimation)
             .shadow(color: .black.opacity(0.5), radius: 15)
-            .scaleEffect(isDragging ? 1.05 : 1)
+            .scaleEffect(isDragging ? clamp(-verticalDragOffset * 0.5, lower: 1, upper: 1.05) : 1)
             .offset(y: clamp(verticalDragOffset * (verticalDragOffset > 0 ? 0.3 : 0.5), lower: -10, upper: 10))
             .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isDragging)
+            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: verticalDragOffset)
         }
     }
     

@@ -14,7 +14,7 @@ class DownloadService: NSObject, ObservableObject, URLSessionDownloadDelegate {
     @Published var averageDownloadProgress: Double = 0.0
     @Published var downloads: [Song] = []
     
-    private let backgroundSessionIdentifier: String = "me.JellyPlayer.backgroundDownloadSession"
+    private let backgroundSessionIdentifier: String = "com.nikoladx.jellyPlayer.backgroundDownloadSession"
     private lazy var backgroundSession: URLSession = {
         let configuration = URLSessionConfiguration.background(withIdentifier: backgroundSessionIdentifier)
         return URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
