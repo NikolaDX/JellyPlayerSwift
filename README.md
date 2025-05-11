@@ -47,7 +47,7 @@ open JellyPlayer.xcodeproj
 Pull requests are welcome! Feel free to fork the repo and submit your improvements.
 
 ## 📄 License
-This project is licensed under the MIT License.
+This project is licensed under the GPL v3 License.
 
 ---
 
