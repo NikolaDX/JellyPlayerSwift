@@ -1,5 +1,6 @@
 <div align="center">
-  <img src="[https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/icon.png]" alt="JellyPlayer Icon" width="100" />
+  
+  ![JellyPlayer icon](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/icon.png)
 
   # 🎵 JellyPlayer
 
