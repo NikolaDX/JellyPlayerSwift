@@ -11,8 +11,6 @@
 
 ---
 
-![SwiftUI](https://img.shields.io/badge/SwiftUI-compatible-blue?logo=swift)
-![Jellyfin](https://img.shields.io/badge/Jellyfin-supported-purple?logo=jellyfin)
 ![Platform](https://img.shields.io/badge/platform-iOS%20-lightgrey)
 ![📱](https://img.shields.io/github/license/NikolaDX/JellyPlayerSwift)
 
