@@ -10,15 +10,18 @@ import SwiftUI
 
 struct AlbumCard: View {
     private var album: Album
+    private var namespace: Namespace.ID
     
-    init(album: Album) {
+    init(album: Album, namespace: Namespace.ID) {
         self.album = album
+        self.namespace = namespace
     }
     
     var body: some View {
         VStack(alignment: .leading) {
             AlbumCover(album: album)
                 .padding(.bottom, 5)
+                .matchedTransitionSource(id: album.Id, in: namespace)
             
             VStack(alignment: .leading) {
                 Text(album.Name)
@@ -37,5 +40,5 @@ struct AlbumCard: View {
 
 #Preview {
     @Previewable @Namespace var albumNamespace
-    AlbumCard(album: Album(Id: "id", Name: "Name", AlbumArtist: "Artist", AlbumArtists: [], DateCreated: "", PremiereDate: ""))
+    AlbumCard(album: Album(Id: "id", Name: "Name", AlbumArtist: "Artist", AlbumArtists: [], DateCreated: "", PremiereDate: ""), namespace: albumNamespace)
 }

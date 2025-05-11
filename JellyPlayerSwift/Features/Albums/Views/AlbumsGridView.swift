@@ -54,8 +54,7 @@ struct AlbumsGridView: View {
                         AlbumTracksView(album: album)
                             .navigationTransition(.zoom(sourceID: album.Id, in: albumViewAnimation))
                     } label: {
-                        AlbumCard(album: album)
-                            .matchedTransitionSource(id: album.Id, in: albumViewAnimation)
+                        AlbumCard(album: album, namespace: albumViewAnimation)
                     }
                     .accessibilityElement(children: .combine)
                     .accessibilityLabel("Album: \(album.Name) by \(album.AlbumArtist)")

@@ -33,7 +33,7 @@ struct AlbumsStackView: View {
                                 let opacity = max(0.3, 1 - abs(depth) * 0.1)
                                 
                                 GeometryReader { proxy in
-                                    AlbumCard(album: album)
+                                    AlbumCard(album: album, namespace: albumViewAnimation)
                                         .scaleEffect(scale)
                                         .offset(y: yOffset)
                                         .zIndex(Double(-depth))
@@ -44,7 +44,6 @@ struct AlbumsStackView: View {
                                             navigationPath.append(album)
                                         }
                                         .frame(width: proxy.size.width, height: proxy.size.height)
-                                        .matchedTransitionSource(id: album.Id, in: albumViewAnimation)
                                         .accessibilityElement(children: .combine)
                                         .accessibilityHidden(index != Int(round(scrollOffset)))
                                         .accessibilityLabel("\(album.Name) by \(album.AlbumArtist)")
