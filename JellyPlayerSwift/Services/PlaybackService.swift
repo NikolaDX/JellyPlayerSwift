@@ -42,7 +42,7 @@ class PlaybackService {
     private var queueShuffled: Bool = false
     private var cancellables = Set<AnyCancellable>()
     private var isShuffleEnabled: Bool = true
-    private var repeatMode: RepeatMode = RepeatMode(rawValue: UserDefaults.standard.string(forKey: repeatKey) ?? "None") ?? .none
+    private var repeatMode: RepeatMode = RepeatMode(rawValue: UserDefaults.standard.string(forKey: repeatKey) ?? "Never repeat") ?? .none
     private var nowPlayingUpdateTimer: Timer?
     
     private let playSongDebouncer = DebounceService(delay: 0.2)

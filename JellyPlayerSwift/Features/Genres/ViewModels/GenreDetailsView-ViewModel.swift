@@ -19,6 +19,7 @@ extension GenreDetailsView {
         }
         
         func fetchGenreAlbums() {
+            if !genreAlbums.isEmpty { return }
             isLoading = true
             let genresService = GenresService()
             Task { @MainActor in

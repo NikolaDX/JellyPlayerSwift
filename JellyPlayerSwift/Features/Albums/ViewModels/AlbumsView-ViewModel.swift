@@ -14,6 +14,7 @@ extension AlbumsStackView {
         var isLoading: Bool = false
         
         func fetchAlbums() {
+            if !albums.isEmpty { return }
             isLoading = true
             let albumService = AlbumService()
             Task { @MainActor in

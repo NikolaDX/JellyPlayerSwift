@@ -14,6 +14,7 @@ extension AlbumsLibraryView {
         var isLoading: Bool = false
         
         func fetchAlbums() {
+            if !albums.isEmpty { return }
             isLoading = true
             let albumsService = AlbumService()
             Task { @MainActor in

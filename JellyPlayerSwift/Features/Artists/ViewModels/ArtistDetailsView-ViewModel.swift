@@ -19,6 +19,7 @@ extension ArtistDetailsView {
         }
         
         func fetchArtistAlbums() {
+            if !artistAlbums.isEmpty { return }
             isLoading = true
             let artistsService = ArtistsService()
             Task { @MainActor in

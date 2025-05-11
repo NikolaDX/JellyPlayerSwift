@@ -14,6 +14,7 @@ extension SongsLibraryView {
         var isLoading: Bool = false
         
         func fetchSongs() {
+            if !songs.isEmpty { return }
             isLoading = true
             let songsService = SongsService()
             Task { @MainActor in
