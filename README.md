@@ -33,8 +33,8 @@ Clone the repository and open in Xcode:
 
 ```bash
 git clone https://github.com/NikolaDX/JellyPlayerSwift
-cd JellyPlayer
-open JellyPlayer.xcodeproj
+cd JellyPlayerSwift
+open JellyPlayerSwift.xcodeproj
 ```
 ## 🤝 Contributing
 Pull requests are welcome! Feel free to fork the repo and submit your improvements.
