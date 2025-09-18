@@ -5,7 +5,7 @@
 //  Created by Nikola Ristic on 4/15/25.
 //
 
-import SwiftUICore
+import SwiftUI
 
 extension AlbumsStackView {
     @Observable

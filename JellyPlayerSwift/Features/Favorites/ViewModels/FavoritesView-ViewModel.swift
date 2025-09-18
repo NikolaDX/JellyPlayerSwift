@@ -5,7 +5,7 @@
 //  Created by Nikola Ristic on 4/24/25.
 //
 
-import SwiftUICore
+import SwiftUI
 
 extension FavoritesView {
     @Observable

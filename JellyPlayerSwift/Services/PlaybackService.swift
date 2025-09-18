@@ -9,7 +9,7 @@ import AVFoundation
 import Combine
 import Foundation
 import MediaPlayer
-import SwiftUICore
+import SwiftUI
 
 enum RepeatMode: String, CaseIterable {
     case none = "Never repeat"

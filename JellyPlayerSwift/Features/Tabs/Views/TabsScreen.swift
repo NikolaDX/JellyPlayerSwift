@@ -20,7 +20,7 @@ struct TabsScreen: View {
                     .modifier(MiniPlayerModifier())
             }
             
-            Tab("Settings", systemImage: "gear") {
+            Tab("Settings", systemImage: "gear", role: .search) {
                 SettingsView()
                     .modifier(MiniPlayerModifier())
             }

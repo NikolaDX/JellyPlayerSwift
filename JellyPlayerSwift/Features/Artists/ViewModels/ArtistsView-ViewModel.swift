@@ -5,7 +5,7 @@
 //  Created by Nikola Ristic on 4/23/25.
 //
 
-import SwiftUICore
+import SwiftUI
 
 extension ArtistsView {
     @Observable
