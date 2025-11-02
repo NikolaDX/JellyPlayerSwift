@@ -27,7 +27,11 @@ extension MiniPlayerView {
         }
         
         var artist: String {
-            playbackService.currentSong?.Artists.joined(separator: ", ") ?? ""
+            if let song = playbackService.currentSong {
+                return song.Artists.isEmpty ? "Unkown Artist" : song.Artists.joined(separator: ", ")
+            } else  {
+                return "Unknown Artist"
+            }
         }
         
         var isPlaying: Bool {

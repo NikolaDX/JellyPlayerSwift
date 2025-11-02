@@ -30,6 +30,7 @@ class SongsService {
             URLQueryItem(name: "SortBy", value: "Name"),
             URLQueryItem(name: "SortOrder", value: "Ascending")
         ]) {
+            print(String(data: data, encoding: .utf8) ?? "No data.")
             do {
                 let raw = try JSONSerialization.jsonObject(with: data) as? [String: Any]
                 if let itemsArray = raw?["Items"] as? [[String: Any]] {

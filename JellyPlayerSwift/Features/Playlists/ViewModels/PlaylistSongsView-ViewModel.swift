@@ -32,7 +32,7 @@ extension PlaylistSongsView {
             filterText.isEmpty ? sortedSongs : sortedSongs.filter {
                 $0.Name.localizedCaseInsensitiveContains(filterText) ||
                 $0.Artists.joined(separator: ", ").localizedCaseInsensitiveContains(filterText) ||
-                $0.Album.localizedCaseInsensitiveContains(filterText)
+                $0.albumName.localizedCaseInsensitiveContains(filterText)
             }
         }
         
@@ -45,7 +45,7 @@ extension PlaylistSongsView {
             case "Name":
                 sorted = songs.sorted { $0.Name < $1.Name }
             case "Album":
-                sorted = songs.sorted { $0.Album < $1.Album }
+                sorted = songs.sorted { $0.albumName < $1.albumName }
             case "Artist":
                 sorted = songs.sorted { $0.Artists.joined(separator: ", ") < $1.Artists.joined(separator: ", ") }
             case "DateAdded":

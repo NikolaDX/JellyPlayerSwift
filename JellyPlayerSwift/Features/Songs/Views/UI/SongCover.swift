@@ -24,6 +24,14 @@ struct SongCover: View {
                 .clipShape(.rect(cornerRadius: 10))
         } else {
             KFImage(song.coverUrl)
+                .placeholder {
+                    Image(systemName: "opticaldisc.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: 50, maxHeight: 50)
+                        .clipShape(.rect(cornerRadius: 10))
+                }
                 .resizable()
                 .scaledToFit()
                 .frame(maxWidth: 50, maxHeight: 50)

@@ -22,6 +22,11 @@ struct LargeSongCover: View {
                 .scaledToFit()
         } else {
             KFImage(song.coverUrl)
+                .placeholder {
+                    Image(systemName: "opticaldisc.fill")
+                        .resizable()
+                        .scaledToFit()
+                }
                 .resizable()
                 .scaledToFit()
         }

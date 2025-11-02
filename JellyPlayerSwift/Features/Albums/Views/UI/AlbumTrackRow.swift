@@ -17,7 +17,7 @@ struct AlbumTrackRow: View {
     var body: some View {
         VStack {
             HStack {
-                Text("\(song.IndexNumber)")
+                Text("\(song.IndexNumber ?? 0)")
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.secondary)
                     .frame(width: 30)

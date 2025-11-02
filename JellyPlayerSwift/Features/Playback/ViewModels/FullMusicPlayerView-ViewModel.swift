@@ -47,11 +47,19 @@ extension FullMusicPlayerView {
         }
         
         var artist: String {
-            playbackService.currentSong?.Artists.joined(separator: ", ") ?? ""
+            if let song = playbackService.currentSong {
+                return song.Artists.isEmpty ? "Unkown Artist" : song.Artists.joined(separator: ", ")
+            } else  {
+                return "Unknown Artist"
+            }
         }
         
         var album: String {
-            playbackService.currentSong?.Album ?? ""
+            if let song = playbackService.currentSong {
+                return song.Album ?? "Unknown Album"
+            } else {
+                return "Unknown Album"
+            }
         }
         
         var isPlaying: Bool {

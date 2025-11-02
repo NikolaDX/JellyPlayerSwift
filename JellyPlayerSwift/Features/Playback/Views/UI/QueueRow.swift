@@ -29,7 +29,7 @@ struct QueueRow: View {
                     .lineLimit(1)
                     .font(.headline)
                 
-                Text(song.Artists.joined(separator: ", "))
+                Text(song.Artists.isEmpty ? "Unknown Artist" : song.Artists.joined(separator: ", "))
                     .lineLimit(1)
                     .foregroundStyle(.secondary)
                     .font(.subheadline)

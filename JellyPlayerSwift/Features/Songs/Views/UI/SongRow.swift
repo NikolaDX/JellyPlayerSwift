@@ -22,7 +22,7 @@ struct SongRow: View {
             
             VStack(alignment: .leading) {
                 Headline(song.Name)
-                Subheadline(song.Artists.joined(separator: ", "))
+                Subheadline(song.Artists.isEmpty ? "Unknown Artist" : song.Artists.joined(separator: ", "))
             }
             
             Spacer()

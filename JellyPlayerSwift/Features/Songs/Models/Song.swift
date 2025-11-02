@@ -15,16 +15,16 @@ struct UserData: Codable {
 class Song: Codable, Equatable {
     let Id: String
     let Name: String
-    let IndexNumber: Int
-    let Album: String
-    let AlbumId: String
+    let IndexNumber: Int?
+    let Album: String?
+    let AlbumId: String?
     let RunTimeTicks: Int
     let Artists: [String]
     var UserData: UserData
     var coverImageData: Data?
     let DateCreated: String?
     
-    init(Id: String, Name: String, IndexNumber: Int, Album: String, AlbumId: String, RunTimeTicks: Int, Artists: [String], UserData: UserData, DateCreated: String?) {
+    init(Id: String, Name: String, IndexNumber: Int?, Album: String?, AlbumId: String?, RunTimeTicks: Int, Artists: [String], UserData: UserData, DateCreated: String?) {
         self.Id = Id
         self.Name = Name
         self.IndexNumber = IndexNumber
@@ -71,9 +71,25 @@ class Song: Codable, Equatable {
     
     var coverUrl: URL? {
         if let serverUrl = UserDefaults.standard.string(forKey: serverKey) {
-            return URL(string: "\(serverUrl)/Items/\(AlbumId)/Images/Primary")
+            return URL(string: "\(serverUrl)/Items/\(AlbumId ?? "Unknown Album")/Images/Primary")
         } else {
             return nil
+        }
+    }
+    
+    var albumName: String {
+        if let albumName = Album {
+            return albumName
+        } else {
+            return "Unknown Album"
+        }
+    }
+    
+    var getAlbumId: String {
+        if let id = AlbumId {
+            return id
+        } else {
+            return "0"
         }
     }
     

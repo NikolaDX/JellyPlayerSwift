@@ -95,7 +95,7 @@ class PlaybackService {
         var nowPlayingInfo: [String: Any] = [
             MPMediaItemPropertyTitle: song.Name,
             MPMediaItemPropertyArtist: song.Artists.joined(separator: ", "),
-            MPMediaItemPropertyAlbumTitle: song.Album,
+            MPMediaItemPropertyAlbumTitle: song.albumName,
             MPMediaItemPropertyPlaybackDuration: duration,
             MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
             MPNowPlayingInfoPropertyPlaybackRate: player?.rate ?? 1.0
