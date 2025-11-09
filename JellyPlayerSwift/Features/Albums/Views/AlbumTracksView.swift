@@ -42,13 +42,21 @@ struct AlbumTracksView: View {
                         .fontWeight(.bold)
                         .accessibilityLabel("Album name: \(viewModel.album.Name)")
                     
-                    NavigationLink(destination: ArtistDetailsView(artist: viewModel.album.AlbumArtists[0])) {
-                        Text(viewModel.album.AlbumArtist)
+                    if (viewModel.album.AlbumArtists.isEmpty) {
+                        Text(viewModel.album.getArtist)
                             .foregroundStyle(.secondary)
                             .font(.headline)
+                            .accessibilityLabel("Artist: \(viewModel.album.getArtist)")
                     }
-                    .accessibilityLabel("Artist: \(viewModel.album.AlbumArtist)")
-                    .accessibilityHint("Double-tap to see all albums from this artist")
+                    else {
+                        NavigationLink(destination: ArtistDetailsView(artist: viewModel.album.AlbumArtists[0])) {
+                            Text(viewModel.album.getArtist)
+                                .foregroundStyle(.secondary)
+                                .font(.headline)
+                        }
+                        .accessibilityLabel("Artist: \(viewModel.album.getArtist)")
+                        .accessibilityHint("Double-tap to see all albums from this artist")
+                    }
                     
                     Subheadline("\(viewModel.album.PremiereDate?.prefix(4) ?? "")")
                         .padding(.bottom, spaceBetween)

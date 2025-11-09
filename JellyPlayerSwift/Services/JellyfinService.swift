@@ -25,6 +25,49 @@ class JellyfinService {
         set { UserDefaults.standard.set(newValue, forKey: accessKey) }
     }
     
+    private var musicLibraryId: String? {
+        get { return UserDefaults.standard.string(forKey: libraryKey) }
+        set { UserDefaults.standard.set(newValue, forKey: libraryKey) }
+    }
+    
+    func fetchMusicLibraryId() async -> String? {
+        if let cachedId = musicLibraryId {
+            return cachedId
+        }
+        
+        guard let server = serverUrl, let userId = userId, let token = accessToken else {
+            return nil
+        }
+        
+        guard let url = URL(string: "\(server)/Users/\(userId)/Views") else {
+            return nil
+        }
+        
+        var request = URLRequest(url: url)
+        request.setValue(token, forHTTPHeaderField: "X-Emby-Token")
+        request.httpMethod = "GET"
+        
+        if let (data, response) = try? await URLSession.shared.data(for: request),
+           let httpResponse = response as? HTTPURLResponse,
+           httpResponse.statusCode == 200 {
+            
+            if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+               let items = json["Items"] as? [[String: Any]] {
+                
+                for item in items {
+                    if let collectionType = item["CollectionType"] as? String,
+                       collectionType == "music",
+                       let id = item["Id"] as? String {
+                        musicLibraryId = id
+                        return id
+                    }
+                }
+            }
+        }
+        
+        return nil
+    }
+    
     func authenticateUser(server: String, username: String, password: String) async throws {
         guard let url = URL(string: "\(server)") else {
             throw URLError(.badURL)
@@ -48,6 +91,7 @@ class JellyfinService {
         userId = response.user?.id
         accessToken = response.accessToken
         serverUrl = server
+        _ = await fetchMusicLibraryId()
     }
     
     func fetchItems(queryItems: [URLQueryItem]) async -> Data? {

@@ -17,7 +17,7 @@ struct AlbumsGridView: View {
     private var filteredAlbums: [Album] {
         filterText.isEmpty ? sortedAlbums : sortedAlbums.filter {
             $0.Name.localizedCaseInsensitiveContains(filterText) ||
-            $0.AlbumArtist.localizedCaseInsensitiveContains(filterText)
+            $0.getArtist.localizedCaseInsensitiveContains(filterText)
         }
     }
     
@@ -28,7 +28,7 @@ struct AlbumsGridView: View {
         case "Name":
             sorted = albums.sorted { $0.Name < $1.Name }
         case "Artist":
-            sorted = albums.sorted { $0.AlbumArtist < $1.AlbumArtist }
+            sorted = albums.sorted { $0.getArtist < $1.getArtist }
         case "DateAdded":
             sorted = albums.sorted { $0.DateCreated ?? "" < $1.DateCreated ?? "" }
         case "DateReleased":
@@ -56,7 +56,7 @@ struct AlbumsGridView: View {
                         AlbumCard(album: album, namespace: albumViewAnimation)
                     }
                     .accessibilityElement(children: .combine)
-                    .accessibilityLabel("Album: \(album.Name) by \(album.AlbumArtist)")
+                    .accessibilityLabel("Album: \(album.Name) by \(album.getArtist)")
                     .foregroundStyle(.primary)
                     .contextMenu {
                         ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {

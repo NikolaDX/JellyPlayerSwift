@@ -23,9 +23,16 @@ class GenresService {
     let jellyfinService = JellyfinService()
     
     func fetchGenres() async -> [Genre] {
+        guard let musicLibraryId = await jellyfinService.fetchMusicLibraryId() else {
+            return []
+        }
+        
         if let data = await jellyfinService.fetchSpecific(queryItems: [
-            URLQueryItem(name: "IncludeItemTypes", value: "Audio")
+            URLQueryItem(name: "Recursive", value: "true"),
+            URLQueryItem(name: "ParentId", value: musicLibraryId),
+            URLQueryItem(name: "Limit", value: "100")
         ], toFetch: "Genres") {
+            print(String(data: data, encoding: .utf8) ?? "No genres")
             if let decodedResponse = try? JSONDecoder().decode(GenreResponse.self, from: data) {
                 return decodedResponse.Items
             }

@@ -46,7 +46,7 @@ struct AlbumsStackView: View {
                                         .frame(width: proxy.size.width, height: proxy.size.height)
                                         .accessibilityElement(children: .combine)
                                         .accessibilityHidden(index != Int(round(scrollOffset)))
-                                        .accessibilityLabel("\(album.Name) by \(album.AlbumArtist)")
+                                        .accessibilityLabel("\(album.Name) by \(album.getArtist)")
                                         .accessibilityAddTraits(.isButton)
                                         .accessibilityHint("Swipe up or down to switch albums. Double tap to open.")
                                         .accessibilityAdjustableAction { direction in

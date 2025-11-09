@@ -28,7 +28,7 @@ struct AlbumCard: View {
                     .lineLimit(1)
                     .font(.headline)
                 
-                Text(album.AlbumArtist)
+                Text(album.getArtist)
                     .lineLimit(1)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)

@@ -14,7 +14,7 @@ struct AlbumResponse: Codable {
 struct Album: Codable, Hashable {
     let Id: String
     let Name: String
-    let AlbumArtist: String
+    let AlbumArtist: String?
     let AlbumArtists: [Artist]
     let DateCreated: String?
     let PremiereDate: String?
@@ -25,5 +25,13 @@ struct Album: Codable, Hashable {
         } else {
             return nil
         }   
+    }
+    
+    var getArtist: String {
+        if let artist = AlbumArtist {
+            return artist
+        } else {
+            return "Unknown artist"
+        }
     }
 }
