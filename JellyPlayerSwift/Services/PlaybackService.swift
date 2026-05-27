@@ -44,12 +44,14 @@ class PlaybackService {
     private var isShuffleEnabled: Bool = true
     private var repeatMode: RepeatMode = RepeatMode(rawValue: UserDefaults.standard.string(forKey: repeatKey) ?? "Never repeat") ?? .none
     private var nowPlayingUpdateTimer: Timer?
+    private var timeControlObserver: NSKeyValueObservation?
     
     private let playSongDebouncer = DebounceService(delay: 0.2)
     
     var currentSong: Song? = nil
     var isPlaying: Bool = false
     var isLoading: Bool = false
+    var isBuffering: Bool = false
     var currentTime: Double = 0
     
     var duration: Double {
@@ -138,12 +140,16 @@ class PlaybackService {
         let remoteCommandCenter = MPRemoteCommandCenter.shared()
         
         remoteCommandCenter.playCommand.addTarget { _ in
-            self.play()
+            Task { @MainActor in
+                self.play()
+            }
             return .success
         }
         
         remoteCommandCenter.pauseCommand.addTarget { _ in
-            self.pause()
+            Task { @MainActor in
+                self.pause()
+            }
             return .success
         }
         
@@ -180,7 +186,6 @@ class PlaybackService {
         
         playSongDebouncer.run {
             self.cleanup()
-            self.isLoading = true
             let playerItem: AVPlayerItem
             
             if let localPath = song.localFilePath {
@@ -191,6 +196,17 @@ class PlaybackService {
             
             self.player = AVPlayer(playerItem: playerItem)
             self.player?.play()
+            self.currentSong = song
+            self.isPlaying = true
+            self.updateNowPlayingInfo(song: song)
+            
+            self.timeControlObserver = self.player?.observe(
+                \.timeControlStatus, options: [.new]
+            ) { [weak self] player, _ in
+                DispatchQueue.main.async {
+                    self?.isBuffering = player.timeControlStatus == .waitingToPlayAtSpecifiedRate
+                }
+            }
             
             let interval = CMTimeMakeWithSeconds(1.0, preferredTimescale: 1)
             self.timeObserverToken = self.player?.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
@@ -200,10 +216,7 @@ class PlaybackService {
             self.playerItemStatusObserver = playerItem.observe(\.status, options: [.initial, .new]) { [weak self] item, _ in
                 if item.status == .readyToPlay {
                     self?.updateNowPlayingInfo(song: song)
-                    self?.currentSong = song
-                    self?.isPlaying = true
                     self?.isShuffleEnabled = true
-                    self?.isLoading = false
                 }
             }
         }
@@ -399,5 +412,8 @@ class PlaybackService {
         
         nowPlayingUpdateTimer?.invalidate()
         nowPlayingUpdateTimer = nil
+        
+        timeControlObserver?.invalidate()
+        timeControlObserver = nil
     }
 }

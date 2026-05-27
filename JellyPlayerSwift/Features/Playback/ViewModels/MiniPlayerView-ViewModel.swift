@@ -38,6 +38,10 @@ extension MiniPlayerView {
             playbackService.isPlaying
         }
         
+        var isBuffering: Bool {
+            playbackService.isBuffering
+        }
+        
         func togglePlayPause() {
             playbackService.togglePlayPause()
         }

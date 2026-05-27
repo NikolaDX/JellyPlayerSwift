@@ -66,6 +66,10 @@ extension FullMusicPlayerView {
             playbackService.isPlaying
         }
         
+        var isBuffering: Bool {
+            playbackService.isBuffering
+        }
+        
         var duration: Double {
             playbackService.duration
         }

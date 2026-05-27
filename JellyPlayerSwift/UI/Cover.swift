@@ -10,15 +10,21 @@ import SwiftUI
 
 struct Cover: View {
     private let url: URL?
+    @State private var failed = false
     
     init(url: URL?) {
         self.url = url
     }
     
     var body: some View {
-        KFImage(url)
-            .resizable()
-            .scaledToFit()
+        if (!failed) {
+            KFImage(url)
+                .onFailure { _ in
+                    failed = true
+                }
+                .resizable()
+                .scaledToFit()
+        }
     }
 }
 

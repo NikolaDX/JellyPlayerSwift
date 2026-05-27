@@ -11,6 +11,7 @@ struct FullMusicPlayerView: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var viewModel = ViewModel()
+    @State private var lastHapticTime: Double = 0
     
     private let buttonSize: Double = 25
     
@@ -161,6 +162,19 @@ struct FullMusicPlayerView: View {
                 viewModel.updateDominantColor()
             }
         }
+        .onChange(of: viewModel.sliderTime) {
+            if (viewModel.isEditing) {
+                triggerScrubHaptic()
+            }
+        }
+    }
+    
+    private func triggerScrubHaptic() {
+        let interval = 2.0
+        guard abs(viewModel.sliderTime - lastHapticTime) >= interval else { return }
+        lastHapticTime = viewModel.sliderTime
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
     }
 }
 
