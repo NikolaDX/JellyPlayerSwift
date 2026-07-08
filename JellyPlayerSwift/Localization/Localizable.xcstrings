@@ -8406,6 +8406,9 @@
         }
       }
     },
+    "Keep listening! Your personalized recommendations will appear here." : {
+
+    },
     "Korean" : {
       "localizations" : {
         "ar" : {
@@ -11980,6 +11983,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "上一首歌曲"
+          }
+        }
+      }
+    },
+    "Recommended song: %@ by %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Recommended song: %1$@ by %2$@"
           }
         }
       }

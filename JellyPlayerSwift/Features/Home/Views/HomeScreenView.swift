@@ -17,8 +17,10 @@ struct HomeScreenView: View {
             Group {
                 if networkService.isConnected {
                     if let _ = access {
-                        AlbumsStackView(navigationPath: $navigationPath)
-                            .modifier(MiniPlayerModifier())
+                        //AlbumsStackView(navigationPath: $navigationPath)
+                        //    .modifier(MiniPlayerModifier())
+                        RecommendedSongsCarouselView()
+                            .padding(.top)
                     } else {
                         ServerNotConfiguredView()
                             .modifier(MiniPlayerModifier())
