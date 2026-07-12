@@ -194,7 +194,7 @@ class PlaybackService {
         if playCounter >= 5 {
             Task(priority: .background) {
                 let history = HistoryService.shared.fetchLocalHistory()
-                await ModelTrainingService.shared.trainModel(with: history)
+                await ModelTrainingService.shared.trainModel(with: history, using: RegressorAlgorithm.randomForest)
                 
                 UserDefaults.standard.set(0, forKey: "songsPlayedSinceLastTrain")
             }

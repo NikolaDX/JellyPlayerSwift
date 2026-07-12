@@ -39,31 +39,22 @@ class RecommendationService {
         var scoredSongs: [(song: Song, score: Double)] = []
         
         for song in availableSongs {
+            let inputFeatures = RecommenderFeatures.inputDictionary(for: song, currentHour: currentHour)
+            
+            var estimatedScore: Double? = nil
+                        
             do {
-                let songArtists = song.Artists.joined(separator: ", ")
-                
-                let inputFeatures: [String: Any] = [
-                    "artists": songArtists,
-                    "hourOfDay": Double(currentHour),
-                    "playCount": Double(song.UserData.PlayCount),
-                    "isFavorite": song.UserData.IsFavorite ? 1.0 : 0.0
-                ]
-                
                 let provider = try MLDictionaryFeatureProvider(dictionary: inputFeatures)
                 let prediction = try model.prediction(from: provider)
                 
-                if var score = prediction.featureValue(for: "calculatedAffinity")?.doubleValue {
-                    if song.UserData.PlayCount == 0 {
-                        score += 1.0
-                    } else if song.UserData.PlayCount <= 3 {
-                        score += 0.7
-                    }
-                    
-                    scoredSongs.append((song: song, score: score))
-                }
+                estimatedScore = prediction.featureValue(for: RecommenderFeatures.targetColumn)?.doubleValue
             } catch {
-                print("Prediction error: \(error)")
+                estimatedScore = nil
             }
+            
+            let playCountBoost: Double = song.UserData.PlayCount == 0 ? 1.0 : song.UserData.PlayCount <= 3 ? 0.7 : 0.0
+            
+            scoredSongs.append((song: song, score: (estimatedScore ?? -Double.infinity) + playCountBoost))
         }
         
         return scoredSongs.sorted { $0.score > $1.score }.map { $0.song }

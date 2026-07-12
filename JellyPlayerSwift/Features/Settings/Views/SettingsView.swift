@@ -107,6 +107,19 @@ struct SettingsView: View {
                         .accessibilityHint("Select language for this app")
                     }
                     
+                    #if DEBUG
+                    
+                    Heading("Developer")
+                    
+                    NiceButton("Compare Recommendation Models") {
+                        Task(priority: .background) {
+                            let history = HistoryService.shared.fetchLocalHistory()
+                            _ = ModelEvaluationService.shared.compareAlgorithms(history: history)
+                        }
+                    }
+                    
+                    #endif
+                    
                 }
                 .navigationTitle("Settings")
                 .sheet(isPresented: $viewModel.showingLogin) {
