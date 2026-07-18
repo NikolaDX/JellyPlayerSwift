@@ -13,12 +13,24 @@ extension SongsLibraryView {
         var songs: [Song] = []
         var isLoading: Bool = false
         
-        func fetchSongs() {
+        var lastFetched: Date?
+        let cacheLifetime: TimeInterval = 300
+        
+        func fetchSongs(forceRefresh: Bool = false) {
             if !songs.isEmpty { return }
+            
+            if !forceRefresh,
+                let lastFetched,
+                Date().timeIntervalSince(lastFetched) < cacheLifetime,
+                !songs.isEmpty {
+                return
+            }
+            
             isLoading = true
             let songsService = SongsService()
             Task { @MainActor in
                 self.songs = await songsService.fetchAllSongs()
+                self.lastFetched = Date()
                 withAnimation {
                     isLoading = false
                 }

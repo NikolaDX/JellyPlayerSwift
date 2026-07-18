@@ -118,6 +118,11 @@ struct SettingsView: View {
                         }
                     }
                     
+                    NiceButton("Get User Location") {
+                        print("Fetching location!")
+                        LocationService.shared.requestLocation()
+                    }
+                    
                     #endif
                     
                 }

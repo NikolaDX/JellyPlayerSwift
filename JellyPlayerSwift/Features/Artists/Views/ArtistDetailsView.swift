@@ -49,6 +49,9 @@ struct ArtistDetailsView: View {
         .task {
             viewModel.fetchArtistAlbums()
         }
+        .refreshable {
+            viewModel.fetchArtistAlbums(forceRefresh: true)
+        }
     }
 }
 

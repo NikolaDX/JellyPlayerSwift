@@ -16,6 +16,9 @@ extension PlaylistSongsView {
         private var favoritesService: FavoritesService
         private var downloadService: DownloadService
         
+        var lastFetched: Date?
+        let cacheLifetime: TimeInterval = 300
+        
         let playlist: Playlist
         
         init(playlist: Playlist, favoritesService: FavoritesService, downloadService: DownloadService) {
@@ -63,11 +66,19 @@ extension PlaylistSongsView {
             }
         }
         
-        func fetchSongs() {
+        func fetchSongs(forceRefresh: Bool = false) {
+            if !forceRefresh,
+                let lastFetched,
+                Date().timeIntervalSince(lastFetched) < cacheLifetime,
+                !songs.isEmpty {
+                return
+            }
+            
             isLoading = true
             let playlistsService = PlaylistsService()
             Task { @MainActor in
                 songs = await playlistsService.fetchPlaylistSongs(playlistId: playlist.Id)
+                self.lastFetched = Date()
                 withAnimation {
                     isLoading = false
                 }
@@ -79,7 +90,7 @@ extension PlaylistSongsView {
             Task { @MainActor in
                 do {
                     try await playlistsSerivce.removeSongsFromPlaylist(songIds: songIds, playlistId: playlistId)
-                    fetchSongs()
+                    fetchSongs(forceRefresh: true)
                 } catch {
                     print("Error removing song: \(error.localizedDescription)")
                 }

@@ -21,6 +21,8 @@ struct SongCover: View {
                 .resizable()
                 .scaledToFit()
                 .frame(maxWidth: 50, maxHeight: 50)
+                .clipped()
+                .compositingGroup()
                 .clipShape(.rect(cornerRadius: 10))
         } else {
             KFImage(song.coverUrl)
@@ -30,11 +32,15 @@ struct SongCover: View {
                         .scaledToFit()
                         .foregroundStyle(.secondary)
                         .frame(maxWidth: 50, maxHeight: 50)
+                        .clipped()
+                        .compositingGroup()
                         .clipShape(.rect(cornerRadius: 10))
                 }
                 .resizable()
                 .scaledToFit()
                 .frame(maxWidth: 50, maxHeight: 50)
+                .clipped()
+                .compositingGroup()
                 .clipShape(.rect(cornerRadius: 10))
         }
     }

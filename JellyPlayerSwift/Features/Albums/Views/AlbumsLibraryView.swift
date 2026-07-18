@@ -18,6 +18,9 @@ struct AlbumsLibraryView: View {
         .task {
             viewModel.fetchAlbums()
         }
+        .refreshable {
+            viewModel.fetchAlbums(forceRefresh: true)
+        }
     }
 }
 

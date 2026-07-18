@@ -13,11 +13,22 @@ extension FavoritesView {
         var favoriteSongs: [Song] = []
         var isLoading: Bool = false
         
-        func fetchSongs() {
+        var lastFetched: Date?
+        let cacheLifetime: TimeInterval = 300
+        
+        func fetchSongs(forceRefresh: Bool = false) {
+            if !forceRefresh,
+                let lastFetched,
+                Date().timeIntervalSince(lastFetched) < cacheLifetime,
+                !favoriteSongs.isEmpty {
+                return
+            }
+            
             isLoading = true
             let favoritesService = FavoritesService()
             Task { @MainActor in
                 self.favoriteSongs = await favoritesService.fetchFavoriteSongs()
+                self.lastFetched = Date()
                 withAnimation {
                     isLoading = false
                 }

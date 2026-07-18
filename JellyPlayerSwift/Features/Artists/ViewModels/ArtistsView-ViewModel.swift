@@ -15,17 +15,28 @@ extension ArtistsView {
         
         var filterText: String = ""
         
+        var lastFetched: Date?
+        let cacheLifetime: TimeInterval = 300
+        
         var filteredArtists: [Artist] {
             filterText.isEmpty ? artists : artists.filter {
                 $0.Name.localizedStandardContains(filterText)
             }
         }
         
-        func fetchArtists() {
+        func fetchArtists(forceRefresh: Bool = false) {
+            if !forceRefresh,
+                let lastFetched,
+                Date().timeIntervalSince(lastFetched) < cacheLifetime,
+                !artists.isEmpty {
+                return
+            }
+            
             isLoading = true
             let artistsService = ArtistsService()
             Task { @MainActor in
                 self.artists = await artistsService.fetchArtists()
+                self.lastFetched = Date()
                 withAnimation {
                     isLoading = false
                 }

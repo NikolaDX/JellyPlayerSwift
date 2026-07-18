@@ -14,6 +14,8 @@ struct ListeningEvent: Codable {
     let playCount: Int
     let isFavorite: Bool
     let artists: String
+    let latitude: Double
+    let longitude: Double
     
     var calculatedAffinity: Double {
         let completionScore = percentListened * 3.5

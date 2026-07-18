@@ -14,16 +14,28 @@ extension GenreDetailsView {
         var genreAlbums: [Album] = []
         var isLoading: Bool = false
         
+        var lastFetched: Date?
+        let cacheLifetime: TimeInterval = 300
+        
         init(genre: Genre) {
             self.genre = genre
         }
         
-        func fetchGenreAlbums() {
+        func fetchGenreAlbums(forceRefresh: Bool = false) {
             if !genreAlbums.isEmpty { return }
+            
+            if !forceRefresh,
+                let lastFetched,
+                Date().timeIntervalSince(lastFetched) < cacheLifetime,
+                !genreAlbums.isEmpty {
+                return
+            }
+            
             isLoading = true
             let genresService = GenresService()
             Task { @MainActor in
                 self.genreAlbums = await genresService.fetchGenreAlbums(genreId: genre.Id)
+                self.lastFetched = Date()
                 withAnimation {
                     isLoading = false
                 }

@@ -32,6 +32,9 @@ struct ArtistsView: View {
         .task {
             viewModel.fetchArtists()
         }
+        .refreshable {
+            viewModel.fetchArtists(forceRefresh: true)
+        }
     }
 }
 

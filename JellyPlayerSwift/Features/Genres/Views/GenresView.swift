@@ -25,6 +25,9 @@ struct GenresView: View {
         .task {
             viewModel.fetchGenres()
         }
+        .refreshable {
+            viewModel.fetchGenres(forceRefresh: true)
+        }
     }
 }
 

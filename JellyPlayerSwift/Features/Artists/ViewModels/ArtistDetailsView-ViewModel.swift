@@ -14,16 +14,28 @@ extension ArtistDetailsView {
         var artistAlbums: [Album] = []
         var isLoading: Bool = false
         
+        var lastFetched: Date?
+        let cacheLifetime: TimeInterval = 300
+        
         init(artist: Artist) {
             self.artist = artist
         }
         
-        func fetchArtistAlbums() {
+        func fetchArtistAlbums(forceRefresh: Bool = false) {
             if !artistAlbums.isEmpty { return }
+            
+            if !forceRefresh,
+                let lastFetched,
+                Date().timeIntervalSince(lastFetched) < cacheLifetime,
+                !artistAlbums.isEmpty {
+                return
+            }
+            
             isLoading = true
             let artistsService = ArtistsService()
             Task { @MainActor in
                 self.artistAlbums = await artistsService.fetchArtistAlbums(artistId: artist.Id)
+                self.lastFetched = Date()
                 withAnimation {
                     isLoading = false
                 }

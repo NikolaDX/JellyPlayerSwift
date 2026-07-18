@@ -154,6 +154,9 @@ struct AlbumTracksView: View {
         .onAppear {
             viewModel.fetchSongs()
         }
+        .refreshable {
+            viewModel.fetchSongs(forceRefresh: true)
+        }
     }
 }
 

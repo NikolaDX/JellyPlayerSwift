@@ -18,6 +18,9 @@ struct FavoritesView: View {
         .task {
             viewModel.fetchSongs()
         }
+        .refreshable {
+            viewModel.fetchSongs(forceRefresh: true)
+        }
     }
 }
 

@@ -138,7 +138,12 @@ struct PlaylistSongsView: View {
                     .accessibilityHint("Remove songs from playlist")
             }
             .sheet(isPresented: $showingAddToPlaylist) {
-                AddItemsView(playlistId: viewModel.playlist.Id, refreshAction: viewModel.fetchSongs)
+                AddItemsView(
+                    playlistId: viewModel.playlist.Id,
+                    refreshAction: {
+                        viewModel.fetchSongs(forceRefresh: true)
+                    }
+                )
             }
             .sheet(isPresented: $showingAddSong) {
                 AddSongToPlaylistView(songToAdd!)
@@ -162,6 +167,9 @@ struct PlaylistSongsView: View {
         }
         .task {
             viewModel.fetchSongs()
+        }
+        .refreshable {
+            viewModel.fetchSongs(forceRefresh: true)
         }
     }
     

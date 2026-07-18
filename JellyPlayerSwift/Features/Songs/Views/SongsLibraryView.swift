@@ -18,6 +18,9 @@ struct SongsLibraryView: View {
         .task {
             viewModel.fetchSongs()
         }
+        .refreshable {
+            viewModel.fetchSongs(forceRefresh: true)
+        }
     }
 }
 

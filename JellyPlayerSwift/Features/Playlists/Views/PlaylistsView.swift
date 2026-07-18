@@ -122,6 +122,9 @@ struct PlaylistsView: View {
         .task {
             viewModel.fetchPlaylists()
         }
+        .refreshable {
+            viewModel.fetchPlaylists(forceRefresh: true)
+        }
     }
     
     func deleteRows(at offsets: IndexSet) {

@@ -17,6 +17,9 @@ extension PlaylistsView {
         var selectedSortOrder: String = "Ascending"
         var filterText: String = ""
         
+        var lastFetched: Date?
+        let cacheLifetime: TimeInterval = 300
+        
         var sortedPlaylists: [Playlist] {
             let sorted: [Playlist]
             
@@ -42,11 +45,19 @@ extension PlaylistsView {
             }
         }
         
-        func fetchPlaylists() {
+        func fetchPlaylists(forceRefresh: Bool = false) {
+            if !forceRefresh,
+                let lastFetched,
+                Date().timeIntervalSince(lastFetched) < cacheLifetime,
+                !playlists.isEmpty {
+                return
+            }
+            
             isLoading = true
             let playlistsService = PlaylistsService()
             Task { @MainActor in
                 self.playlists = await playlistsService.fetchPlaylists()
+                self.lastFetched = Date()
                 withAnimation {
                     isLoading = false
                 }
@@ -58,7 +69,7 @@ extension PlaylistsView {
             Task { @MainActor in
                 do {
                     try await playlistsService.deletePlaylist(playlistId: playlistId)
-                    fetchPlaylists()
+                    fetchPlaylists(forceRefresh: true)
                 } catch {
                     print("Error deleting playlist: \(error.localizedDescription)")
                 }

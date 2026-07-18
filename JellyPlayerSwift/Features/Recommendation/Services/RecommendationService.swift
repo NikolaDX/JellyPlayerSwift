@@ -39,7 +39,16 @@ class RecommendationService {
         var scoredSongs: [(song: Song, score: Double)] = []
         
         for song in availableSongs {
-            let inputFeatures = RecommenderFeatures.inputDictionary(for: song, currentHour: currentHour)
+            LocationService.shared.requestLocation()
+            var latitude = 0.0
+            var longitude = 0.0
+            if let location = LocationService.shared.location {
+                latitude = location.latitude
+                longitude = location.longitude
+            }
+            
+            
+            let inputFeatures = RecommenderFeatures.inputDictionary(for: song, currentHour: currentHour, latitude: latitude, longitude: longitude)
             
             var estimatedScore: Double? = nil
                         

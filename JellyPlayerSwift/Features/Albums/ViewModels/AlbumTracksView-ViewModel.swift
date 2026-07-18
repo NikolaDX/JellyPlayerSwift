@@ -17,17 +17,28 @@ extension AlbumTracksView {
         private var favoritesService: FavoritesService
         private var downloadService: DownloadService
         
+        var lastFetched: Date?
+        let cacheLifetime: TimeInterval = 300
+        
         init(album: Album, favoritesService: FavoritesService, downloadService: DownloadService) {
             self.album = album
             self.favoritesService = favoritesService
             self.downloadService = downloadService
         }
         
-        func fetchSongs() {
+        func fetchSongs(forceRefresh: Bool = false) {
+            if !forceRefresh,
+                let lastFetched,
+                Date().timeIntervalSince(lastFetched) < cacheLifetime,
+                !songs.isEmpty {
+                return
+            }
+            
             isLoading = true
             let albumService = AlbumService()
             Task { @MainActor in
                 songs = await albumService.fetchAlbumSongs(albumId: album.Id)
+                self.lastFetched = Date()
                 withAnimation {
                     isLoading = false
                 }

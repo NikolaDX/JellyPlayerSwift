@@ -29,13 +29,25 @@ class HistoryService {
             
             let ratio = totalDuration > 0 ? min(currentTime / totalDuration, 1.0) : 1.0
             
+            var latitude = 0.0
+            var longitude = 0.0
+            
+            LocationService.shared.requestLocation()
+            
+            if let location = LocationService.shared.location {
+                latitude = location.latitude
+                longitude = location.longitude
+            }
+            
             let newEvent = ListeningEvent(
                 songId: song.Id,
                 hourOfDay: currentHour,
                 percentListened: ratio,
                 playCount: song.UserData.PlayCount + 1,
                 isFavorite: song.UserData.IsFavorite,
-                artists: song.Artists.joined(separator: ", ")
+                artists: song.Artists.joined(separator: ", "),
+                latitude: latitude,
+                longitude: longitude
             )
             
             currentHistory.append(newEvent)

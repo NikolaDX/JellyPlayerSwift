@@ -38,6 +38,9 @@ struct GenreDetailsView: View {
         .task {
             viewModel.fetchGenreAlbums()
         }
+        .refreshable {
+            viewModel.fetchGenreAlbums(forceRefresh: true)
+        }
     }
 }
 
