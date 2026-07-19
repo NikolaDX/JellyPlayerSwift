@@ -19,6 +19,7 @@ struct GenresView: View {
                 .foregroundStyle(.primary)
                 .accessibilityLabel("Genre: \(genre.Name)")
             }
+            .contentMargins(.bottom, CGFloat(miniPlayerPadding), for: .scrollContent)
             .navigationTitle("Genres")
             .searchable(text: $viewModel.filterText, prompt: "Search for a genre...")
         }

@@ -63,6 +63,13 @@ struct QueueView: View {
                             viewModel.moveQueueItems(from: source, to: destination)
                         }
                     }
+                    
+                    NiceIconButton("Add recommended songs", buttonImage: "plus") {
+                        Task {
+                            await viewModel.addRecommended()
+                        }
+                    }
+                    .listRowBackground(Color.clear)
                 }
                 .scrollIndicators(.hidden)
                 .scrollContentBackground(.hidden)

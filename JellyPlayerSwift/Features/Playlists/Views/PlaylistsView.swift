@@ -54,6 +54,7 @@ struct PlaylistsView: View {
                 .onDelete(perform: deleteRows)
             }
             .searchable(text: $viewModel.filterText, prompt: "Search for a playlist...")
+            .contentMargins(.bottom, CGFloat(miniPlayerPadding), for: .scrollContent)
             .toolbar {
                 IconButton(icon: Image(systemName: "plus.circle.fill")) {
                     showingPlaylistCreation = true

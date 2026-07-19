@@ -30,7 +30,7 @@ extension AlbumsLibraryView {
             let albumsService = AlbumService()
             Task { @MainActor in
                 self.albums = await albumsService.fetchAlbums()
-                self.fetchAlbums(forceRefresh: true)
+                self.lastFetched = Date()
                 withAnimation {
                     isLoading = false
                 }

@@ -132,6 +132,7 @@ struct AlbumTracksView: View {
                     }
                 }
                 .padding(spaceBetween)
+                .padding(.bottom, CGFloat(PlaybackService.shared.presentation == .hidden ? 0 : miniPlayerPadding))
             }
         }
         .clipped()

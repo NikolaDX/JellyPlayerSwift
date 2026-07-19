@@ -9,12 +9,11 @@ import SwiftUI
 
 struct MiniPlayerView: View {
     @State private var viewModel = ViewModel()
+    let namespace: Namespace.ID
     
     @State private var dragOffset: CGFloat = 0
     @State private var verticalDragOffset: CGFloat = 0
     @State private var isDragging = false
-    
-    @Namespace var playerViewAnimation
     
     private let fullPlayerThreshold: CGFloat = -30
     private let miniPlayerDragLimit: CGFloat = 30
@@ -26,6 +25,7 @@ struct MiniPlayerView: View {
                 HStack {
                     HStack {
                         SongCover(song)
+                            .matchedGeometryEffect(id: "cover", in: namespace)
                         VStack(alignment: .leading) {
                             Headline(viewModel.title)
                             Subheadline(viewModel.artist)
@@ -52,6 +52,7 @@ struct MiniPlayerView: View {
                     }
                 }
                 .padding(5)
+                .padding(.horizontal, 5)
                 .contentShape(Rectangle())
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel("\(viewModel.title) by \(viewModel.artist)")
@@ -97,7 +98,7 @@ struct MiniPlayerView: View {
                             } else if verticalAmount < fullPlayerThreshold {
                                 dragOffset = 0
                                 withAnimation(.spring()) {
-                                    viewModel.showingPlayer = true
+                                    viewModel.playbackService.presentation = .expanded
                                     verticalDragOffset = 0
                                 }
                             }
@@ -111,15 +112,21 @@ struct MiniPlayerView: View {
                 .contentShape(Rectangle())
             }
             .onTapGesture {
-                viewModel.showingPlayer = true
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
+                    viewModel.playbackService.presentation = .expanded
+                }
             }
-            .sheet(isPresented: $viewModel.showingPlayer) {
-                FullMusicPlayerView()
-                    .navigationTransition(.zoom(sourceID: "playerView", in: playerViewAnimation))
+            .background {
+                if #available(iOS 26.0, *) {
+                    RoundedRectangle(cornerRadius: 15)
+                        .fill(.clear)
+                        .glassEffect()
+                } else {
+                    RoundedRectangle(cornerRadius: 15)
+                        .fill(.ultraThinMaterial)
+                }
             }
-            .background(.ultraThinMaterial)
-            .clipShape(.rect(cornerRadius: 15))
-            .matchedTransitionSource(id: "playerView", in: playerViewAnimation)
+            //.clipShape(.rect(cornerRadius: 15))
             .shadow(color: .black.opacity(0.5), radius: 15)
             .scaleEffect(isDragging ? clamp(-verticalDragOffset * 0.5, lower: 1, upper: 1.05) : 1)
             .offset(y: clamp(verticalDragOffset * (verticalDragOffset > 0 ? 0.3 : 0.5), lower: -10, upper: 10))
@@ -131,8 +138,4 @@ struct MiniPlayerView: View {
     func clamp(_ value: CGFloat, lower: CGFloat, upper: CGFloat) -> CGFloat {
         min(max(value, lower), upper)
     }
-}
-
-#Preview {
-    MiniPlayerView()
 }

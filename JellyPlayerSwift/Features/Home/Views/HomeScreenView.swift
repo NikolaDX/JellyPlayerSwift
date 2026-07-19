@@ -23,12 +23,9 @@ struct HomeScreenView: View {
                             .padding(.top)
                     } else {
                         ServerNotConfiguredView()
-                            .modifier(MiniPlayerModifier())
-                        
                     }
                 } else {
                     NetworkUnavailableView()
-                        .modifier(MiniPlayerModifier())
                 }
             }
             .navigationTitle("JellyPlayer")

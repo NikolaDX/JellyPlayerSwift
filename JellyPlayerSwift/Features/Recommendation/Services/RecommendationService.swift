@@ -31,41 +31,79 @@ class RecommendationService {
         }
     }
     
-    func getRecommendations(from availableSongs: [Song], currentHour: Int) -> [Song] {
+    func score(toScore songs: [Song], currentHour: Int, request: RecommendationRequest) -> [(song: Song, score: Double)] {
         guard let model = personalizedModel else {
             return []
         }
         
+        LocationService.shared.requestLocation()
+        let latitude = LocationService.shared.location?.latitude ?? 0.0
+        let longitude = LocationService.shared.location?.longitude ?? 0.0
+        
         var scoredSongs: [(song: Song, score: Double)] = []
         
-        for song in availableSongs {
-            LocationService.shared.requestLocation()
-            var latitude = 0.0
-            var longitude = 0.0
-            if let location = LocationService.shared.location {
-                latitude = location.latitude
-                longitude = location.longitude
-            }
+        for song in songs {
+            let input = RecommenderFeatures.inputDictionary(
+                for: song,
+                currentHour: currentHour,
+                latitude: latitude,
+                longitude: longitude
+            )
             
+            var score = -Double.infinity
             
-            let inputFeatures = RecommenderFeatures.inputDictionary(for: song, currentHour: currentHour, latitude: latitude, longitude: longitude)
-            
-            var estimatedScore: Double? = nil
-                        
             do {
-                let provider = try MLDictionaryFeatureProvider(dictionary: inputFeatures)
+                let provider = try MLDictionaryFeatureProvider(dictionary: input)
                 let prediction = try model.prediction(from: provider)
-                
-                estimatedScore = prediction.featureValue(for: RecommenderFeatures.targetColumn)?.doubleValue
+                score = prediction
+                    .featureValue(for: RecommenderFeatures.targetColumn)?
+                    .doubleValue ?? -Double.infinity
             } catch {
-                estimatedScore = nil
+                print(error)
             }
             
-            let playCountBoost: Double = song.UserData.PlayCount == 0 ? 1.0 : song.UserData.PlayCount <= 3 ? 0.7 : 0.0
+            score += song.UserData.PlayCount == 0 ? 1.0 : song.UserData.PlayCount <= 3 ? 0.7 : 0
             
-            scoredSongs.append((song: song, score: (estimatedScore ?? -Double.infinity) + playCountBoost))
+            switch request {
+            case .home:
+                break
+            case .queue(let currentSong, let queue):
+                if queue.contains(song) {
+                    score = -.infinity
+                }
+                
+                if Set(song.Artists)
+                    .intersection(currentSong.Artists)
+                    .isEmpty == false {
+                    score += 0.5
+                }
+                
+                if song.AlbumId == currentSong.AlbumId {
+                    score += 0.3
+                }
+                
+                if song.UserData.IsFavorite {
+                    score += 0.2
+                }
+                
+                if song.Id == currentSong.Id {
+                    score = -.infinity
+                }
+            }
+            
+            scoredSongs.append((song, score))
         }
         
-        return scoredSongs.sorted { $0.score > $1.score }.map { $0.song }
+        return scoredSongs
+    }
+    
+    func getRecommendations(from availableSongs: [Song], currentHour: Int, request: RecommendationRequest) -> [Song] {
+        score(
+            toScore: availableSongs,
+            currentHour: currentHour,
+            request: request
+        )
+            .sorted(by: { $0.score > $1.score })
+            .map(\.song)
     }
 }

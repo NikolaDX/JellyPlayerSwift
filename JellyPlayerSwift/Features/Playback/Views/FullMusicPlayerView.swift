@@ -9,15 +9,22 @@ import SwiftUI
 
 struct FullMusicPlayerView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.colorScheme) var colorScheme
     
     @State private var viewModel = ViewModel()
     @State private var lastHapticTime: Double = 0
+    let namespace: Namespace.ID
+    
+    @State private var dragOffset: CGFloat = 0
+    @GestureState private var isDragging = false
     
     private let buttonSize: Double = 25
+    private let dismissThreshold: CGFloat = 140
     
     var body: some View {
         ZStack {
             GradientView(color: viewModel.coverDominantColor)
+                .matchedGeometryEffect(id: "playerBackground", in: namespace)
             VStack {
                 if viewModel.showingQueue {
                     QueueView()
@@ -31,6 +38,7 @@ struct FullMusicPlayerView: View {
                                 currentTime: $viewModel.sliderTime,
                                 isScrubbing: $viewModel.isEditing
                             )
+                            .matchedGeometryEffect(id: "cover", in: namespace)
                             .shadow(color: .black, radius: 10)
                         }
                         
@@ -38,13 +46,16 @@ struct FullMusicPlayerView: View {
                         
                         Text(viewModel.title)
                             .font(.title)
+                            .lineLimit(2)
                         
                         Text(viewModel.album)
                             .font(.title2)
+                            .lineLimit(2)
                         
                         Text(viewModel.artist)
                             .foregroundStyle(.secondary)
                             .font(.title3)
+                            .lineLimit(2)
                         
                         Spacer()
                     }
@@ -135,7 +146,9 @@ struct FullMusicPlayerView: View {
                         RepeatModeButton()
                         
                         IconButton(icon: Image(systemName: "chevron.down")) {
-                            dismiss()
+                            withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
+                                viewModel.playbackService.presentation = .mini
+                            }
                         }
                         .accessibilityLabel("Hide full music player")
                         
@@ -153,10 +166,39 @@ struct FullMusicPlayerView: View {
                 }
             }
             .padding()
-            .padding(.vertical, 5)
+            .padding(.vertical, 50)
         }
-        .preferredColorScheme(.light)
-        .foregroundStyle(.white)
+        .foregroundStyle(viewModel.coverDominantColor.readableForeground)
+        .scaleEffect(dragScale, anchor: .top)
+        .offset(y: dragOffset)
+        .animation(.interactiveSpring(), value: dragCornerRadius)
+        .gesture(
+            DragGesture(minimumDistance: 10)
+                .updating($isDragging) { _, state, _ in state = true }
+                .onChanged { value in
+                    guard value.translation.height > 0 else { return }
+                    dragOffset = value.translation.height
+                }
+                .onEnded { value in
+                    let dragged = value.translation.height
+                    let velocity = value.predictedEndTranslation.height - value.translation.height
+                    
+                    if dragged > dismissThreshold || velocity > 300 {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                            withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
+                                viewModel.playbackService.presentation = .mini
+                            }
+                            
+                            dragOffset = 0
+                        }
+                    } else {
+                        withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
+                            dragOffset = 0
+                        }
+                    }
+                }
+        )
+        .animation(.interactiveSpring(), value: dragOffset)
         .onChange(of: viewModel.currentSong) {
             withAnimation {
                 viewModel.updateDominantColor()
@@ -176,8 +218,16 @@ struct FullMusicPlayerView: View {
         let generator = UIImpactFeedbackGenerator(style: .light)
         generator.impactOccurred()
     }
-}
-
-#Preview {
-    FullMusicPlayerView()
+    
+    private var dragProgress: CGFloat {
+        min(dragOffset / dismissThreshold, 1)
+    }
+    
+    private var dragScale: CGFloat {
+        1 - (dragProgress * 0.08)
+    }
+    
+    private var dragCornerRadius: CGFloat {
+        dragProgress * 100
+    }
 }

@@ -126,6 +126,7 @@ struct SettingsView: View {
                     #endif
                     
                 }
+                .padding(.bottom, CGFloat(PlaybackService.shared.presentation == .hidden ? 0 : miniPlayerPadding))
                 .navigationTitle("Settings")
                 .sheet(isPresented: $viewModel.showingLogin) {
                     AuthenticationView(serverUrl: viewModel.serverText)

@@ -111,6 +111,7 @@ struct SongsView: View {
             }
             .foregroundStyle(.primary)
         }
+        .contentMargins(.bottom, CGFloat(miniPlayerPadding), for: .scrollContent)
         .onChange(of: songToAdd) {
             if let _ = songToAdd {
                 showingAddToPlaylist = true

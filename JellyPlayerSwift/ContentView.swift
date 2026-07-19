@@ -33,17 +33,12 @@ struct AppMainView: View {
     var body: some View {
         Group {
             DownloadProgressView()
-            TabsScreen()
-                .safeAreaInset(edge: .bottom) {
-                    VStack {
-                        MiniPlayerView()
-                            .padding()
-                            .padding(.bottom,
-                                     UIDevice.current.userInterfaceIdiom == .pad
-                                     ? 0 : 55
-                            )
-                    }
-                }
+            ZStack(alignment: .bottom) {
+                TabsScreen()
+                PlayerOverlayView()
+            }
+            .ignoresSafeArea(.keyboard, edges: .bottom)
+            
         }
     }
 }

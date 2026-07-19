@@ -72,6 +72,7 @@ struct AlbumsGridView: View {
                 }
             }
             .padding()
+            .padding(.bottom, CGFloat(PlaybackService.shared.presentation == .hidden ? 0 : miniPlayerPadding))
         }
         .searchable(text: $filterText, prompt: "Search for an album...")
         .toolbar {

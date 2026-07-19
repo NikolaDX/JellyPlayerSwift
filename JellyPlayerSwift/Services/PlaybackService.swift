@@ -48,11 +48,22 @@ class PlaybackService {
     
     private let playSongDebouncer = DebounceService(delay: 0.2)
     
-    var currentSong: Song? = nil
+    var currentSong: Song? {
+        didSet {
+            if currentSong == nil {
+                presentation = .hidden
+            } else if presentation == .hidden {
+                presentation = .mini
+            }
+        }
+    }
+    
     var isPlaying: Bool = false
     var isLoading: Bool = false
     var isBuffering: Bool = false
     var currentTime: Double = 0
+    
+    var presentation: PlaybackPresentation = .hidden
     
     var duration: Double {
         if let time = self.player?.currentItem?.duration.seconds {
@@ -283,6 +294,10 @@ class PlaybackService {
         if index <= currentIndex {
             currentIndex = max(0, currentIndex - 1)
         }
+    }
+    
+    func addToQueue(songs: [Song]) {
+        queue += songs
     }
     
     func moveSong(from source: IndexSet, to destination: Int) {

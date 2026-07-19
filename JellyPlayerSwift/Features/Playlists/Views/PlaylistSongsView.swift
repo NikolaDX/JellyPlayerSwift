@@ -88,6 +88,7 @@ struct PlaylistSongsView: View {
                 }
                 .onDelete(perform: deleteRows)
             }
+            .contentMargins(.bottom, CGFloat(miniPlayerPadding), for: .scrollContent)
             .onChange(of: songToAdd) {
                 if let _ = songToAdd {
                     showingAddSong = true
