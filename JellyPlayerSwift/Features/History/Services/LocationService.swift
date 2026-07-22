@@ -11,33 +11,40 @@ import Foundation
 class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate {
     static let shared = LocationService()
     
-    let manager = CLLocationManager()
+    private let manager = CLLocationManager()
     
-    @Published var location: CLLocationCoordinate2D?
+    private(set) var location: CLLocationCoordinate2D?
+    
     @Published var error: Error?
     
     private override init() {
         super.init()
         manager.delegate = self
+        manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        manager.distanceFilter = 100
     }
     
-    func requestLocation() {
+    func start() {
         switch manager.authorizationStatus {
         case .notDetermined:
             manager.requestWhenInUseAuthorization()
         case .restricted:
-            self.error = CLError(.denied)
+            error = CLError(.denied)
         case .denied:
-            self.error = CLError(.denied)
+            error = CLError(.denied)
         case .authorizedAlways:
-            manager.requestLocation()
+            manager.startUpdatingLocation()
         case .authorizedWhenInUse:
-            manager.requestLocation()
+            manager.startUpdatingLocation()
         case .authorized:
-            manager.requestLocation()
+            manager.startUpdatingLocation()
         @unknown default:
-            self.error = CLError(.denied)
+            break
         }
+    }
+    
+    func stop() {
+        manager.stopUpdatingLocation()
     }
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {

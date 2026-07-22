@@ -196,19 +196,10 @@ class PlaybackService {
         isShuffleEnabled = false
         
         if let current = currentSong {
-            HistoryService.shared.logEvent(for: current)
-        }
-        
-        let playCounter = UserDefaults.standard.integer(forKey: "songsPlayedSinceLastTrain") + 1
-                UserDefaults.standard.set(playCounter, forKey: "songsPlayedSinceLastTrain")
-        
-        if playCounter >= 5 {
-            Task(priority: .background) {
-                let history = HistoryService.shared.fetchLocalHistory()
-                await ModelTrainingService.shared.trainModel(with: history, using: RegressorAlgorithm.randomForest)
-                
-                UserDefaults.standard.set(0, forKey: "songsPlayedSinceLastTrain")
-            }
+            NotificationCenter.default.post(
+                name: .songPlaybackFinished,
+                object: current
+            )
         }
         
         playSongDebouncer.run {

@@ -5,6 +5,7 @@
 //  Created by Nikola on 8. 7. 2026..
 //
 
+import AVFAudio
 import CoreML
 import Foundation
 
@@ -36,18 +37,23 @@ class RecommendationService {
             return []
         }
         
-        LocationService.shared.requestLocation()
         let latitude = LocationService.shared.location?.latitude ?? 0.0
         let longitude = LocationService.shared.location?.longitude ?? 0.0
         
         var scoredSongs: [(song: Song, score: Double)] = []
+        
+        let audioOutput = AudioContextService.shared.output
+        let audioVolume = AudioContextService.shared.volume
         
         for song in songs {
             let input = RecommenderFeatures.inputDictionary(
                 for: song,
                 currentHour: currentHour,
                 latitude: latitude,
-                longitude: longitude
+                longitude: longitude,
+                activity: MotionService.shared.activity.rawValue,
+                audioOutput: audioOutput,
+                audioVolume: audioVolume
             )
             
             var score = -Double.infinity

@@ -5,6 +5,7 @@
 //  Created by Nikola on 8. 7. 2026..
 //
 
+import AVFAudio
 import Foundation
 
 class HistoryService {
@@ -29,15 +30,11 @@ class HistoryService {
             
             let ratio = totalDuration > 0 ? min(currentTime / totalDuration, 1.0) : 1.0
             
-            var latitude = 0.0
-            var longitude = 0.0
+            let latitude = LocationService.shared.location?.latitude ?? 0
+            let longitude = LocationService.shared.location?.longitude ?? 0
             
-            LocationService.shared.requestLocation()
-            
-            if let location = LocationService.shared.location {
-                latitude = location.latitude
-                longitude = location.longitude
-            }
+            let audioOutput = AudioContextService.shared.output
+            let audioVolume = AudioContextService.shared.volume
             
             let newEvent = ListeningEvent(
                 songId: song.Id,
@@ -45,9 +42,11 @@ class HistoryService {
                 percentListened: ratio,
                 playCount: song.UserData.PlayCount + 1,
                 isFavorite: song.UserData.IsFavorite,
-                artists: song.Artists.joined(separator: ", "),
                 latitude: latitude,
-                longitude: longitude
+                longitude: longitude,
+                activity: MotionService.shared.activity,
+                audioOutput: audioOutput,
+                audioVolume: audioVolume
             )
             
             currentHistory.append(newEvent)
@@ -58,6 +57,12 @@ class HistoryService {
             
             do {
                 let data = try JSONEncoder().encode(currentHistory)
+                
+                if let json = String(data: data, encoding: .utf8) {
+                    print("Current history:")
+                    print(json)
+                }
+                
                 try data.write(to: self.historyURL, options: .atomic)
                 print("Interaction saved to local storage for: \(song.Name)")
             } catch {

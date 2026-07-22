@@ -9,6 +9,14 @@ import SwiftUI
 
 @main
 struct JellyPlayerSwiftApp: App {
+    
+    init() {
+        _ = ListeningService.shared
+        AudioContextService.shared.start()
+        MotionService.shared.start()
+        LocationService.shared.start()
+    }
+    
     var body: some Scene {
         WindowGroup {
             ContentView()

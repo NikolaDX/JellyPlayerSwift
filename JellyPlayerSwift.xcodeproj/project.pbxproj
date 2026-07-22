@@ -445,6 +445,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = JellyPlayer;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location is needed to improve song recommendations.";
+				INFOPLIST_KEY_NSMotionUsageDescription = "Motion is needed to improve song recommendations.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -479,6 +480,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = JellyPlayer;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location is needed to improve song recommendations.";
+				INFOPLIST_KEY_NSMotionUsageDescription = "Motion is needed to improve song recommendations.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
