@@ -32,10 +32,14 @@ class RecommendationService {
         }
     }
     
-    func score(toScore songs: [Song], currentHour: Int, request: RecommendationRequest) -> [(song: Song, score: Double)] {
+    func score(toScore songs: [Song], request: RecommendationRequest) -> [(song: Song, score: Double)] {
         guard let model = personalizedModel else {
             return []
         }
+        
+        let currentDate = Date()
+        
+        let currentHour = Calendar.current.component(.hour, from: currentDate)
         
         let latitude = LocationService.shared.location?.latitude ?? 0.0
         let longitude = LocationService.shared.location?.longitude ?? 0.0
@@ -45,6 +49,16 @@ class RecommendationService {
         let audioOutput = AudioContextService.shared.output
         let audioVolume = AudioContextService.shared.volume
         
+        var networkType: NetworkType = .offline
+        
+        if !NetworkService.shared.isConnected {
+            networkType = .offline
+        } else if NetworkService.shared.usesWifi {
+            networkType = .wifi
+        } else {
+            networkType = .cellular
+        }
+        
         for song in songs {
             let input = RecommenderFeatures.inputDictionary(
                 for: song,
@@ -53,7 +67,10 @@ class RecommendationService {
                 longitude: longitude,
                 activity: MotionService.shared.activity.rawValue,
                 audioOutput: audioOutput,
-                audioVolume: audioVolume
+                audioVolume: audioVolume,
+                timeOfDay: TimeOfDay(hour: currentHour),
+                networkType: networkType,
+                dayOfWeek: Calendar.current.component(.weekday, from: currentDate)
             )
             
             var score = -Double.infinity
@@ -103,10 +120,9 @@ class RecommendationService {
         return scoredSongs
     }
     
-    func getRecommendations(from availableSongs: [Song], currentHour: Int, request: RecommendationRequest) -> [Song] {
+    func getRecommendations(from availableSongs: [Song], request: RecommendationRequest) -> [Song] {
         score(
             toScore: availableSongs,
-            currentHour: currentHour,
             request: request
         )
             .sorted(by: { $0.score > $1.score })

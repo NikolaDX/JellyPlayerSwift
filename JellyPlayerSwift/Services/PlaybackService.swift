@@ -205,12 +205,17 @@ class PlaybackService {
         playSongDebouncer.run {
             self.cleanup()
             let playerItem: AVPlayerItem
+            var playbackLocation: String = ""
             
             if let localPath = song.localFilePath {
                 playerItem = AVPlayerItem(url: localPath)
+                playbackLocation = "Local File: \(localPath.absoluteString)"
             } else {
                 playerItem = AVPlayerItem(url: song.streamUrl!)
+                playbackLocation = "Remote Stream: \(song.streamUrl?.absoluteString ?? "")"
             }
+            
+            print("Playing '\(song.Name)' from: \(playbackLocation)")
             
             self.player = AVPlayer(playerItem: playerItem)
             self.player?.play()

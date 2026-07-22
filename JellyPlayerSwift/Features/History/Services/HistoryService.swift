@@ -26,6 +26,7 @@ class HistoryService {
             let currentHour = Calendar.current.component(.hour, from: Date())
             
             let currentTime = PlaybackService.shared.currentTime
+            
             let totalDuration = PlaybackService.shared.duration
             
             let ratio = totalDuration > 0 ? min(currentTime / totalDuration, 1.0) : 1.0
@@ -35,6 +36,16 @@ class HistoryService {
             
             let audioOutput = AudioContextService.shared.output
             let audioVolume = AudioContextService.shared.volume
+            
+            var networkType: NetworkType = .offline
+            
+            if !NetworkService.shared.isConnected {
+                networkType = .offline
+            } else if NetworkService.shared.usesWifi {
+                networkType = .wifi
+            } else {
+                networkType = .cellular
+            }
             
             let newEvent = ListeningEvent(
                 songId: song.Id,
@@ -46,7 +57,10 @@ class HistoryService {
                 longitude: longitude,
                 activity: MotionService.shared.activity,
                 audioOutput: audioOutput,
-                audioVolume: audioVolume
+                audioVolume: audioVolume,
+                timeOfDay: TimeOfDay(hour: currentHour),
+                networkType: networkType,
+                dayOfWeek: Calendar.current.component(.weekday, from: Date())
             )
             
             currentHistory.append(newEvent)

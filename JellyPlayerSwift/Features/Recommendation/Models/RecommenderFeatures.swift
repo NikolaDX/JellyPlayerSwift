@@ -17,7 +17,10 @@ enum RecommenderFeatures {
         "longitude",
         "activity",
         "audioOutput",
-        "audioVolume"
+        "audioVolume",
+        "timeOfDay",
+        "networkType",
+        "dayOfWeek"
     ]
     
     static let targetColumn = "calculatedAffinity"
@@ -33,6 +36,9 @@ enum RecommenderFeatures {
         df.append(column: Column(name: "activity", contents: history.map { $0.activity.rawValue }))
         df.append(column: Column(name: "audioOutput", contents: history.map { $0.audioOutput.rawValue }))
         df.append(column: Column(name: "audioVolume", contents: history.map { $0.audioVolume }))
+        df.append(column: Column(name: "timeOfDay", contents: history.map { $0.timeOfDay.rawValue }))
+        df.append(column: Column(name: "networkType", contents: history.map { $0.networkType.rawValue }))
+        df.append(column: Column(name: "dayOfWeek", contents: history.map { $0.dayOfWeek }))
         return df
     }
     
@@ -43,7 +49,10 @@ enum RecommenderFeatures {
         longitude: Double,
         activity: String,
         audioOutput: AudioOutput,
-        audioVolume: Float
+        audioVolume: Float,
+        timeOfDay: TimeOfDay,
+        networkType: NetworkType,
+        dayOfWeek: Int
     ) -> [String: Any] {
         [
             "artists": song.Artists.joined(separator: ", "),
@@ -54,7 +63,10 @@ enum RecommenderFeatures {
             "longitude": longitude,
             "activity": activity,
             "audioOutput": audioOutput,
-            "audioVolume": audioVolume
+            "audioVolume": audioVolume,
+            "timeOfDay": timeOfDay,
+            "networkType": networkType,
+            "dayOfWeek": dayOfWeek
         ]
     }
 }

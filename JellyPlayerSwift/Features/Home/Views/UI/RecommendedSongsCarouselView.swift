@@ -58,8 +58,7 @@ struct RecommendedSongsCarouselView: View {
         defer { isLoading = false}
         
         let allSongs = await SongsService().fetchAllSongs()
-        let currentHour = Calendar.current.component(.hour, from: Date())
-        let modelResults = RecommendationService.shared.getRecommendations(from: allSongs, currentHour: currentHour, request: RecommendationRequest.home)
+        let modelResults = RecommendationService.shared.getRecommendations(from: allSongs, request: RecommendationRequest.home)
         self.recommendedSongs = Array(modelResults.prefix(12))
     }
 }

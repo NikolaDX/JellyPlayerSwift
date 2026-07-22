@@ -444,6 +444,7 @@
 				INFOPLIST_FILE = JellyPlayerSwift/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = JellyPlayer;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location is needed to improve song recommendations.";
 				INFOPLIST_KEY_NSMotionUsageDescription = "Motion is needed to improve song recommendations.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -479,6 +480,7 @@
 				INFOPLIST_FILE = JellyPlayerSwift/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = JellyPlayer;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location is needed to improve song recommendations.";
 				INFOPLIST_KEY_NSMotionUsageDescription = "Motion is needed to improve song recommendations.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

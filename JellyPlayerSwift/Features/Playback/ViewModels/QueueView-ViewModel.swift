@@ -52,8 +52,7 @@ extension QueueView {
         
         func addRecommended() async {
             let allSongs = await SongsService().fetchAllSongs()
-            let currentHour = Calendar.current.component(.hour, from: Date())
-            let modelResults = RecommendationService.shared.getRecommendations(from: allSongs, currentHour: currentHour, request: RecommendationRequest.queue(currentSong: queue[currentIndex], queue: queue))
+            let modelResults = RecommendationService.shared.getRecommendations(from: allSongs, request: RecommendationRequest.queue(currentSong: queue[currentIndex], queue: queue))
             playbackService.addToQueue(songs: Array(modelResults.prefix(10)))
         }
     }
