@@ -58,7 +58,7 @@ struct RecommendedSongsCarouselView: View {
         defer { isLoading = false}
         
         let allSongs = await SongsService().fetchAllSongs()
-        let modelResults = RecommendationService.shared.getRecommendations(from: allSongs, request: RecommendationRequest.home)
+        let modelResults = RecommendationService.shared.getRecommendations(from: allSongs, request: RecommendationRequest.regular)
         self.recommendedSongs = Array(modelResults.prefix(12))
     }
 }

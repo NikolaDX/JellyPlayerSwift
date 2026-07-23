@@ -318,7 +318,7 @@ class PlaybackService {
         guard isShuffleEnabled else { return }
         queueShuffled.toggle()
         if queueShuffled {
-            queue.shuffle()
+            queue = RecommendationService.shared.smartShuffle(songs: queue, currentSong: currentSong)
             for index in queue.indices {
                 if queue[index].Id == currentSong?.Id {
                     queue.swapAt(0, index)

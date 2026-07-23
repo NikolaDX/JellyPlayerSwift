@@ -88,7 +88,7 @@ class RecommendationService {
             score += song.UserData.PlayCount == 0 ? 1.0 : song.UserData.PlayCount <= 3 ? 0.7 : 0
             
             switch request {
-            case .home:
+            case .regular:
                 break
             case .queue(let currentSong, let queue):
                 if queue.contains(song) {
@@ -112,6 +112,20 @@ class RecommendationService {
                 if song.Id == currentSong.Id {
                     score = -.infinity
                 }
+            case .shuffle(let currentSong):
+                if song.UserData.IsFavorite {
+                    score += 0.2
+                }
+                
+                if let genres = song.Genres,
+                   let currentGenres = currentSong.Genres
+                {
+                    if !Set(genres).intersection(currentGenres).isEmpty {
+                        score += 0.3
+                    }
+                }
+                
+                score += Double.random(in: -0.7...0.7)
             }
             
             scoredSongs.append((song, score))
@@ -121,11 +135,19 @@ class RecommendationService {
     }
     
     func getRecommendations(from availableSongs: [Song], request: RecommendationRequest) -> [Song] {
-        score(
+        guard personalizedModel != nil else {
+            return availableSongs
+        }
+        
+        return score(
             toScore: availableSongs,
             request: request
         )
             .sorted(by: { $0.score > $1.score })
             .map(\.song)
+    }
+    
+    func smartShuffle(songs: [Song], currentSong: Song?) -> [Song] {
+        getRecommendations(from: songs, request: .shuffle(currentSong: currentSong ?? songs[0]))
     }
 }

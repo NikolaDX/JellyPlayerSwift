@@ -8,7 +8,8 @@
 import Foundation
 
 enum RecommendationRequest {
-    case home
+    case regular
     case queue(currentSong: Song, queue: [Song])
+    case shuffle(currentSong: Song)
 }
 

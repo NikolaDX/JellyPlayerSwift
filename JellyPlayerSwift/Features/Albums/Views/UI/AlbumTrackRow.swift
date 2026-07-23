@@ -45,6 +45,6 @@ struct AlbumTrackRow: View {
     }
 }
 
-#Preview {
-    AlbumTrackRow(Song(Id: "Id", Name: "Name", IndexNumber: 1, Album: "Album", AlbumId: "Id", RunTimeTicks: 12345, Artists: ["Artist"], UserData: UserData(IsFavorite: false, PlayCount: 1), DateCreated: ""))
-}
+//#Preview {
+//    AlbumTrackRow(Song(Id: "Id", Name: "Name", IndexNumber: 1, Album: "Album", AlbumId: "Id", RunTimeTicks: 12345, Artists: ["Artist"], Genres: ["Metal"], UserData: SongUserData(IsFavorite: false, PlayCount: 1), DateCreated: ""))
+//}

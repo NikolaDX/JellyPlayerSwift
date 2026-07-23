@@ -53,6 +53,6 @@ struct AddSongToPlaylistView: View {
     }
 }
 
-#Preview {
-    AddSongToPlaylistView(Song(Id: "Id", Name: "Name", IndexNumber: 1, Album: "Album", AlbumId: "AlbumId", RunTimeTicks: 120000, Artists: ["Artist"], UserData: UserData(IsFavorite: false, PlayCount: 1), DateCreated: ""))
-}
+//#Preview {
+//    AddSongToPlaylistView(Song(Id: "Id", Name: "Name", IndexNumber: 1, Album: "Album", AlbumId: "AlbumId", RunTimeTicks: 120000, Artists: ["Artist"], Genres: ["Metal"], UserData: SongUserData(IsFavorite: false, PlayCount: 1), DateCreated: ""))
+//}
