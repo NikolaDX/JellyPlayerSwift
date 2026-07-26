@@ -9905,79 +9905,85 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "كلمة المرور"
           }
         },
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Passwort"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password:"
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Contraseña"
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Mot de passe"
           }
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "पासवर्ड"
           }
         },
         "it" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Password"
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "パスワード"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "비밀번호"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Palavra-passe"
           }
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Пароль"
           }
         },
         "sr" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Лозинка"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "密码"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "密碼"
           }
         }
@@ -9985,6 +9991,7 @@
     },
     "Password:" : {
       "extractionState" : "manual",
+      "generatesSymbol" : false,
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -11054,6 +11061,7 @@
     },
     "Playlist name:" : {
       "extractionState" : "manual",
+      "generatesSymbol" : false,
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -17209,6 +17217,7 @@
     },
     "Username" : {
       "extractionState" : "manual",
+      "generatesSymbol" : false,
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -17538,5 +17547,5 @@
       }
     }
   },
-  "version" : "1.0"
+  "version" : "1.1"
 }
