@@ -33,6 +33,7 @@ final class Song: Codable, Equatable {
     let Id: String
     let Name: String
     let IndexNumber: Int?
+    let ParentIndexNumber: Int?
     let Album: String?
     let AlbumId: String?
     let RunTimeTicks: Int
@@ -46,6 +47,7 @@ final class Song: Codable, Equatable {
         case Id
         case Name
         case IndexNumber
+        case ParentIndexNumber
         case Album
         case AlbumId
         case RunTimeTicks
@@ -62,6 +64,7 @@ final class Song: Codable, Equatable {
         Id = try container.decode(String.self, forKey: .Id)
         Name = try container.decode(String.self, forKey: .Name)
         IndexNumber = try container.decodeIfPresent(Int.self, forKey: .IndexNumber)
+        ParentIndexNumber = try container.decodeIfPresent(Int.self, forKey: .ParentIndexNumber)
         Album = try container.decodeIfPresent(String.self, forKey: .Album)
         AlbumId = try container.decodeIfPresent(String.self, forKey: .AlbumId)
         RunTimeTicks = try container.decode(Int.self, forKey: .RunTimeTicks)
@@ -72,10 +75,11 @@ final class Song: Codable, Equatable {
         DateCreated = try container.decode(String.self, forKey: .DateCreated)
     }
     
-    init(Id: String, Name: String, IndexNumber: Int?, Album: String?, AlbumId: String?, RunTimeTicks: Int, Artists: [String], Genres: [String], UserData: SongUserData, DateCreated: String?) {
+    init(Id: String, Name: String, IndexNumber: Int?, ParentIndexNumber: Int?, Album: String?, AlbumId: String?, RunTimeTicks: Int, Artists: [String], Genres: [String], UserData: SongUserData, DateCreated: String?) {
         self.Id = Id
         self.Name = Name
         self.IndexNumber = IndexNumber
+        self.ParentIndexNumber = ParentIndexNumber
         self.Album = Album
         self.AlbumId = AlbumId
         self.RunTimeTicks = RunTimeTicks

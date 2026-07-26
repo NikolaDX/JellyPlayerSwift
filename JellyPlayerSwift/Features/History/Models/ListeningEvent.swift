@@ -21,6 +21,8 @@ struct ListeningEvent: Codable {
     let timeOfDay: TimeOfDay
     let networkType: NetworkType
     let dayOfWeek: Int
+    let energy: Double
+    let duration: Int
     
     enum CodingKeys: String, CodingKey {
         case songId
@@ -36,6 +38,8 @@ struct ListeningEvent: Codable {
         case timeOfDay
         case networkType
         case dayOfWeek
+        case energy
+        case duration
     }
     
     init(
@@ -51,7 +55,9 @@ struct ListeningEvent: Codable {
         audioVolume: Float,
         timeOfDay: TimeOfDay,
         networkType: NetworkType,
-        dayOfWeek: Int
+        dayOfWeek: Int,
+        energy: Double,
+        duration: Int
     ) {
         self.songId = songId
         self.hourOfDay = hourOfDay
@@ -66,6 +72,8 @@ struct ListeningEvent: Codable {
         self.timeOfDay = timeOfDay
         self.networkType = networkType
         self.dayOfWeek = dayOfWeek
+        self.energy = energy
+        self.duration = duration
     }
     
     init(from decoder: Decoder) throws {
@@ -84,6 +92,8 @@ struct ListeningEvent: Codable {
         timeOfDay = try container.decode(TimeOfDay.self, forKey: .timeOfDay)
         networkType = try container.decode(NetworkType.self, forKey: .networkType)
         dayOfWeek = try container.decode(Int.self, forKey: .dayOfWeek)
+        energy = try container.decode(Double.self, forKey: .energy)
+        duration = try container.decode(Int.self, forKey: .duration)
     }
     
     var calculatedAffinity: Double {

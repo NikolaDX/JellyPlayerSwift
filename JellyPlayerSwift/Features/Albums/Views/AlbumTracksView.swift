@@ -81,58 +81,67 @@ struct AlbumTracksView: View {
                         }
                         .padding(.bottom, spaceBetween)
                         
-                        ForEach(viewModel.songs, id: \.Id) { song in
-                            AlbumTrackRow(song)
-                                .onTapGesture {
-                                    viewModel.playSong(song)
-                                }
-                                .accessibilityElement(children: .combine)
-                                .accessibilityLabel("Song: \(song.Name)")
-                                .accessibilityHint("Double-tap to play")
-                                .contextMenu {
-                                    if song.UserData.IsFavorite {
-                                        ContextButton(isDestructive: true, text: "Remove from favorites", systemImage: "star.slash") {
-                                            viewModel.removeFromFavorites(song)
-                                        }
-                                        .accessibilityHint("Remove this song from favorites")
-                                    } else {
-                                        ContextButton(isDestructive: false, text: "Add to favorites", systemImage: "star") {
-                                            viewModel.addToFavorites(song)
-                                        }
-                                        .accessibilityHint("Add this song to favorites")
+                        ForEach(viewModel.songsByDisc(), id: \.disc) { disc in
+                            if viewModel.hasMultipleDiscs {
+                                Headline("Disc \(disc.disc)")
+                                    .multilineTextAlignment(.leading)
+                                    .padding()
+                            }
+                            
+                            ForEach(disc.songs, id: \.Id) { song in
+                                AlbumTrackRow(song)
+                                    .onTapGesture {
+                                        viewModel.playSong(song)
                                     }
-                                    
-                                    if song.localFilePath != nil {
-                                        ContextButton(isDestructive: true, text: "Remove download", systemImage: "trash") {
-                                            songToRemove = song
-                                            showingRemoveDownloadAlert = true
+                                    .accessibilityElement(children: .combine)
+                                    .accessibilityLabel("Song: \(song.Name)")
+                                    .accessibilityHint("Double-tap to play")
+                                    .contextMenu {
+                                        if song.UserData.IsFavorite {
+                                            ContextButton(isDestructive: true, text: "Remove from favorites", systemImage: "star.slash") {
+                                                viewModel.removeFromFavorites(song)
+                                            }
+                                            .accessibilityHint("Remove this song from favorites")
+                                        } else {
+                                            ContextButton(isDestructive: false, text: "Add to favorites", systemImage: "star") {
+                                                viewModel.addToFavorites(song)
+                                            }
+                                            .accessibilityHint("Add this song to favorites")
                                         }
-                                        .accessibilityHint("Remove this song from downloads")
-                                    } else {
-                                        ContextButton(isDestructive: false, text: "Download", systemImage: "arrow.down.circle") {
-                                            viewModel.downloadSong(song)
+                                        
+                                        if song.localFilePath != nil {
+                                            ContextButton(isDestructive: true, text: "Remove download", systemImage: "trash") {
+                                                songToRemove = song
+                                                showingRemoveDownloadAlert = true
+                                            }
+                                            .accessibilityHint("Remove this song from downloads")
+                                        } else {
+                                            ContextButton(isDestructive: false, text: "Download", systemImage: "arrow.down.circle") {
+                                                viewModel.downloadSong(song)
+                                            }
+                                            .accessibilityHint("Download this song for offline listening")
                                         }
-                                        .accessibilityHint("Download this song for offline listening")
-                                    }
-                                    
-                                    ContextButton(isDestructive: false, text: "Add to playlist", systemImage: "plus.circle") {
-                                        songToAdd = nil
-                                        DispatchQueue.main.async {
-                                            songToAdd = song
+                                        
+                                        ContextButton(isDestructive: false, text: "Add to playlist", systemImage: "plus.circle") {
+                                            songToAdd = nil
+                                            DispatchQueue.main.async {
+                                                songToAdd = song
+                                            }
                                         }
+                                        .accessibilityHint("Add this song to playlist")
+                                        
+                                        ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
+                                            viewModel.generateInstantMix(song)
+                                        }
+                                        .accessibilityHint("Create mix based on this song")
                                     }
-                                    .accessibilityHint("Add this song to playlist")
-                                    
-                                    ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
-                                        viewModel.generateInstantMix(song)
-                                    }
-                                    .accessibilityHint("Create mix based on this song")
-                                }
+                            }
                         }
                     }
                 }
                 .padding(spaceBetween)
                 .padding(.bottom, CGFloat(PlaybackService.shared.presentation == .hidden ? 0 : miniPlayerPadding))
+                .frame(alignment: Alignment.leading)
             }
         }
         .clipped()

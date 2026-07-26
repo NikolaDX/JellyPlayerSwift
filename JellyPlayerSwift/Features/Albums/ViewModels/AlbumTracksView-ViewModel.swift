@@ -28,9 +28,9 @@ extension AlbumTracksView {
         
         func fetchSongs(forceRefresh: Bool = false) {
             if !forceRefresh,
-                let lastFetched,
-                Date().timeIntervalSince(lastFetched) < cacheLifetime,
-                !songs.isEmpty {
+               let lastFetched,
+               Date().timeIntervalSince(lastFetched) < cacheLifetime,
+               !songs.isEmpty {
                 return
             }
             
@@ -43,6 +43,20 @@ extension AlbumTracksView {
                     isLoading = false
                 }
             }
+        }
+        
+        func songsByDisc() -> [(disc: Int, songs: [Song])] {
+            let grouped = Dictionary(grouping: songs) { song in
+                song.ParentIndexNumber ?? 1
+            }
+            
+            return grouped
+                .map { ($0.key, $0.value.sorted { ($0.IndexNumber ?? 0) < ($1.IndexNumber ?? 0) })}
+                .sorted { $0.disc < $1.disc }
+        }
+        
+        var hasMultipleDiscs: Bool {
+            songsByDisc().count > 1
         }
         
         func playSong(_ song: Song) {

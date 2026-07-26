@@ -18,6 +18,8 @@ class HistoryService {
     
     private let queue = DispatchQueue(label: "com.jellyplayer.historyqueue", attributes: .concurrent)
     
+    private let maxHistoryEntries = 1500
+    
     private init() {}
     
     func logEvent(for song: Song) {
@@ -47,6 +49,8 @@ class HistoryService {
                 networkType = .cellular
             }
             
+            let energy = AudioAnalysisService.shared.getEnergy(for: song.Id) ?? 0.2
+            
             let newEvent = ListeningEvent(
                 songId: song.Id,
                 hourOfDay: currentHour,
@@ -60,13 +64,15 @@ class HistoryService {
                 audioVolume: audioVolume,
                 timeOfDay: TimeOfDay(hour: currentHour),
                 networkType: networkType,
-                dayOfWeek: Calendar.current.component(.weekday, from: Date())
+                dayOfWeek: Calendar.current.component(.weekday, from: Date()),
+                energy: energy,
+                duration: song.durationInSeconds
             )
             
             currentHistory.append(newEvent)
             
-            if currentHistory.count > 1500 {
-                currentHistory.removeFirst(currentHistory.count - 1500)
+            if currentHistory.count > self.maxHistoryEntries {
+                currentHistory.removeFirst(currentHistory.count - self.maxHistoryEntries)
             }
             
             do {

@@ -195,6 +195,8 @@ class PlaybackService {
     private func playSong(_ song: Song) {
         isShuffleEnabled = false
         
+        AudioAnalysisService.shared.finalizeAndSave()
+        
         if let current = currentSong {
             NotificationCenter.default.post(
                 name: .songPlaybackFinished,
@@ -218,6 +220,9 @@ class PlaybackService {
             print("Playing '\(song.Name)' from: \(playbackLocation)")
             
             self.player = AVPlayer(playerItem: playerItem)
+            
+            AudioAnalysisService.shared.attachTap(to: playerItem, for: song)
+            
             self.player?.play()
             self.currentSong = song
             self.isPlaying = true

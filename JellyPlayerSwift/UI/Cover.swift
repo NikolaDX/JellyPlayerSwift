@@ -12,6 +12,8 @@ struct Cover: View {
     private let url: URL?
     @State private var failed = false
     
+    private static let maxCoverSize = CGSize(width: 1080, height: 1080)
+    
     init(url: URL?) {
         self.url = url
     }
@@ -19,6 +21,8 @@ struct Cover: View {
     var body: some View {
         if (!failed) {
             KFImage(url)
+                .setProcessor(DownsamplingImageProcessor(size: Self.maxCoverSize))
+                .cacheOriginalImage()
                 .onFailure { _ in
                     failed = true
                 }

@@ -60,6 +60,8 @@ class RecommendationService {
         }
         
         for song in songs {
+            let energy = AudioAnalysisService.shared.getEnergy(for: song.Id) ?? 0.2
+            
             let input = RecommenderFeatures.inputDictionary(
                 for: song,
                 currentHour: currentHour,
@@ -70,7 +72,9 @@ class RecommendationService {
                 audioVolume: audioVolume,
                 timeOfDay: TimeOfDay(hour: currentHour),
                 networkType: networkType,
-                dayOfWeek: Calendar.current.component(.weekday, from: currentDate)
+                dayOfWeek: Calendar.current.component(.weekday, from: currentDate),
+                energy: energy,
+                duration: song.durationInSeconds
             )
             
             var score = -Double.infinity
@@ -85,47 +89,49 @@ class RecommendationService {
                 print(error)
             }
             
-            score += song.UserData.PlayCount == 0 ? 1.0 : song.UserData.PlayCount <= 3 ? 0.7 : 0
+            if (networkType == .cellular) {
+                if DownloadService.shared.downloads.contains(song) {
+                    score += 5.0
+                }
+            }
             
             switch request {
             case .regular:
                 break
-            case .queue(let currentSong, let queue):
+            case .queue(let queue):
                 if queue.contains(song) {
                     score = -.infinity
                 }
                 
-                if Set(song.Artists)
-                    .intersection(currentSong.Artists)
-                    .isEmpty == false {
-                    score += 0.5
-                }
-                
-                if song.AlbumId == currentSong.AlbumId {
-                    score += 0.3
+                if let genres = song.Genres,
+                   let lastGenres = queue.last?.Genres
+                {
+                    if !Set(genres).intersection(lastGenres).isEmpty {
+                        score += 5.0
+                    }
                 }
                 
                 if song.UserData.IsFavorite {
-                    score += 0.2
+                    score += 1.0
                 }
                 
-                if song.Id == currentSong.Id {
+                if song.Id == queue.last?.Id {
                     score = -.infinity
                 }
             case .shuffle(let currentSong):
                 if song.UserData.IsFavorite {
-                    score += 0.2
+                    score += 1.0
                 }
                 
                 if let genres = song.Genres,
                    let currentGenres = currentSong.Genres
                 {
                     if !Set(genres).intersection(currentGenres).isEmpty {
-                        score += 0.3
+                        score += 1.0
                     }
                 }
                 
-                score += Double.random(in: -0.7...0.7)
+                score += Double.random(in: -1.0...1.0)
             }
             
             scoredSongs.append((song, score))
