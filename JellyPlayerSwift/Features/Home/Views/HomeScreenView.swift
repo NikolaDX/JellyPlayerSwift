@@ -19,6 +19,8 @@ struct HomeScreenView: View {
                     if let _ = access {
                         RecommendedSongsCarouselView()
                             .padding(.top)
+                        
+                        AlbumsDiscoBallView()
                     } else {
                         ServerNotConfiguredView()
                     }
