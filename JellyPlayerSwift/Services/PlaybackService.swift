@@ -111,7 +111,9 @@ class PlaybackService {
             MPMediaItemPropertyAlbumTitle: song.albumName,
             MPMediaItemPropertyPlaybackDuration: duration,
             MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
-            MPNowPlayingInfoPropertyPlaybackRate: player?.rate ?? 1.0
+            MPNowPlayingInfoPropertyPlaybackRate: player?.rate ?? 1.0,
+            MPNowPlayingInfoPropertyPlaybackQueueIndex: currentIndex,
+            MPNowPlayingInfoPropertyPlaybackQueueCount: queue.count
         ]
 
         let artworkService = ArtworkService()
@@ -179,7 +181,7 @@ class PlaybackService {
             return .success
         }
         
-        MPRemoteCommandCenter.shared().changePlaybackPositionCommand.addTarget { [weak self] event in
+        remoteCommandCenter.changePlaybackPositionCommand.addTarget { [weak self] event in
             guard let self = self,
             let player = self.player,
             let event = event as? MPChangePlaybackPositionCommandEvent else {
@@ -188,6 +190,24 @@ class PlaybackService {
 
             let targetTime = CMTime(seconds: event.positionTime, preferredTimescale: 1)
             player.seek(to: targetTime)
+            return .success
+        }
+        
+        remoteCommandCenter.changeShuffleModeCommand.isEnabled = true
+        remoteCommandCenter.changeShuffleModeCommand.addTarget { [weak self] event in
+            guard let self = self, let event = event as? MPChangeShuffleModeCommandEvent else {
+                return .commandFailed
+            }
+            handleRemoteShuffleCHange(mode: event.shuffleType)
+            return .success
+        }
+        
+        remoteCommandCenter.changeRepeatModeCommand.isEnabled = true
+        remoteCommandCenter.changeRepeatModeCommand.addTarget { [weak self] event in
+            guard let self = self, let event = event as? MPChangeRepeatModeCommandEvent else {
+                return .commandFailed
+            }
+            handleRemoteRepeatChange(mode: event.repeatType)
             return .success
         }
     }
@@ -342,6 +362,49 @@ class PlaybackService {
                 }
             }
         }
+        updateRemoteCommandCenterState()
+    }
+    
+    private func handleRemoteShuffleCHange(mode: MPShuffleType) {
+        switch mode {
+        case .off:
+            if queueShuffled { shuffleQueue() }
+        case .items, .collections:
+            if !queueShuffled { shuffleQueue() }
+        default:
+            break
+        }
+        updateRemoteCommandCenterState()
+    }
+    
+    private func handleRemoteRepeatChange(mode: MPRepeatType) {
+        switch mode {
+        case .off:
+            repeatMode = .none
+        case .one:
+            repeatMode = .repeatOne
+        case .all:
+            repeatMode = .repeatAll
+        default:
+            break
+        }
+        UserDefaults.standard.set(repeatMode.rawValue, forKey: repeatKey)
+        updateRemoteCommandCenterState()
+    }
+    
+    private func updateRemoteCommandCenterState() {
+        let commandCenter = MPRemoteCommandCenter.shared()
+        
+        commandCenter.changeShuffleModeCommand.currentShuffleType = queueShuffled ? .items : .off
+        
+        switch repeatMode {
+        case .none:
+            commandCenter.changeRepeatModeCommand.currentRepeatType = .off
+        case .repeatAll:
+            commandCenter.changeRepeatModeCommand.currentRepeatType = .all
+        case .repeatOne:
+            commandCenter.changeRepeatModeCommand.currentRepeatType = .one
+        }
     }
 
     private func updateTime() {
@@ -425,6 +488,7 @@ class PlaybackService {
             let nextIndex = (index + 1) % allCases.count
             repeatMode = allCases[nextIndex]
             UserDefaults.standard.set(repeatMode.rawValue, forKey: repeatKey)
+            updateRemoteCommandCenterState()
         }
     }
     

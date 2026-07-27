@@ -87,6 +87,36 @@ struct PlaylistSongsView: View {
                     .foregroundStyle(.primary)
                 }
                 .onDelete(perform: deleteRows)
+                
+                if viewModel.filterText.isEmpty {
+                    Section {
+                        if viewModel.isLoadingSuggestions {
+                            ProgressView()
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .padding()
+                        } else {
+                            ForEach(viewModel.suggestedSongs, id: \.Id) { song in
+                                HStack {
+                                    SongRow(song)
+                                    
+                                    Spacer()
+                                    
+                                    Button {
+                                        viewModel.addSuggestedSong(song)
+                                    } label: {
+                                        Image(systemName: "plus.circle")
+                                            .font(.title2)
+                                    }
+                                    .buttonStyle(.borderless)
+                                    .accessibilityLabel("Add \(song.Name) to playlist")
+                                }
+                                .padding(.vertical, 4)
+                            }
+                        }
+                    } header: {
+                        Headline("Suggested Songs")
+                    }
+                }
             }
             .contentMargins(.bottom, CGFloat(miniPlayerPadding), for: .scrollContent)
             .onChange(of: songToAdd) {

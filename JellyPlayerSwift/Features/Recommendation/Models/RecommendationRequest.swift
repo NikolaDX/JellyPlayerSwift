@@ -11,5 +11,6 @@ enum RecommendationRequest {
     case regular
     case queue(queue: [Song])
     case shuffle(currentSong: Song)
+    case playlist(playlistSongs: [Song])
 }
 

@@ -38,13 +38,9 @@ class RecommendationService {
         }
         
         let currentDate = Date()
-        
         let currentHour = Calendar.current.component(.hour, from: currentDate)
-        
         let latitude = LocationService.shared.location?.latitude ?? 0.0
         let longitude = LocationService.shared.location?.longitude ?? 0.0
-        
-        var scoredSongs: [(song: Song, score: Double)] = []
         
         let audioOutput = AudioContextService.shared.output
         let audioVolume = AudioContextService.shared.volume
@@ -59,7 +55,30 @@ class RecommendationService {
             networkType = .cellular
         }
         
+        var playlistGenres = Set<String>()
+        var averagePlaylistEnergy: Double = 0.5
+        
+        if case .playlist(let playlistSongs) = request, !playlistSongs.isEmpty {
+            var totalEnergy = 0.0
+            for pSong in playlistSongs {
+                if let genres = pSong.Genres {
+                    playlistGenres.formUnion(genres)
+                }
+                totalEnergy += AudioAnalysisService.shared.getEnergy(for: pSong.Id) ?? 0.5
+            }
+            averagePlaylistEnergy = totalEnergy / Double(playlistSongs.count)
+        }
+        
+        var scoredSongs: [(song: Song, score: Double)] = []
+        let downloadedSongs = DownloadService.shared.downloads
+        
         for song in songs {
+            let isDownloaded = downloadedSongs.contains(song)
+            if networkType == .offline && !isDownloaded {
+                scoredSongs.append((song, -.infinity))
+                continue
+            }
+            
             let energy = AudioAnalysisService.shared.getEnergy(for: song.Id) ?? 0.2
             
             let input = RecommenderFeatures.inputDictionary(
@@ -86,18 +105,16 @@ class RecommendationService {
                     .featureValue(for: RecommenderFeatures.targetColumn)?
                     .doubleValue ?? -Double.infinity
             } catch {
-                print(error)
+                print("Model prediction failed for \(song.Name): \(error)")
             }
             
-            if (networkType == .cellular) {
-                if DownloadService.shared.downloads.contains(song) {
-                    score += 5.0
-                }
+            if networkType == .cellular && isDownloaded {
+                score += 5.0
             }
             
             switch request {
             case .regular:
-                break
+                if song.UserData.IsFavorite { score += 0.5 }
             case .queue(let queue):
                 if queue.contains(song) {
                     score = -.infinity
@@ -107,7 +124,7 @@ class RecommendationService {
                    let lastGenres = queue.last?.Genres
                 {
                     if !Set(genres).intersection(lastGenres).isEmpty {
-                        score += 5.0
+                        score += 3.0
                     }
                 }
                 
@@ -119,19 +136,28 @@ class RecommendationService {
                     score = -.infinity
                 }
             case .shuffle(let currentSong):
-                if song.UserData.IsFavorite {
-                    score += 1.0
-                }
-                
-                if let genres = song.Genres,
-                   let currentGenres = currentSong.Genres
-                {
+                if let genres = song.Genres, let currentGenres = currentSong.Genres {
                     if !Set(genres).intersection(currentGenres).isEmpty {
-                        score += 1.0
+                        score += 0.5
                     }
                 }
                 
-                score += Double.random(in: -1.0...1.0)
+                score += Double.random(in: -2.0...2.0)
+            case .playlist(let playlistSongs):
+                if playlistSongs.contains(song) {
+                    score -= .infinity
+                } else {
+                    if let genres = song.Genres, !Set(genres).intersection(playlistGenres).isEmpty {
+                        score += 2.0
+                    }
+                    
+                    let energyDifference = abs(averagePlaylistEnergy - energy)
+                    score -= (energyDifference * 5.0)
+                    
+                    if song.UserData.IsFavorite {
+                        score += 1.0
+                    }
+                }
             }
             
             scoredSongs.append((song, score))

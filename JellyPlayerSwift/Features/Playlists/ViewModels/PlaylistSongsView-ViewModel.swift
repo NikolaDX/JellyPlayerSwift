@@ -13,6 +13,9 @@ extension PlaylistSongsView {
         var songs: [Song] = []
         var isLoading: Bool = false
         
+        var suggestedSongs: [Song] = []
+        var isLoadingSuggestions: Bool = false
+        
         private var favoritesService: FavoritesService
         private var downloadService: DownloadService
         
@@ -82,6 +85,8 @@ extension PlaylistSongsView {
                 withAnimation {
                     isLoading = false
                 }
+                
+                await fetchSuggestions()
             }
         }
         
@@ -140,6 +145,53 @@ extension PlaylistSongsView {
                 let songsToPlay = await songsService.generateInstantMix(songId: songId)
                 if !songsToPlay.isEmpty {
                     PlaybackService.shared.playAndBuildQueue(songsToPlay[0], songsToPlay: songsToPlay)
+                }
+            }
+        }
+        
+        func fetchSuggestions() async {
+            isLoadingSuggestions = true
+            
+            let songsService = SongsService()
+            
+            let candidatePool = await songsService.fetchAllSongs()
+            
+            let existingSongIds = Set(songs.map { $0.Id })
+            
+            let unplayedCandidates = candidatePool.filter { !existingSongIds.contains($0.Id) }
+            
+            let scored = RecommendationService.shared.score(
+                toScore: unplayedCandidates,
+                request: .playlist(playlistSongs: self.songs)
+            )
+            
+            let topSuggestions = scored
+                .sorted { $0.score > $1.score }
+                .prefix(3)
+                .map { $0.song }
+            
+            withAnimation {
+                self.suggestedSongs = Array(topSuggestions)
+                isLoadingSuggestions = false
+            }
+        }
+        
+        func addSuggestedSong(_ song: Song) {
+            let playlistsService = PlaylistsService()
+            
+            Task { @MainActor in
+                do {
+                    try await playlistsService.addSongsToPlaylist(songIds: [song.Id], playlistId: playlist.Id)
+                    
+                    withAnimation {
+                        if let index = suggestedSongs.firstIndex(where: { $0.Id == song.Id }) {
+                            suggestedSongs.remove(at: index)
+                        }
+                    }
+                    
+                    fetchSongs(forceRefresh: true)
+                } catch {
+                    print("Error adding suggested song: \(error.localizedDescription)")
                 }
             }
         }
