@@ -108,6 +108,9 @@ struct AlbumsDiscoBallView: View {
                     let size = min(geo.size.width, geo.size.height)
                     let radius = size * 0.42
                     let center = CGPoint(x: geo.size.width / 2, y: geo.size.height / 2)
+                    
+                    let countFactor = max(1.0, sqrt(Double(viewModel.points.count) / 30.0))
+                    let baseItemSize = (size * 0.18) / countFactor
 
                     TimelineView(.animation) { timeline in
                         let autoYDegrees = timeline.date.timeIntervalSinceReferenceDate * rotationSpeed
@@ -146,7 +149,7 @@ struct AlbumsDiscoBallView: View {
                                         .scaleEffect(0.9)
                                 }
                                 .buttonStyle(.plain)
-                                .frame(width: 72, height: 72)
+                                .frame(width: baseItemSize, height: baseItemSize)
                                 .scaleEffect(scale)
                                 .opacity(opacity)
                                 .position(screen)
