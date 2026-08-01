@@ -64,11 +64,17 @@ struct QueueView: View {
                         }
                     }
                     
-                    NiceIconButton("Add recommended songs", buttonImage: "plus") {
+                    NiceIconButton(
+                        viewModel.isLoadingRecommendations
+                        ? "Generating recommendations..."
+                        : "Add recommended songs",
+                        buttonImage: "plus"
+                    ) {
                         Task {
                             await viewModel.addRecommended()
                         }
                     }
+                    .disabled(viewModel.isLoadingRecommendations)
                     .listRowBackground(Color.clear)
                 }
                 .scrollIndicators(.hidden)
@@ -83,6 +89,16 @@ struct QueueView: View {
                     proxy.scrollTo(viewModel.currentIndex, anchor: .center)
                 }
             }
+        }
+        .alert("Recommendations unavailable",
+               isPresented: Binding(
+                get: { viewModel.recommendationError != nil },
+                set: { if !$0 { viewModel.recommendationError = nil } }
+               )
+        ) {
+            Button("OK") {}
+        } message: {
+            Text(viewModel.recommendationError?.localizedDescription ?? "")
         }
     }
 }

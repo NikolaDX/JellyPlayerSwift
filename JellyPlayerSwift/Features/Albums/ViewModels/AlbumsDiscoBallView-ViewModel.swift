@@ -19,7 +19,7 @@ extension AlbumsDiscoBallView {
         var lastFetched: Date?
         let cacheLifetime: TimeInterval = 300
         
-        func fetchAlbums(forceRefresh: Bool = false) {
+        func fetchAlbums(forceRefresh: Bool = false, limit: Int = 30) {
             if !albums.isEmpty { return }
             
             if !forceRefresh,
@@ -33,6 +33,7 @@ extension AlbumsDiscoBallView {
             let albumsService = AlbumService()
             Task { @MainActor in
                 self.albums = await albumsService.fetchAlbums()
+                self.albums = Array(self.albums.prefix(limit))
                 self.lastFetched = Date()
                 self.points = fibonacciSphere(albums: self.albums)
                 withAnimation {

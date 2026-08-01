@@ -319,6 +319,7 @@ class PlaybackService {
     
     func addToQueue(songs: [Song]) {
         queue += songs
+        defaultQueue += songs
     }
     
     func moveSong(from source: IndexSet, to destination: Int) {
@@ -343,7 +344,12 @@ class PlaybackService {
         guard isShuffleEnabled else { return }
         queueShuffled.toggle()
         if queueShuffled {
-            queue = RecommendationService.shared.smartShuffle(songs: queue, currentSong: currentSong)
+            defaultQueue = queue
+            do {
+                queue = try RecommendationService.shared.smartShuffle(songs: queue, currentSong: currentSong)
+            } catch {
+                queue.shuffle()
+            }
             for index in queue.indices {
                 if queue[index].Id == currentSong?.Id {
                     queue.swapAt(0, index)

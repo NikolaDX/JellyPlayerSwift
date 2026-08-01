@@ -135,14 +135,36 @@ class RecommendationService {
                 if song.Id == queue.last?.Id {
                     score = -.infinity
                 }
+                
+                let lastEnergy = AudioAnalysisService.shared.getEnergy(for: queue.last?.Id ?? "") ?? 0.5
+                
+                let difference = abs(lastEnergy - energy)
+
+                switch difference {
+                case 0..<0.1:
+                    score += 3
+                case 0.1..<0.2:
+                    score += 2
+                case 0.2..<0.35:
+                    score += 1
+                default:
+                    score -= difference * 4
+                }
+                
             case .shuffle(let currentSong):
                 if let genres = song.Genres, let currentGenres = currentSong.Genres {
                     if !Set(genres).intersection(currentGenres).isEmpty {
-                        score += 0.5
+                        score += 1.0
                     }
                 }
                 
-                score += Double.random(in: -2.0...2.0)
+                let currentEnergy = AudioAnalysisService.shared.getEnergy(for: currentSong.Id) ?? 0.5
+                let desiredEnergy = min(currentEnergy + 0.05, 1.0)
+                let difference = abs(desiredEnergy - energy)
+
+                score -= difference * 4
+                
+                score += Double.random(in: -1...1)
             case .playlist(let playlistSongs):
                 if playlistSongs.contains(song) {
                     score -= .infinity
@@ -166,9 +188,9 @@ class RecommendationService {
         return scoredSongs
     }
     
-    func getRecommendations(from availableSongs: [Song], request: RecommendationRequest) -> [Song] {
+    func getRecommendations(from availableSongs: [Song], request: RecommendationRequest) throws -> [Song] {
         guard personalizedModel != nil else {
-            return availableSongs
+            throw RecommendationError.modelUnavailable
         }
         
         return score(
@@ -179,7 +201,7 @@ class RecommendationService {
             .map(\.song)
     }
     
-    func smartShuffle(songs: [Song], currentSong: Song?) -> [Song] {
-        getRecommendations(from: songs, request: .shuffle(currentSong: currentSong ?? songs[0]))
+    func smartShuffle(songs: [Song], currentSong: Song?) throws -> [Song] {
+        try getRecommendations(from: songs, request: .shuffle(currentSong: currentSong ?? songs[0]))
     }
 }

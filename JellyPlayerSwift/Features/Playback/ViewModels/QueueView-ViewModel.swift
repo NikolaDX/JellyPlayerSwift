@@ -12,6 +12,9 @@ extension QueueView {
     class ViewModel {
         let playbackService = PlaybackService.shared
         
+        var isLoadingRecommendations = false
+        var recommendationError: RecommendationError?
+        
         var queue: [Song] {
             playbackService.getQueue()
         }
@@ -51,9 +54,25 @@ extension QueueView {
         }
         
         func addRecommended() async {
-            let allSongs = await SongsService().fetchAllSongs()
-            let modelResults = RecommendationService.shared.getRecommendations(from: allSongs, request: RecommendationRequest.queue(queue: queue))
-            playbackService.addToQueue(songs: Array(modelResults.prefix(10)))
+            isLoadingRecommendations = true
+            recommendationError = nil
+            
+            defer {
+                isLoadingRecommendations = false
+            }
+            
+            do {
+                let allSongs = await SongsService().fetchAllSongs()
+                let recommendations = try RecommendationService.shared.getRecommendations(
+                    from: allSongs,
+                    request: .queue(queue: queue)
+                )
+                playbackService.addToQueue(songs: Array(recommendations.prefix(10)))
+            } catch let error as RecommendationError {
+                recommendationError = error
+            }  catch {
+                recommendationError = .recommendationFailed
+            }
         }
     }
 }
