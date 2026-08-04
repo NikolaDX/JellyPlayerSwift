@@ -69,7 +69,7 @@ extension PlaylistsView {
             Task { @MainActor in
                 do {
                     try await playlistsService.deletePlaylist(playlistId: playlistId)
-                    fetchPlaylists(forceRefresh: true)
+                    playlists.removeAll(where: { $0.Id == playlistId })
                 } catch {
                     print("Error deleting playlist: \(error.localizedDescription)")
                 }

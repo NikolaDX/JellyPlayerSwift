@@ -95,7 +95,10 @@ extension PlaylistSongsView {
             Task { @MainActor in
                 do {
                     try await playlistsSerivce.removeSongsFromPlaylist(songIds: songIds, playlistId: playlistId)
-                    fetchSongs(forceRefresh: true)
+                    
+                    let songIdsCollection = Set(songIds)
+                    
+                    songs.removeAll(where: { songIdsCollection.contains($0.Id) })
                 } catch {
                     print("Error removing song: \(error.localizedDescription)")
                 }
@@ -189,7 +192,7 @@ extension PlaylistSongsView {
                         }
                     }
                     
-                    fetchSongs(forceRefresh: true)
+                    songs.append(song)
                 } catch {
                     print("Error adding suggested song: \(error.localizedDescription)")
                 }

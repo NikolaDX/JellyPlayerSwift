@@ -100,12 +100,12 @@ struct PlaylistsView: View {
                     }
                 }
             }
-            .sheet(isPresented: $showingPlaylistCreation) {
+            .sheet(isPresented: $showingPlaylistCreation, onDismiss: refreshView) {
                 CreatePlaylistView()
                     .presentationDetents([.medium])
                     .presentationDragIndicator(.visible)
             }
-            .sheet(isPresented: $showingRenamePlaylist) {
+            .sheet(isPresented: $showingRenamePlaylist, onDismiss: refreshView) {
                 RenamePlaylistView(playlistId: playlistToRename!.Id)
                     .presentationDetents([.medium])
                     .presentationDragIndicator(.visible)
@@ -124,7 +124,7 @@ struct PlaylistsView: View {
             viewModel.fetchPlaylists()
         }
         .refreshable {
-            viewModel.fetchPlaylists(forceRefresh: true)
+            refreshView()
         }
     }
     
@@ -132,6 +132,10 @@ struct PlaylistsView: View {
         for index in offsets {
             viewModel.deletePlaylist(playlistId: viewModel.playlists[index].Id)
         }
+    }
+    
+    func refreshView() {
+        viewModel.fetchPlaylists(forceRefresh: true)
     }
 }
 

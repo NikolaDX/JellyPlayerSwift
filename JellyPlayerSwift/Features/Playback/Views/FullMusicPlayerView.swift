@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+private enum DragDirection {
+   case horizontal, vertical
+}
+
 struct FullMusicPlayerView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
@@ -16,6 +20,8 @@ struct FullMusicPlayerView: View {
     let namespace: Namespace.ID
     
     @State private var dragOffset: CGFloat = 0
+    @State private var discDragOffset: CGFloat = 0
+    @State private var dragDirection: DragDirection? = nil
     @GestureState private var isDragging = false
     
     private let buttonSize: Double = 25
@@ -61,6 +67,7 @@ struct FullMusicPlayerView: View {
                     }
                     .transition(.slide.combined(with: .opacity))
                     .accessibilityHidden(true)
+                    .offset(x: discDragOffset)
                 }
                 
                 Spacer()
@@ -176,26 +183,53 @@ struct FullMusicPlayerView: View {
             DragGesture(minimumDistance: 10)
                 .updating($isDragging) { _, state, _ in state = true }
                 .onChanged { value in
-                    guard value.translation.height > 0 else { return }
-                    dragOffset = value.translation.height
+                    if dragDirection == nil {
+                        dragDirection = abs(value.translation.width) > abs(value.translation.height)
+                            ? .horizontal
+                            : .vertical
+                    }
+                    
+                    switch dragDirection {
+                    case .horizontal:
+                        discDragOffset = value.translation.width
+                    case .vertical:
+                        dragOffset = value.translation.height
+                    case nil:
+                        break
+                    }
                 }
                 .onEnded { value in
-                    let dragged = value.translation.height
-                    let velocity = value.predictedEndTranslation.height - value.translation.height
-                    
-                    if dragged > dismissThreshold || velocity > 300 {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                            withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
-                                viewModel.playbackService.presentation = .mini
+                    switch dragDirection {
+                    case .horizontal:
+                        let dragAmount = value.translation.width
+                        if dragAmount > 50 {
+                            withAnimation(.easeInOut) { viewModel.previousSong() }
+                        } else if dragAmount < -50 {
+                            withAnimation(.easeInOut) { viewModel.nextSong() }
+                        }
+                        withAnimation(.easeInOut) { discDragOffset = 0 }
+                    case .vertical:
+                        let dragged = value.translation.height
+                        let velocity = value.predictedEndTranslation.height - value.translation.height
+                        
+                        if dragged > dismissThreshold || velocity > 300 {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                                withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
+                                    viewModel.playbackService.presentation = .mini
+                                }
+                                
+                                dragOffset = 0
                             }
-                            
-                            dragOffset = 0
+                        } else {
+                            withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
+                                dragOffset = 0
+                            }
                         }
-                    } else {
-                        withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
-                            dragOffset = 0
-                        }
+                    case nil:
+                        break
                     }
+                    
+                    dragDirection = nil
                 }
         )
         .animation(.interactiveSpring(), value: dragOffset)
