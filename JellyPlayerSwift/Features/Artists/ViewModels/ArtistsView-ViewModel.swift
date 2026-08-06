@@ -10,8 +10,13 @@ import SwiftUI
 extension ArtistsView {
     @Observable
     class ViewModel {
-        var artists: [Artist] = []
-        var isLoading: Bool = false
+        var artists: [Artist] {
+            LibraryService.shared.artists
+        }
+        
+        var isLoading: Bool {
+            LibraryService.shared.isLoading && artists.isEmpty
+        }
         
         var filterText: String = ""
         
@@ -21,25 +26,6 @@ extension ArtistsView {
         var filteredArtists: [Artist] {
             filterText.isEmpty ? artists : artists.filter {
                 $0.Name.localizedStandardContains(filterText)
-            }
-        }
-        
-        func fetchArtists(forceRefresh: Bool = false) {
-            if !forceRefresh,
-                let lastFetched,
-                Date().timeIntervalSince(lastFetched) < cacheLifetime,
-                !artists.isEmpty {
-                return
-            }
-            
-            isLoading = true
-            let artistsService = ArtistsService()
-            Task { @MainActor in
-                self.artists = await artistsService.fetchArtists()
-                self.lastFetched = Date()
-                withAnimation {
-                    isLoading = false
-                }
             }
         }
         

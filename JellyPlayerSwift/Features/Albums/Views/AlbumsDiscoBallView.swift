@@ -171,9 +171,6 @@ struct AlbumsDiscoBallView: View {
                 .padding()
             }
         }
-        .task {
-            viewModel.fetchAlbums()
-        }
         .onAppear { motion.start() }
         .onDisappear { motion.stop() }
     }

@@ -15,7 +15,7 @@ struct ArtistDetailsView: View {
     }
     
     var body: some View {
-        AsyncView(isLoading: $viewModel.isLoading) {
+        AsyncView(isLoading: viewModel.isLoading) {
             GeometryReader { proxy in
                 ScrollView {
                     ArtistHeader(artist: viewModel.artist)
@@ -46,12 +46,6 @@ struct ArtistDetailsView: View {
             }
         }
         .navigationTitle(viewModel.artist.Name)
-        .task {
-            viewModel.fetchArtistAlbums()
-        }
-        .refreshable {
-            viewModel.fetchArtistAlbums(forceRefresh: true)
-        }
     }
 }
 

@@ -64,7 +64,7 @@ class DownloadService: NSObject, ObservableObject, URLSessionDownloadDelegate {
     }
     
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-        guard let song = downloadTasks[downloadTask],
+        guard var song = downloadTasks[downloadTask],
               let response = downloadTask.response as? HTTPURLResponse else {
             return
         }

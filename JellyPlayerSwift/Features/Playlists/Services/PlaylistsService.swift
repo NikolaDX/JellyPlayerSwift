@@ -31,7 +31,7 @@ class PlaylistsService {
             URLQueryItem(name: "SortOrder", value: "Ascending")
         ]) {
             if let decodedResponse = try? JSONDecoder().decode(PlaylistResponse.self, from: data) {
-                let playlists = decodedResponse.Items
+                var playlists = decodedResponse.Items
 
                 for i in playlists.indices {
                     let playlistId = playlists[i].Id
@@ -99,6 +99,7 @@ class PlaylistsService {
             path: "Playlists/\(playlistId)/Items",
             httpBody: [:]
         )
+        LibraryService.shared.adjustPlaylistSongCount(id: playlistId, by: songIds.count)
     }
     
     func removeSongsFromPlaylist(songIds: [String], playlistId: String) async throws {
@@ -109,6 +110,7 @@ class PlaylistsService {
             path: "Playlists/\(playlistId)/Items",
             httpBody: [:]
         )
+        LibraryService.shared.adjustPlaylistSongCount(id: playlistId, by: -songIds.count)
     }
     
     func generateInstantMix(playlistId: String) async -> [Song] {

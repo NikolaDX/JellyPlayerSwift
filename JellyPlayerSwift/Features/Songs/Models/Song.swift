@@ -29,7 +29,7 @@ struct SongUserData: Codable {
     }
 }
 
-final class Song: Codable, Equatable {
+struct Song: Codable, Equatable {
     let Id: String
     let Name: String
     let IndexNumber: Int?

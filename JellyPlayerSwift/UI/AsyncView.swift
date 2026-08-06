@@ -8,23 +8,27 @@
 import SwiftUI
 
 struct AsyncView<Content: View>: View {
-    @Binding var isLoading: Bool
+    var isLoading: Bool
     @ViewBuilder let content: Content
     
     var body: some View {
-        if isLoading {
-            ProgressView()
-                .accessibilityLabel("Loading...")
-        } else {
-            content
-                .transition(.slide.combined(with: .opacity))
+        let _ = print("PlaylistsView recomputed")
+        
+        Group {
+            if isLoading {
+                ProgressView()
+                    .accessibilityLabel("Loading...")
+            } else {
+                content
+                    .transition(.slide.combined(with: .opacity))
+            }
         }
+        .animation(.default, value: isLoading)
     }
 }
 
 #Preview {
-    @Previewable @State var isLoading: Bool = false
-    AsyncView(isLoading: $isLoading) {
+    AsyncView(isLoading: true) {
         Text("AsyncView")
     }
 }

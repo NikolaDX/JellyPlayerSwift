@@ -11,38 +11,21 @@ extension AlbumTracksView {
     @Observable
     class ViewModel {
         let album: Album
-        var songs: [Song] = []
-        var isLoading: Bool = false
+        var songs: [Song] {
+            LibraryService.shared.fetchAlbumTracks(for: album.Id)
+        }
+        
+        var isLoading: Bool {
+            LibraryService.shared.isLoading && songs.isEmpty
+        }
         
         private var favoritesService: FavoritesService
         private var downloadService: DownloadService
-        
-        var lastFetched: Date?
-        let cacheLifetime: TimeInterval = 300
         
         init(album: Album, favoritesService: FavoritesService, downloadService: DownloadService) {
             self.album = album
             self.favoritesService = favoritesService
             self.downloadService = downloadService
-        }
-        
-        func fetchSongs(forceRefresh: Bool = false) {
-            if !forceRefresh,
-               let lastFetched,
-               Date().timeIntervalSince(lastFetched) < cacheLifetime,
-               !songs.isEmpty {
-                return
-            }
-            
-            isLoading = true
-            let albumService = AlbumService()
-            Task { @MainActor in
-                songs = await albumService.fetchAlbumSongs(albumId: album.Id)
-                self.lastFetched = Date()
-                withAnimation {
-                    isLoading = false
-                }
-            }
         }
         
         func songsByDisc() -> [(disc: Int, songs: [Song])] {

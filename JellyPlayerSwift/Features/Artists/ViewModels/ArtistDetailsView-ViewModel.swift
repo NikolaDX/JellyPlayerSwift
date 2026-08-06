@@ -11,35 +11,16 @@ extension ArtistDetailsView {
     @Observable
     class ViewModel {
         let artist: Artist
-        var artistAlbums: [Album] = []
-        var isLoading: Bool = false
+        var artistAlbums: [Album] {
+            LibraryService.shared.fetchArtistAlbums(for: artist.Id)
+        }
         
-        var lastFetched: Date?
-        let cacheLifetime: TimeInterval = 300
+        var isLoading: Bool {
+            LibraryService.shared.isLoading && artistAlbums.isEmpty
+        }
         
         init(artist: Artist) {
             self.artist = artist
-        }
-        
-        func fetchArtistAlbums(forceRefresh: Bool = false) {
-            if !artistAlbums.isEmpty { return }
-            
-            if !forceRefresh,
-                let lastFetched,
-                Date().timeIntervalSince(lastFetched) < cacheLifetime,
-                !artistAlbums.isEmpty {
-                return
-            }
-            
-            isLoading = true
-            let artistsService = ArtistsService()
-            Task { @MainActor in
-                self.artistAlbums = await artistsService.fetchArtistAlbums(artistId: artist.Id)
-                self.lastFetched = Date()
-                withAnimation {
-                    isLoading = false
-                }
-            }
         }
         
         func playArtist() async {

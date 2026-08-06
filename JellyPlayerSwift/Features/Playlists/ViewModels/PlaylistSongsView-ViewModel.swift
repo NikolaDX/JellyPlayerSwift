@@ -193,10 +193,17 @@ extension PlaylistSongsView {
                     }
                     
                     songs.append(song)
+                    
+                    await fetchSuggestions()
                 } catch {
                     print("Error adding suggested song: \(error.localizedDescription)")
                 }
             }
+        }
+        
+        func appendSongs(_ newSongs: [Song]) {
+            songs.append(contentsOf: newSongs)
+            LibraryService.shared.adjustPlaylistSongCount(id: playlist.Id, by: newSongs.count)
         }
     }
 }

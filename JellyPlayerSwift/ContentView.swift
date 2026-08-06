@@ -26,6 +26,9 @@ struct ContentView: View {
         .environmentObject(languageService)
         .environment(\.locale, Locale(identifier: languageService.selectedLanguage.rawValue))
         .environment(\.layoutDirection, languageService.selectedLanguage == .arabic ? .rightToLeft : .leftToRight)
+        .task {
+            await LibraryService.shared.loadAll(forceRefresh: true)
+        }
     }
 }
 

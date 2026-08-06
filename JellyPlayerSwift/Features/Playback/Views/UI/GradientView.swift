@@ -17,7 +17,7 @@ struct GradientView: View {
     
     var body: some View {
         LinearGradient(
-           gradient: Gradient(colors: [color, color.mix(with: .black, by: 0.25)]),
+           gradient: Gradient(colors: [color, color.mix(with: .white, by: 0.25)]),
            startPoint: .bottomTrailing,
            endPoint: .topLeading
         )

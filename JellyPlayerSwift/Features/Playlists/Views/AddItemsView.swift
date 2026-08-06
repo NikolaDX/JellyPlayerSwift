@@ -14,8 +14,8 @@ struct AddItemsView: View {
     @State private var editMode: EditMode = .active
     @State private var songsSelection = Set<String>()
     
-    init(playlistId: String, refreshAction: @escaping () -> Void) {
-        viewModel = ViewModel(playlistId: playlistId, refreshAction: refreshAction)
+    init(playlistId: String, existingSongIds: Set<String>, onSongsAdded: @escaping ([Song]) -> Void) {
+        viewModel = ViewModel(playlistId: playlistId, existingSongIds: existingSongIds, onSongsAdded: onSongsAdded)
     }
     
     var body: some View {
@@ -42,8 +42,8 @@ struct AddItemsView: View {
     }
 }
 
-#Preview {
-    AddItemsView(playlistId: "Id") {
-        
-    }
-}
+//#Preview {
+//    AddItemsView(playlistId: "Id") {
+//        
+//    }
+//}

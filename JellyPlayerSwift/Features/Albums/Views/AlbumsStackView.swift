@@ -17,7 +17,7 @@ struct AlbumsStackView: View {
     @Namespace private var albumViewAnimation
     
     var body: some View {
-        AsyncView(isLoading: $viewModel.isLoading) {
+        AsyncView(isLoading: viewModel.isLoading) {
             VStack {
                 GeometryReader { metrics in
                     ZStack(alignment: .bottom) {

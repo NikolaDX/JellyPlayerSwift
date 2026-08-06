@@ -11,7 +11,7 @@ struct GenresView: View {
     @State private var viewModel = ViewModel()
     
     var body: some View {
-        AsyncView(isLoading: $viewModel.isLoading) {
+        AsyncView(isLoading: viewModel.isLoading) {
             List(viewModel.filteredGenres, id: \.Id) { genre in
                 NavigationLink(destination: GenreDetailsView(genre: genre)) {
                     Headline(genre.Name)
@@ -22,12 +22,6 @@ struct GenresView: View {
             .contentMargins(.bottom, CGFloat(miniPlayerPadding), for: .scrollContent)
             .navigationTitle("Genres")
             .searchable(text: $viewModel.filterText, prompt: "Search for a genre...")
-        }
-        .task {
-            viewModel.fetchGenres()
-        }
-        .refreshable {
-            viewModel.fetchGenres(forceRefresh: true)
         }
     }
 }

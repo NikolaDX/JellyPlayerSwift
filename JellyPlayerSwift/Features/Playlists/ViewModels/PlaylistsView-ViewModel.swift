@@ -10,17 +10,24 @@ import SwiftUI
 extension PlaylistsView {
     @Observable
     class ViewModel {
-        var playlists: [Playlist] = []
-        var isLoading: Bool = false
+        let library = LibraryService.shared
+        
+        var playlists: [Playlist] {
+            library.playlists
+        }
+        
+        var isLoading: Bool {
+            library.isLoading
+        }
         
         var selectedSortOption: String = "Name"
         var selectedSortOrder: String = "Ascending"
         var filterText: String = ""
         
-        var lastFetched: Date?
-        let cacheLifetime: TimeInterval = 300
         
         var sortedPlaylists: [Playlist] {
+            let playlists = library.playlists
+            
             let sorted: [Playlist]
             
             switch selectedSortOption {
@@ -45,31 +52,12 @@ extension PlaylistsView {
             }
         }
         
-        func fetchPlaylists(forceRefresh: Bool = false) {
-            if !forceRefresh,
-                let lastFetched,
-                Date().timeIntervalSince(lastFetched) < cacheLifetime,
-                !playlists.isEmpty {
-                return
-            }
-            
-            isLoading = true
-            let playlistsService = PlaylistsService()
-            Task { @MainActor in
-                self.playlists = await playlistsService.fetchPlaylists()
-                self.lastFetched = Date()
-                withAnimation {
-                    isLoading = false
-                }
-            }
-        }
-        
         func deletePlaylist(playlistId: String) {
             let playlistsService = PlaylistsService()
             Task { @MainActor in
                 do {
                     try await playlistsService.deletePlaylist(playlistId: playlistId)
-                    playlists.removeAll(where: { $0.Id == playlistId })
+                    LibraryService.shared.removePlaylist(playlistId: playlistId)
                 } catch {
                     print("Error deleting playlist: \(error.localizedDescription)")
                 }

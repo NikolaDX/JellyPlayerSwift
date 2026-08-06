@@ -11,16 +11,10 @@ struct AlbumsLibraryView: View {
     @State private var viewModel = ViewModel()
     
     var body: some View {
-        AsyncView(isLoading: $viewModel.isLoading) {
+        AsyncView(isLoading: viewModel.isLoading) {
             AlbumsGridView(albums: viewModel.albums)
         }
         .navigationTitle("Albums")
-        .task {
-            viewModel.fetchAlbums()
-        }
-        .refreshable {
-            viewModel.fetchAlbums(forceRefresh: true)
-        }
     }
 }
 

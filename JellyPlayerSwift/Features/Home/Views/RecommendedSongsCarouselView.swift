@@ -49,7 +49,7 @@ struct RecommendedSongsCarouselView: View {
                             }
                             .buttonStyle(.plain)
                             .contextMenu {
-                                if song.UserData.IsFavorite {
+                                if isFavorite(song) {
                                     ContextButton(isDestructive: true, text: "Remove from favorites", systemImage: "star.slash") {
                                         Task { @MainActor in
                                             await favoritesService.removeFromFavorites(song: song)
@@ -120,6 +120,10 @@ struct RecommendedSongsCarouselView: View {
         } message: { song in
             Text("Are you sure you want to remove the download for \"\(song.Name)\"?")
         }
+    }
+    
+    private func isFavorite(_ song: Song) -> Bool {
+        LibraryService.shared.songs.first(where: { $0.Id == song.Id })?.UserData.IsFavorite ?? song.UserData.IsFavorite
     }
 }
 

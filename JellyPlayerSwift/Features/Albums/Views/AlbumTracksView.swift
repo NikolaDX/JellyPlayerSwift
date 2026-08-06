@@ -17,7 +17,6 @@ struct AlbumTracksView: View {
     @StateObject private var downloadService: DownloadService
     let spaceBetween: Double = 20
     
-    
     init(album: Album) {
         let favorites = FavoritesService()
         let downloads = DownloadService.shared
@@ -62,7 +61,7 @@ struct AlbumTracksView: View {
                         .padding(.bottom, spaceBetween)
                         .accessibilityLabel("Release year: \(viewModel.album.PremiereDate?.prefix(4) ?? "")")
                     
-                    AsyncView(isLoading: $viewModel.isLoading) {
+                    AsyncView(isLoading: viewModel.isLoading) {
                         HStack(spacing: 10) {
                             NiceIconButton("Play", buttonImage: "play.fill") {
                                 if (!viewModel.songs.isEmpty) {
@@ -97,7 +96,7 @@ struct AlbumTracksView: View {
                                     .accessibilityLabel("Song: \(song.Name)")
                                     .accessibilityHint("Double-tap to play")
                                     .contextMenu {
-                                        if song.UserData.IsFavorite {
+                                        if isFavorite(song) {
                                             ContextButton(isDestructive: true, text: "Remove from favorites", systemImage: "star.slash") {
                                                 viewModel.removeFromFavorites(song)
                                             }
@@ -161,16 +160,14 @@ struct AlbumTracksView: View {
         } message: { song in
             Text("Are you sure you want to remove the download for \"\(song.Name)\"?")
         }
-        .onAppear {
-            viewModel.fetchSongs()
-        }
-        .refreshable {
-            viewModel.fetchSongs(forceRefresh: true)
-        }
+    }
+    
+    private func isFavorite(_ song: Song) -> Bool {
+        LibraryService.shared.songs.first(where: { $0.Id == song.Id })?.UserData.IsFavorite ?? song.UserData.IsFavorite
     }
 }
 
 #Preview {
     @Previewable @Namespace var albumViewAnimation
-    AlbumTracksView(album: Album(Id: "id", Name: "Name", AlbumArtist: "Artist", AlbumArtists: [], DateCreated: "", PremiereDate: ""))
+    AlbumTracksView(album: Album(Id: "id", Name: "Name", AlbumArtist: "Artist", AlbumArtists: [], DateCreated: "", PremiereDate: "", Genres: nil))
 }

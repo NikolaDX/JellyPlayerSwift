@@ -29,7 +29,7 @@ struct PlaylistSongsView: View {
     }
     
     var body: some View {
-        AsyncView(isLoading: $viewModel.isLoading) {
+        AsyncView(isLoading: viewModel.isLoading) {
             List {
                 ForEach(viewModel.filteredSongs, id: \.Id) { song in
                     Button {
@@ -171,8 +171,9 @@ struct PlaylistSongsView: View {
             .sheet(isPresented: $showingAddToPlaylist) {
                 AddItemsView(
                     playlistId: viewModel.playlist.Id,
-                    refreshAction: {
-                        viewModel.fetchSongs(forceRefresh: true)
+                    existingSongIds: Set(viewModel.songs.map(\.Id)),
+                    onSongsAdded: { newSongs in
+                        viewModel.appendSongs(newSongs)
                     }
                 )
             }

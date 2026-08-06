@@ -16,7 +16,7 @@ struct PlaylistsView: View {
     @State private var showingRenamePlaylist: Bool = false
     
     var body: some View {
-        AsyncView(isLoading: $viewModel.isLoading) {
+        AsyncView(isLoading: viewModel.isLoading) {
             List {
                 ForEach(viewModel.filteredPlaylists, id: \.Id) { playlist in
                     NavigationLink {
@@ -83,29 +83,20 @@ struct PlaylistsView: View {
                 EditButton()
                     .accessibilityLabel("Edit playlists")
             }
-            .onChange(of: showingPlaylistCreation) { _, newValue in
-                if !newValue {
-                    viewModel.fetchPlaylists()
-                }
+            .onAppear {
+                print(viewModel.filteredPlaylists.map(\.Name))
             }
             .onChange(of: playlistToRename) {
                 if let _ = playlistToRename {
                     showingRenamePlaylist = true
                 }
             }
-            .onChange(of: showingRenamePlaylist) { _, newValue in
-                if !newValue {
-                    DispatchQueue.main.async {
-                        viewModel.fetchPlaylists()
-                    }
-                }
-            }
-            .sheet(isPresented: $showingPlaylistCreation, onDismiss: refreshView) {
+            .sheet(isPresented: $showingPlaylistCreation) {
                 CreatePlaylistView()
                     .presentationDetents([.medium])
                     .presentationDragIndicator(.visible)
             }
-            .sheet(isPresented: $showingRenamePlaylist, onDismiss: refreshView) {
+            .sheet(isPresented: $showingRenamePlaylist) {
                 RenamePlaylistView(playlistId: playlistToRename!.Id)
                     .presentationDetents([.medium])
                     .presentationDragIndicator(.visible)
@@ -120,22 +111,12 @@ struct PlaylistsView: View {
             }
             .navigationTitle("Playlists")
         }
-        .task {
-            viewModel.fetchPlaylists()
-        }
-        .refreshable {
-            refreshView()
-        }
     }
     
     func deleteRows(at offsets: IndexSet) {
         for index in offsets {
             viewModel.deletePlaylist(playlistId: viewModel.playlists[index].Id)
         }
-    }
-    
-    func refreshView() {
-        viewModel.fetchPlaylists(forceRefresh: true)
     }
 }
 

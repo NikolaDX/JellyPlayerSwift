@@ -10,31 +10,12 @@ import SwiftUI
 extension AlbumsLibraryView {
     @Observable
     class ViewModel {
-        var albums: [Album] = []
-        var isLoading: Bool = false
+        var albums: [Album] {
+            LibraryService.shared.albums
+        }
         
-        var lastFetched: Date?
-        let cacheLifetime: TimeInterval = 300
-        
-        func fetchAlbums(forceRefresh: Bool = false) {
-            if !albums.isEmpty { return }
-            
-            if !forceRefresh,
-                let lastFetched,
-                Date().timeIntervalSince(lastFetched) < cacheLifetime,
-                !albums.isEmpty {
-                return
-            }
-            
-            isLoading = true
-            let albumsService = AlbumService()
-            Task { @MainActor in
-                self.albums = await albumsService.fetchAlbums()
-                self.lastFetched = Date()
-                withAnimation {
-                    isLoading = false
-                }
-            }
+        var isLoading: Bool {
+            LibraryService.shared.isLoading && albums.isEmpty
         }
     }
 }
