@@ -36,20 +36,14 @@ struct MiniPlayerView: View {
 
                     Spacer()
                     
-                    if viewModel.playbackService.isLoading {
-                        ProgressView()
-                            .padding()
-                            .accessibilityLabel("Loading...")
-                    } else {
-                        ConditionalIconButton(
-                            condition: viewModel.isPlaying,
-                            trueLabel: Image(systemName: "pause.fill"),
-                            falseLabel: Image(systemName: "play.fill")) {
-                                viewModel.togglePlayPause()
-                            }
-                            .padding()
-                            .font(.title2)
-                    }
+                    ConditionalIconButton(
+                        condition: viewModel.isPlaying,
+                        trueLabel: Image(systemName: "pause.fill"),
+                        falseLabel: Image(systemName: "play.fill")) {
+                            viewModel.togglePlayPause()
+                        }
+                        .padding()
+                        .font(.title2)
                 }
                 .padding(5)
                 .padding(.horizontal, 5)

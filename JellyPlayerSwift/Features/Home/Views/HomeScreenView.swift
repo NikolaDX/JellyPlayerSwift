@@ -5,6 +5,7 @@
 //  Created by Nikola Ristic on 5/2/25.
 //
 
+import Kingfisher
 import SwiftUI
 
 struct HomeScreenView: View {
@@ -21,6 +22,7 @@ struct HomeScreenView: View {
                             .padding(.top)
                         
                         AlbumsDiscoBallView()
+                            .accessibilityHidden(true)
                     } else {
                         ServerNotConfiguredView()
                     }

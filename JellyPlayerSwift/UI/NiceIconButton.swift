@@ -24,7 +24,6 @@ struct NiceIconButton: View {
             buttonAction()
         } label: {
             Label(LocalizedStringKey(buttonLabel), systemImage: buttonImage)
-                .foregroundStyle(themeService.selectedAccentColor)
                 .padding(15)
                 .padding(.horizontal, 20)
                 .background(.secondary.opacity(0.2))

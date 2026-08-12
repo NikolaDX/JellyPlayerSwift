@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AlbumTracksView: View {
+    @EnvironmentObject private var themeService: ThemeService
     @State private var viewModel: ViewModel
     @State private var songToRemove: Song? = nil
     @State private var showingRemoveDownloadAlert: Bool = false
@@ -68,6 +69,7 @@ struct AlbumTracksView: View {
                                     viewModel.playSong(viewModel.songs[0])
                                 }
                             }
+                            .foregroundStyle(themeService.selectedAccentColor)
                             .accessibilityHint("Play all songs from this album")
                             
                             NiceIconButton("Shuffle", buttonImage: "shuffle") {
@@ -75,6 +77,7 @@ struct AlbumTracksView: View {
                                     viewModel.shufflePlay()
                                 }
                             }
+                            .foregroundStyle(themeService.selectedAccentColor)
                             .accessibilityLabel("Shuffle")
                             .accessibilityHint("Shuffle all songs from this album")
                         }

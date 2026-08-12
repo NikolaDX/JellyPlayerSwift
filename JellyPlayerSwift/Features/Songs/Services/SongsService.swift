@@ -47,7 +47,7 @@ class SongsService {
     }
     
     func generateInstantMix(songId: String) async -> [Song] {
-        if let data = await jellyfinService.fetchSpecific(queryItems: [], toFetch: "Items/\(songId)/InstantMix") {
+        if let data = await jellyfinService.fetchSpecific(queryItems: [], toFetch: "Songs/\(songId)/InstantMix") {
             do {
                 let raw = try JSONSerialization.jsonObject(with: data) as? [String: Any]
                 if let itemsArray = raw?["Items"] as? [[String: Any]] {

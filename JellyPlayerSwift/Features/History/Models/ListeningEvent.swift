@@ -98,8 +98,11 @@ struct ListeningEvent: Codable {
     
     var calculatedAffinity: Double {
         let completionScore = percentListened * 3.5
-        let favoriteScore = isFavorite ? 1.5 : 0.0
         let fatiguePenalty = playCount > 10 ? 0.6 : 0.0
-        return max(0.0, min(completionScore + favoriteScore - fatiguePenalty, 5.0))
+
+        return max(
+            0.0,
+            min(completionScore - fatiguePenalty, 5.0)
+        )
     }
 }

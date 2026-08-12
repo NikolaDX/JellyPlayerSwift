@@ -50,7 +50,30 @@ final class LibraryService {
     private let artistsService = ArtistsService()
     private let genresService = GenresService()
     
+    private func cacheUrl(for name: String) -> URL {
+        let dir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+        return dir.appendingPathComponent("\(name).json")
+    }
+    
+    private func saveCache<T: Encodable>(_ value: T, name: String) {
+        guard let data = try? JSONEncoder().encode(value) else { return }
+        try? data.write(to: cacheUrl(for: name), options: .atomic)
+    }
+    
+    private func loadCache<T: Decodable>(_ type: T.Type, name: String) -> T? {
+        guard let data = try? Data(contentsOf: cacheUrl(for: name)) else { return nil }
+        return try? JSONDecoder().decode(T.self, from: data)
+    }
+    
     func loadAll(options: LibraryRefreshOptions = .all, forceRefresh: Bool = false) async {
+        if !hasLoadedOnce {
+            songs = loadCache([Song].self, name: "songs") ?? songs
+            albums = loadCache([Album].self, name: "albums") ?? albums
+            playlists = loadCache([Playlist].self, name: "playlists") ?? playlists
+            artists = loadCache([Artist].self, name: "artists") ?? artists
+            genres = loadCache([Genre].self, name: "genres") ?? genres
+        }
+        
         if !forceRefresh,
            hasLoadedOnce,
            let lastFetched,
@@ -87,6 +110,12 @@ final class LibraryService {
         playlists = await playlistsResult
         artists = await artistsResult
         genres = await genresResult
+        
+        saveCache(songs, name: "songs")
+        saveCache(albums, name: "albums")
+        saveCache(playlists, name: "playlists")
+        saveCache(artists, name: "artists")
+        saveCache(genres, name: "genres")
         
         lastFetched = Date()
         hasLoadedOnce = true
@@ -146,6 +175,10 @@ final class LibraryService {
     }
     
     // MARK: - SONGS
+    
+    func isFavorite(songId: String) -> Bool {
+        songs.first(where: { $0.Id == songId })?.UserData.IsFavorite ?? false
+    }
     
     func fetchFavorites() -> [Song] {
         songs.filter { $0.UserData.IsFavorite }

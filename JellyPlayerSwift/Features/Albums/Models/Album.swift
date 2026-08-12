@@ -22,7 +22,7 @@ struct Album: Codable, Hashable {
     
     var coverUrl: URL? {
         if let serverUrl = UserDefaults.standard.string(forKey: serverKey) {
-            return URL(string: "\(serverUrl)/Items/\(Id)/Images/Primary")
+            return URL(string: "\(serverUrl)/Items/\(Id)/Images/Primary?maxWidth=\(coverMaxWidth)&maxHeight=\(coverMaxHeight)&quality=\(coverQuality)")
         } else {
             return nil
         }   

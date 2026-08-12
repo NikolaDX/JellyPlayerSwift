@@ -18,8 +18,12 @@ struct TabsScreen: View {
                 LibraryView()
             }
             
-            Tab("Settings", systemImage: "gear", role: .search) {
+            Tab("Settings", systemImage: "gear") {
                 SettingsView()
+            }
+            
+            Tab("Search", systemImage: "magnifyingglass", role: .search) {
+                SearchView()
             }
         }
     }

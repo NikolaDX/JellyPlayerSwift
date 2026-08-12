@@ -24,7 +24,16 @@ class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate {
         manager.distanceFilter = 100
     }
     
+    var isEnabled: Bool {
+        UserDefaults.standard.object(forKey: locationEnabled) as? Bool ?? true
+    }
+    
     func start() {
+        guard isEnabled else {
+            stop()
+            return
+        }
+        
         switch manager.authorizationStatus {
         case .notDetermined:
             manager.requestWhenInUseAuthorization()
@@ -45,9 +54,25 @@ class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     func stop() {
         manager.stopUpdatingLocation()
+        location = nil
+    }
+    
+    func setEnabled(_ enabled: Bool) {
+        UserDefaults.standard.set(enabled, forKey: locationEnabled)
+        
+        if enabled {
+            start()
+        } else {
+            stop()
+        }
     }
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        guard isEnabled else {
+            stop()
+            return
+        }
+        
         if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways {
             manager.requestLocation()
         }

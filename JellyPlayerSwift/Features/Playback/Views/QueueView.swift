@@ -9,6 +9,7 @@ import SwiftUI
 
 struct QueueView: View {
     @State private var viewModel = ViewModel()
+    let accentColor: Color
     
     var body: some View {
         VStack {
@@ -74,8 +75,19 @@ struct QueueView: View {
                             await viewModel.addRecommended()
                         }
                     }
+                    .foregroundStyle(accentColor)
                     .disabled(viewModel.isLoadingRecommendations)
                     .listRowBackground(Color.clear)
+                    .accessibilityLabel(
+                        viewModel.isLoadingRecommendations
+                        ? "Generating recommendations"
+                        : "Add recommended songs"
+                    )
+                    .accessibilityHint(
+                        viewModel.isLoadingRecommendations
+                        ? "Please wait while recommendations are generated"
+                        : "Double-tap to add recommended songs to the queue"
+                    )
                 }
                 .scrollIndicators(.hidden)
                 .scrollContentBackground(.hidden)
@@ -103,6 +115,6 @@ struct QueueView: View {
     }
 }
 
-#Preview {
-    QueueView()
-}
+//#Preview {
+//    QueueView()
+//}

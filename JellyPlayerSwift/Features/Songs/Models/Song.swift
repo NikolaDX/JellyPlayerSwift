@@ -29,6 +29,14 @@ struct SongUserData: Codable {
     }
 }
 
+struct SongImageInfo: Codable {
+    let primary: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case primary = "Primary"
+    }
+}
+
 struct Song: Codable, Equatable {
     let Id: String
     let Name: String
@@ -42,6 +50,7 @@ struct Song: Codable, Equatable {
     var UserData: SongUserData
     var coverImageData: Data?
     let DateCreated: String?
+    let ImageTags: [String: String]?
     
     enum CodingKeys: String, CodingKey {
         case Id
@@ -56,6 +65,7 @@ struct Song: Codable, Equatable {
         case UserData
         case coverImageData
         case DateCreated
+        case ImageTags
     }
     
     init (from decoder: Decoder) throws {
@@ -72,10 +82,11 @@ struct Song: Codable, Equatable {
         Genres = try container.decodeIfPresent([String].self, forKey: .Genres)
         UserData = try container.decode(SongUserData.self, forKey: .UserData)
         coverImageData = try container.decodeIfPresent(Data.self, forKey: .coverImageData)
-        DateCreated = try container.decode(String.self, forKey: .DateCreated)
+        DateCreated = try container.decodeIfPresent(String.self, forKey: .DateCreated)
+        ImageTags = try container.decodeIfPresent([String: String].self, forKey: .ImageTags)
     }
     
-    init(Id: String, Name: String, IndexNumber: Int?, ParentIndexNumber: Int?, Album: String?, AlbumId: String?, RunTimeTicks: Int, Artists: [String], Genres: [String], UserData: SongUserData, DateCreated: String?) {
+    init(Id: String, Name: String, IndexNumber: Int?, ParentIndexNumber: Int?, Album: String?, AlbumId: String?, RunTimeTicks: Int, Artists: [String], Genres: [String], UserData: SongUserData, DateCreated: String?, ImageTags: [String: String]?) {
         self.Id = Id
         self.Name = Name
         self.IndexNumber = IndexNumber
@@ -87,6 +98,7 @@ struct Song: Codable, Equatable {
         self.Genres = Genres
         self.UserData = UserData
         self.DateCreated = DateCreated
+        self.ImageTags = ImageTags
     }
     
     var streamUrl: URL? {
@@ -122,9 +134,18 @@ struct Song: Codable, Equatable {
         return nil
     }
     
+    var hasCover: Bool {
+        ImageTags?["Primary"] != nil
+    }
+    
     var coverUrl: URL? {
         if let serverUrl = UserDefaults.standard.string(forKey: serverKey) {
-            return URL(string: "\(serverUrl)/Items/\(AlbumId ?? "Unknown Album")/Images/Primary")
+            if hasCover {
+                return URL(string: "\(serverUrl)/Items/\(Id)/Images/Primary?maxWidth=\(coverMaxWidth)&maxHeight=\(coverMaxHeight)&quality=\(coverQuality)")
+            }
+            else {
+                return URL(string: "\(serverUrl)/Items/\(AlbumId ?? "Uknown Album")/Images/Primary?maxWidth=\(coverMaxWidth)&maxHeight=\(coverMaxHeight)&quality=\(coverQuality)")
+            }
         } else {
             return nil
         }

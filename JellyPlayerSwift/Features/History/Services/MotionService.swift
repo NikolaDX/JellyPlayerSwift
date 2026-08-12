@@ -18,7 +18,16 @@ class MotionService {
     
     private init() {}
     
+    var isEnabled: Bool {
+        UserDefaults.standard.object(forKey: motionEnabled) as? Bool ?? true
+    }
+    
     func start() {
+        guard isEnabled else {
+            stop()
+            return
+        }
+        
         guard CMMotionActivityManager.isActivityAvailable() else {
             return
         }
@@ -44,5 +53,16 @@ class MotionService {
     
     func stop() {
         activityManager.stopActivityUpdates()
+        activity = .unknown
+    }
+    
+    func setEnabled(_ enabled: Bool) {
+        UserDefaults.standard.set(enabled, forKey: motionEnabled)
+        
+        if enabled {
+            start()
+        } else {
+            stop()
+        }
     }
 }

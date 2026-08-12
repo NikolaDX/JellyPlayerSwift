@@ -13,6 +13,9 @@ struct SettingsView: View {
     @State private var viewModel = ViewModel()
     @StateObject private var streamQualityService = StreamQualityService.shared
     
+    @AppStorage(locationEnabled) private var locationTrackingEnabled = true
+    @AppStorage(motionEnabled) private var motionTrackingEnabled = true
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -42,7 +45,7 @@ struct SettingsView: View {
                     .pickerStyle(.segmented)
                     
                     Headline("Accent color")
-                        .accessibilityHint("Select accent color for your app")
+                        .accessibilityHint("Select an accent color")
                     
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 44))], spacing: 12) {
                         ForEach(themeService.availableAccentColors, id: \.self) { color in
@@ -97,6 +100,27 @@ struct SettingsView: View {
                     }
                     .pickerStyle(.segmented)
                     
+                    Heading("Privacy")
+                        .accessibilityHint("Toggle privacy settings")
+                    
+                    Toggle("Location tracking", isOn: $locationTrackingEnabled)
+                        .onChange(of: locationTrackingEnabled) {
+                            LocationService.shared.setEnabled(locationTrackingEnabled)
+                        }
+                        .accessibilityLabel("Location tracking")
+                        .accessibilityValue( locationTrackingEnabled ? "On" : "Off" )
+                        .accessibilityHint("Allow JellyPlayer to use your location for personalized music recommendations")
+                    
+                    Toggle("Motion & activity tracking", isOn: $motionTrackingEnabled)
+                        .onChange(of: motionTrackingEnabled) { MotionService.shared.setEnabled( motionTrackingEnabled ) }
+                        .accessibilityLabel("Motion and activity tracking") .accessibilityValue( motionTrackingEnabled ? "On" : "Off" )
+                        .accessibilityHint("Allow JellyPlayer to use your activity for personalized music recommendations")
+                    
+                    Text( "Location and motion data are used to improve personalized music recommendations. Turning these options off stops JellyPlayer from using them for personalization." )
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .accessibilityLabel("Privacy information. Location and motion data are used to improve personalized music recommendations. Turning these options off stops JellyPlayer from using them for personalization.")
+
                     Heading("Language")
                         .accessibilityHint("Select the app language below")
                     

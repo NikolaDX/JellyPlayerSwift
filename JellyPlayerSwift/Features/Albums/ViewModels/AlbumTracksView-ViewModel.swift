@@ -12,7 +12,15 @@ extension AlbumTracksView {
     class ViewModel {
         let album: Album
         var songs: [Song] {
-            LibraryService.shared.fetchAlbumTracks(for: album.Id)
+            LibraryService.shared
+                .fetchAlbumTracks(for: album.Id)
+                .sorted {
+                    if ($0.ParentIndexNumber ?? 1) != ($1.ParentIndexNumber ?? 1) {
+                        return ($0.ParentIndexNumber ?? 1) < ($1.ParentIndexNumber ?? 1)
+                    }
+
+                    return ($0.IndexNumber ?? 0) < ($1.IndexNumber ?? 0)
+                }
         }
         
         var isLoading: Bool {
@@ -29,12 +37,12 @@ extension AlbumTracksView {
         }
         
         func songsByDisc() -> [(disc: Int, songs: [Song])] {
-            let grouped = Dictionary(grouping: songs) { song in
-                song.ParentIndexNumber ?? 1
+            let grouped = Dictionary(grouping: songs) {
+                $0.ParentIndexNumber ?? 1
             }
-            
+
             return grouped
-                .map { ($0.key, $0.value.sorted { ($0.IndexNumber ?? 0) < ($1.IndexNumber ?? 0) })}
+                .map { ($0.key, $0.value) }
                 .sorted { $0.disc < $1.disc }
         }
         

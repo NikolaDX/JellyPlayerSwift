@@ -28,15 +28,17 @@ struct RecommendedSongsCarouselView: View {
         VStack(alignment: .leading, spacing: 14) {
             Headline("Recommended For You")
                 .padding(.horizontal)
+                .accessibilityAddTraits(.isHeader)
             
             if viewModel.isLoading {
                 ProgressView()
                     .frame(maxWidth: .infinity, minHeight: 210)
+                    .accessibilityLabel("Loading recommendations")
             } else if viewModel.recommendedSongs.isEmpty {
                 Text("Keep listening! Your personalized recommendations will appear here.")
                     .font(.subheadline)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal)
+                    .padding(16)
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHGrid(rows: rows, spacing: 18) {
@@ -48,6 +50,9 @@ struct RecommendedSongsCarouselView: View {
                                     .frame(width: 290, alignment: .leading)
                             }
                             .buttonStyle(.plain)
+                            .accessibilityElement(children: .combine)
+                            .accessibilityLabel("Recommended song: \(song.Name)")
+                            .accessibilityHint("Double-tap to play this song")
                             .contextMenu {
                                 if isFavorite(song) {
                                     ContextButton(isDestructive: true, text: "Remove from favorites", systemImage: "star.slash") {
@@ -89,7 +94,15 @@ struct RecommendedSongsCarouselView: View {
                                 ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
                                     Task {
                                         let songsToPlay = await SongsService().generateInstantMix(songId: song.Id)
-                                        PlaybackService.shared.playAndBuildQueue(songsToPlay[0], songsToPlay: songsToPlay)
+
+                                        guard let firstSong = songsToPlay.first else {
+                                            return
+                                        }
+
+                                        PlaybackService.shared.playAndBuildQueue(
+                                            firstSong,
+                                            songsToPlay: songsToPlay
+                                        )
                                     }
                                 }
                                 .accessibilityHint("Create mix based on this song")
@@ -99,6 +112,8 @@ struct RecommendedSongsCarouselView: View {
                     .padding(.horizontal)
                 }
                 .frame(height: 210)
+                .accessibilityLabel("Recommended songs")
+                .accessibilityHint("Swipe left or right to browse recommendations")
             }
         }
         .task {

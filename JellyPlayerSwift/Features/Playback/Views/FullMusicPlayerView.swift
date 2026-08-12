@@ -12,8 +12,9 @@ private enum DragDirection {
 }
 
 struct FullMusicPlayerView: View {
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.colorScheme) var colorScheme
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.scenePhase) private var scenePhase
     
     @State private var viewModel = ViewModel()
     @State private var lastHapticTime: Double = 0
@@ -33,7 +34,7 @@ struct FullMusicPlayerView: View {
                 .matchedGeometryEffect(id: "playerBackground", in: namespace)
             VStack {
                 if viewModel.showingQueue {
-                    QueueView()
+                    QueueView(accentColor: viewModel.coverDominantColor.readableForeground)
                         .transition(.slide.combined(with: .opacity))
                 } else {
                     VStack(spacing: 5) {
@@ -73,21 +74,16 @@ struct FullMusicPlayerView: View {
                 Spacer()
                  
                 VStack(spacing: 10) {
-                    if viewModel.playbackService.isLoading {
-                        ProgressView()
-                            .accessibilityLabel("Loading...")
-                    } else {
-                        HStack {
-                            Text(viewModel.formattedCurrentTime)
-                                .font(.headline)
-                                .accessibilityLabel("Current progress: \(viewModel.formattedCurrentTime)")
-                            
-                            Spacer()
-                            
-                            Text(viewModel.formattedDuration)
-                                .font(.headline)
-                                .accessibilityLabel("Song duration: \(viewModel.formattedDuration)")
-                        }
+                    HStack {
+                        Text(viewModel.formattedCurrentTime)
+                            .font(.headline)
+                            .accessibilityLabel("Current progress: \(viewModel.formattedCurrentTime)")
+                        
+                        Spacer()
+                        
+                        Text(viewModel.formattedDuration)
+                            .font(.headline)
+                            .accessibilityLabel("Song duration: \(viewModel.formattedDuration)")
                     }
                     
                     Slider(value: $viewModel.sliderTime, in: 0...viewModel.duration, onEditingChanged: { editing in
@@ -103,7 +99,7 @@ struct FullMusicPlayerView: View {
                             viewModel.sliderTime = viewModel.currentTime
                         }
                     }
-                    .tint(viewModel.coverDominantColor)
+                    .tint(viewModel.coverDominantColor.readableForeground)
                     .accessibilityLabel("Playback position")
                     .accessibilityValue(viewModel.formattedCurrentTime)
                     .accessibilityHint("Swipe up or down with one finger to adjust playback position")
@@ -241,6 +237,13 @@ struct FullMusicPlayerView: View {
         .onChange(of: viewModel.sliderTime) {
             if (viewModel.isEditing) {
                 triggerScrubHaptic()
+            }
+        }
+        .onChange(of: scenePhase) {
+            if scenePhase != .active {
+                dragOffset = 0
+                discDragOffset = 0
+                dragDirection = nil
             }
         }
     }

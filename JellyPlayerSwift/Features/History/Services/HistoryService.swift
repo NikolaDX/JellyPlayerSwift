@@ -85,6 +85,8 @@ class HistoryService {
                 
                 try data.write(to: self.historyURL, options: .atomic)
                 print("Interaction saved to local storage for: \(song.Name)")
+                print("\(MotionService.shared.activity)")
+                print("Lat: \(latitude); Long: \(longitude)")
             } catch {
                 print("Failed to write listening interaction data: \(error)")
             }

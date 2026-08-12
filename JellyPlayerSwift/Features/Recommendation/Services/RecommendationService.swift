@@ -13,6 +13,11 @@ class RecommendationService {
     static let shared = RecommendationService()
     var personalizedModel: MLModel?
     
+    private let favoriteBoost: Double = 0.3
+    private let genreBoost: Double = 3.0
+    private let defaultEnergy: Double = 0.5
+    private let energyDifferencePenalty: Double = 4.5
+    
     private var modelURL: URL {
         let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         return docs.appendingPathComponent("UserPersonalizedRecommender.mlmodelc")
@@ -64,7 +69,7 @@ class RecommendationService {
                 if let genres = pSong.Genres {
                     playlistGenres.formUnion(genres)
                 }
-                totalEnergy += AudioAnalysisService.shared.getEnergy(for: pSong.Id) ?? 0.5
+                totalEnergy += AudioAnalysisService.shared.getEnergy(for: pSong.Id) ?? defaultEnergy
             }
             averagePlaylistEnergy = totalEnergy / Double(playlistSongs.count)
         }
@@ -79,7 +84,7 @@ class RecommendationService {
                 continue
             }
             
-            let energy = AudioAnalysisService.shared.getEnergy(for: song.Id) ?? 0.2
+            let energy = AudioAnalysisService.shared.getEnergy(for: song.Id) ?? defaultEnergy
             
             let input = RecommenderFeatures.inputDictionary(
                 for: song,
@@ -108,37 +113,27 @@ class RecommendationService {
                 print("Model prediction failed for \(song.Name): \(error)")
             }
             
-            if networkType == .cellular && isDownloaded {
-                score += 5.0
-            }
-            
             switch request {
             case .regular:
-                if song.UserData.IsFavorite { score += 0.5 }
+                if song.UserData.IsFavorite { score += favoriteBoost }
             case .queue(let queue):
                 if queue.contains(song) {
                     score = -.infinity
-                }
-                
-                if let genres = song.Genres,
-                   let lastGenres = queue.last?.Genres
-                {
-                    if !Set(genres).intersection(lastGenres).isEmpty {
-                        score += 3.0
-                    }
-                }
-                
-                if song.UserData.IsFavorite {
-                    score += 1.0
                 }
                 
                 if song.Id == queue.last?.Id {
                     score = -.infinity
                 }
                 
-                let lastEnergy = AudioAnalysisService.shared.getEnergy(for: queue.last?.Id ?? "") ?? 0.5
+                let genreProfile = queueGenreProfile(for: queue)
+                score += genreAffinityScore(for: song, profile: genreProfile)
                 
-                let difference = abs(lastEnergy - energy)
+                if song.UserData.IsFavorite {
+                    score += favoriteBoost
+                }
+                
+                let targetEnergy = recentAverageEnergy(for: queue)
+                let difference = abs(targetEnergy - energy)
 
                 switch difference {
                 case 0..<0.1:
@@ -148,13 +143,12 @@ class RecommendationService {
                 case 0.2..<0.35:
                     score += 1
                 default:
-                    score -= difference * 4
+                    score -= difference * energyDifferencePenalty
                 }
-                
             case .shuffle(let currentSong):
                 if let genres = song.Genres, let currentGenres = currentSong.Genres {
                     if !Set(genres).intersection(currentGenres).isEmpty {
-                        score += 1.0
+                        score += genreBoost
                     }
                 }
                 
@@ -170,14 +164,14 @@ class RecommendationService {
                     score -= .infinity
                 } else {
                     if let genres = song.Genres, !Set(genres).intersection(playlistGenres).isEmpty {
-                        score += 2.0
+                        score += genreBoost
                     }
                     
                     let energyDifference = abs(averagePlaylistEnergy - energy)
-                    score -= (energyDifference * 5.0)
+                    score -= (energyDifference * energyDifferencePenalty)
                     
                     if song.UserData.IsFavorite {
-                        score += 1.0
+                        score += favoriteBoost
                     }
                 }
             }
@@ -186,6 +180,42 @@ class RecommendationService {
         }
         
         return scoredSongs
+    }
+    
+    private func queueGenreProfile(for queue: [Song], lookback: Int = 6) -> [String: Double] {
+        var profile: [String: Double] = [:]
+        let recentSongs = queue.suffix(lookback)
+        let count = recentSongs.count
+        guard count > 0 else { return profile }
+        
+        for (index, song) in recentSongs.enumerated() {
+            let recencyWeight = Double(index + 1) / Double(count)
+            guard let genres = song.Genres else { continue }
+            for genre in genres {
+                profile[genre, default: 0] += recencyWeight
+            }
+        }
+        
+        return profile
+    }
+
+    private func genreAffinityScore(for song: Song, profile: [String: Double]) -> Double {
+        guard let genres = song.Genres, !genres.isEmpty, !profile.isEmpty else { return 0 }
+        
+        let totalWeight = profile.values.reduce(0, +)
+        guard totalWeight > 0 else { return 0 }
+        
+        let matchedWeight = genres.reduce(0.0) { $0 + (profile[$1] ?? 0) }
+        let matchRatio = matchedWeight / totalWeight
+        
+        return matchRatio * genreBoost
+    }
+
+    private func recentAverageEnergy(for queue: [Song], lookback: Int = 6) -> Double {
+        let recentSongs = queue.suffix(lookback)
+        guard !recentSongs.isEmpty else { return defaultEnergy }
+        let energies = recentSongs.map { AudioAnalysisService.shared.getEnergy(for: $0.Id) ?? defaultEnergy }
+        return energies.reduce(0, +) / Double(energies.count)
     }
     
     func getRecommendations(from availableSongs: [Song], request: RecommendationRequest) throws -> [Song] {

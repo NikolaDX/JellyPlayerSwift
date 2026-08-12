@@ -26,7 +26,7 @@ extension FullMusicPlayerView {
         }
         
         var isFavorite: Bool {
-            playbackService.currentSong?.UserData.IsFavorite ?? false
+            LibraryService.shared.isFavorite(songId: currentSong?.Id ?? "")
         }
         
         func updateDominantColor() {
@@ -122,7 +122,7 @@ extension FullMusicPlayerView {
         func toggleFavorite() {
             if let song = currentSong {
                 let favoritesService = FavoritesService()
-                if song.UserData.IsFavorite {
+                if isFavorite {
                     Task { @MainActor in
                         await favoritesService.removeFromFavorites(song: song)
                     }
