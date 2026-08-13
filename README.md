@@ -8,10 +8,10 @@
   Stream your favorite tracks with elegance on iOS.
   
 <p align="center">
-  <img src="[Screenshot 1](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/screenshot1.PNG)" width="22%">
-  <img src="[Screenshot 2](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/screenshot1.PNG)" width="22%">
-  <img src="[Screenshot 3](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/screenshot1.PNG)" width="22%">
-  <img src="[Screenshot 4](https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/screenshot1.PNG)" width="22%">
+  <img src="https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/screenshot1.PNG" width="22%">
+  <img src="https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/screenshot1.PNG" width="22%">
+  <img src="https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/screenshot1.PNG" width="22%">
+  <img src="https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/screenshot1.PNG" width="22%">
 </p>
 
 **Album artwork belongs to the respective artists, labels, and copyright holders.** It is displayed solely as part of the music library interface and is not claimed as original content.
