@@ -7,6 +7,15 @@
   **A sleek and SwiftUI-powered music player for [Jellyfin](https://jellyfin.org/)**  
   Stream your favorite tracks with elegance on iOS.
   
+<p align="center">
+  <img src="Images/screenshot1.png" width="22%">
+  <img src="Images/screenshot2.png" width="22%">
+  <img src="Images/screenshot3.png" width="22%">
+  <img src="Images/screenshot4.png" width="22%">
+</p>
+
+**Album artwork belongs to the respective artists, labels, and copyright holders.** It is displayed solely as part of the music library interface and is not claimed as original content.
+
 </div>
 
 ---
@@ -22,10 +31,15 @@
 - 💾 **Download** songs for **offline** listening
 - 🎨 Native experience for iOS with full **dark mode** and **custom colors** support
 - 📱 Full **iPadOS** support
-- 🧭 Get **insant mix** out of any album, artist, genre, playlist or song
+- 🧭 Get **instant mix** out of any album, artist, genre, playlist or song
 - 🗣️ Complete **VoiceOver** support
 - 🌐 Multiple **languages** support
 - 📶 Quality limiter for **Wi-Fi** and **cellular**
+- 🤖 **Personalized music recommendations** powered by on-device machine learning, with an easy **opt-out**.
+
+## 🔒 Privacy 
+
+Recommendations are generated entirely **on-device**. Your listening history and recommendation data are **never sent to anyone**. You can **disable** location and motion tracking at any time.
 
 ## 🚀 Installation
 
