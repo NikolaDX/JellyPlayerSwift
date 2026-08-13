@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AlbumTracksView: View {
+    @EnvironmentObject private var themeService: ThemeService
     @State private var viewModel: ViewModel
     @State private var songToRemove: Song? = nil
     @State private var showingRemoveDownloadAlert: Bool = false
@@ -16,7 +17,6 @@ struct AlbumTracksView: View {
     @StateObject private var favoritesService: FavoritesService
     @StateObject private var downloadService: DownloadService
     let spaceBetween: Double = 20
-    
     
     init(album: Album) {
         let favorites = FavoritesService()
@@ -62,13 +62,14 @@ struct AlbumTracksView: View {
                         .padding(.bottom, spaceBetween)
                         .accessibilityLabel("Release year: \(viewModel.album.PremiereDate?.prefix(4) ?? "")")
                     
-                    AsyncView(isLoading: $viewModel.isLoading) {
+                    AsyncView(isLoading: viewModel.isLoading) {
                         HStack(spacing: 10) {
                             NiceIconButton("Play", buttonImage: "play.fill") {
                                 if (!viewModel.songs.isEmpty) {
                                     viewModel.playSong(viewModel.songs[0])
                                 }
                             }
+                            .foregroundStyle(themeService.selectedAccentColor)
                             .accessibilityHint("Play all songs from this album")
                             
                             NiceIconButton("Shuffle", buttonImage: "shuffle") {
@@ -76,62 +77,73 @@ struct AlbumTracksView: View {
                                     viewModel.shufflePlay()
                                 }
                             }
+                            .foregroundStyle(themeService.selectedAccentColor)
                             .accessibilityLabel("Shuffle")
                             .accessibilityHint("Shuffle all songs from this album")
                         }
                         .padding(.bottom, spaceBetween)
                         
-                        ForEach(viewModel.songs, id: \.Id) { song in
-                            AlbumTrackRow(song)
-                                .onTapGesture {
-                                    viewModel.playSong(song)
-                                }
-                                .accessibilityElement(children: .combine)
-                                .accessibilityLabel("Song: \(song.Name)")
-                                .accessibilityHint("Double-tap to play")
-                                .contextMenu {
-                                    if song.UserData.IsFavorite {
-                                        ContextButton(isDestructive: true, text: "Remove from favorites", systemImage: "star.slash") {
-                                            viewModel.removeFromFavorites(song)
-                                        }
-                                        .accessibilityHint("Remove this song from favorites")
-                                    } else {
-                                        ContextButton(isDestructive: false, text: "Add to favorites", systemImage: "star") {
-                                            viewModel.addToFavorites(song)
-                                        }
-                                        .accessibilityHint("Add this song to favorites")
+                        ForEach(viewModel.songsByDisc(), id: \.disc) { disc in
+                            if viewModel.hasMultipleDiscs {
+                                Headline("Disc \(disc.disc)")
+                                    .multilineTextAlignment(.leading)
+                                    .padding()
+                            }
+                            
+                            ForEach(disc.songs, id: \.Id) { song in
+                                AlbumTrackRow(song)
+                                    .onTapGesture {
+                                        viewModel.playSong(song)
                                     }
-                                    
-                                    if song.localFilePath != nil {
-                                        ContextButton(isDestructive: true, text: "Remove download", systemImage: "trash") {
-                                            songToRemove = song
-                                            showingRemoveDownloadAlert = true
+                                    .accessibilityElement(children: .combine)
+                                    .accessibilityLabel("Song: \(song.Name)")
+                                    .accessibilityHint("Double-tap to play")
+                                    .contextMenu {
+                                        if isFavorite(song) {
+                                            ContextButton(isDestructive: true, text: "Remove from favorites", systemImage: "star.slash") {
+                                                viewModel.removeFromFavorites(song)
+                                            }
+                                            .accessibilityHint("Remove this song from favorites")
+                                        } else {
+                                            ContextButton(isDestructive: false, text: "Add to favorites", systemImage: "star") {
+                                                viewModel.addToFavorites(song)
+                                            }
+                                            .accessibilityHint("Add this song to favorites")
                                         }
-                                        .accessibilityHint("Remove this song from downloads")
-                                    } else {
-                                        ContextButton(isDestructive: false, text: "Download", systemImage: "arrow.down.circle") {
-                                            viewModel.downloadSong(song)
+                                        
+                                        if song.localFilePath != nil {
+                                            ContextButton(isDestructive: true, text: "Remove download", systemImage: "trash") {
+                                                songToRemove = song
+                                                showingRemoveDownloadAlert = true
+                                            }
+                                            .accessibilityHint("Remove this song from downloads")
+                                        } else {
+                                            ContextButton(isDestructive: false, text: "Download", systemImage: "arrow.down.circle") {
+                                                viewModel.downloadSong(song)
+                                            }
+                                            .accessibilityHint("Download this song for offline listening")
                                         }
-                                        .accessibilityHint("Download this song for offline listening")
-                                    }
-                                    
-                                    ContextButton(isDestructive: false, text: "Add to playlist", systemImage: "plus.circle") {
-                                        songToAdd = nil
-                                        DispatchQueue.main.async {
-                                            songToAdd = song
+                                        
+                                        ContextButton(isDestructive: false, text: "Add to playlist", systemImage: "plus.circle") {
+                                            songToAdd = nil
+                                            DispatchQueue.main.async {
+                                                songToAdd = song
+                                            }
                                         }
+                                        .accessibilityHint("Add this song to playlist")
+                                        
+                                        ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
+                                            viewModel.generateInstantMix(song)
+                                        }
+                                        .accessibilityHint("Create mix based on this song")
                                     }
-                                    .accessibilityHint("Add this song to playlist")
-                                    
-                                    ContextButton(isDestructive: false, text: "Instant mix", systemImage: "safari") {
-                                        viewModel.generateInstantMix(song)
-                                    }
-                                    .accessibilityHint("Create mix based on this song")
-                                }
+                            }
                         }
                     }
                 }
                 .padding(spaceBetween)
+                .padding(.bottom, CGFloat(PlaybackService.shared.presentation == .hidden ? 0 : miniPlayerPadding))
+                .frame(alignment: Alignment.leading)
             }
         }
         .clipped()
@@ -151,13 +163,14 @@ struct AlbumTracksView: View {
         } message: { song in
             Text("Are you sure you want to remove the download for \"\(song.Name)\"?")
         }
-        .onAppear {
-            viewModel.fetchSongs()
-        }
+    }
+    
+    private func isFavorite(_ song: Song) -> Bool {
+        LibraryService.shared.songs.first(where: { $0.Id == song.Id })?.UserData.IsFavorite ?? song.UserData.IsFavorite
     }
 }
 
 #Preview {
     @Previewable @Namespace var albumViewAnimation
-    AlbumTracksView(album: Album(Id: "id", Name: "Name", AlbumArtist: "Artist", AlbumArtists: [], DateCreated: "", PremiereDate: ""))
+    AlbumTracksView(album: Album(Id: "id", Name: "Name", AlbumArtist: "Artist", AlbumArtists: [], DateCreated: "", PremiereDate: "", Genres: nil))
 }

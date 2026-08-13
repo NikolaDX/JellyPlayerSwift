@@ -17,8 +17,10 @@ struct Cover: View {
     }
     
     var body: some View {
-        if (!failed) {
+        if !failed {
             KFImage(url)
+                .cacheOriginalImage(false)
+                .diskCacheExpiration(.days(7))
                 .onFailure { _ in
                     failed = true
                 }

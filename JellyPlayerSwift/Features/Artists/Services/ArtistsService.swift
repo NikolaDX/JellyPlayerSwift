@@ -23,7 +23,7 @@ class ArtistsService {
     let jellyfinService = JellyfinService()
     
     func fetchArtists() async -> [Artist] {
-        if let data = await jellyfinService.fetchSpecific(queryItems: [], toFetch: "Artists") {
+        if let data = await jellyfinService.fetchSpecific(queryItems: [], toFetch: "Artists/AlbumArtists") {
             if let decodedResponse = try? JSONDecoder().decode(ArtistResponse.self, from: data) {
                 return decodedResponse.Items
             }

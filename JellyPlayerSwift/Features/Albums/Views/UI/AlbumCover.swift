@@ -22,5 +22,5 @@ struct AlbumCover: View {
 
 #Preview {
     @Previewable @Namespace var namespace
-    AlbumCover(album: Album(Id: "Id", Name: "Name", AlbumArtist: "Artist", AlbumArtists: [], DateCreated: "", PremiereDate: ""))
+    AlbumCover(album: Album(Id: "Id", Name: "Name", AlbumArtist: "Artist", AlbumArtists: [], DateCreated: "", PremiereDate: "", Genres: nil))
 }

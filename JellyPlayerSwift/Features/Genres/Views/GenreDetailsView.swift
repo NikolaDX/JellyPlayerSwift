@@ -15,7 +15,7 @@ struct GenreDetailsView: View {
     }
     
     var body: some View {
-        AsyncView(isLoading: $viewModel.isLoading) {
+        AsyncView(isLoading: viewModel.isLoading) {
             AlbumsGridView(albums: viewModel.genreAlbums)
                 .navigationTitle(viewModel.genre.Name)
                 .toolbar {
@@ -34,9 +34,6 @@ struct GenreDetailsView: View {
                     .accessibilityLabel("Shuffle")
                     .accessibilityHint("Shuffle songs of this genre")
                 }
-        }
-        .task {
-            viewModel.fetchGenreAlbums()
         }
     }
 }

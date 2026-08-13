@@ -64,13 +64,13 @@ class DownloadService: NSObject, ObservableObject, URLSessionDownloadDelegate {
     }
     
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-        guard let song = downloadTasks[downloadTask],
-              let response = downloadTask.response as? HTTPURLResponse,
-              let contentType = response.allHeaderFields["Content-Type"] as? String else {
+        guard var song = downloadTasks[downloadTask],
+              let response = downloadTask.response as? HTTPURLResponse else {
             return
         }
 
-        let fileExtension = getFileExtension(from: contentType)
+        let mimeType = response.mimeType ?? "audio/mpeg"
+        let fileExtension = getFileExtension(from: mimeType)
         let destination = getDocumentsDirectory().appendingPathComponent("\(song.Id).\(fileExtension)")
 
         do {
@@ -137,19 +137,21 @@ class DownloadService: NSObject, ObservableObject, URLSessionDownloadDelegate {
         completionHandlers[identifier] = nil
     }
     
-    func getFileExtension(from mimeType: String) -> String {
+    func getFileExtension(from rawMimeType: String) -> String {
+        let mimeType = rawMimeType.components(separatedBy: ";").first?.trimmingCharacters(in: .whitespaces).lowercased() ?? rawMimeType.lowercased()
+        
         switch mimeType {
-        case "audio/mpeg":
+        case "audio/mpeg", "audio/mp3":
             return "mp3"
         case "audio/aac":
             return "aac"
-        case "audio/x-m4a":
+        case "audio/x-m4a", "audio/m4a", "audio/mp4":
             return "m4a"
-        case "audio/wav":
+        case "audio/wav", "audio/x-wav":
             return "wav"
-        case "audio/ogg":
+        case "audio/ogg", "application/ogg":
             return "ogg"
-        case "audio/flac":
+        case "audio/flac", "audio/x-flac":
             return "flac"
         case "audio/opus":
             return "opus"

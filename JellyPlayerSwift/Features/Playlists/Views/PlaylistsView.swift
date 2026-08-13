@@ -16,7 +16,7 @@ struct PlaylistsView: View {
     @State private var showingRenamePlaylist: Bool = false
     
     var body: some View {
-        AsyncView(isLoading: $viewModel.isLoading) {
+        AsyncView(isLoading: viewModel.isLoading) {
             List {
                 ForEach(viewModel.filteredPlaylists, id: \.Id) { playlist in
                     NavigationLink {
@@ -54,6 +54,7 @@ struct PlaylistsView: View {
                 .onDelete(perform: deleteRows)
             }
             .searchable(text: $viewModel.filterText, prompt: "Search for a playlist...")
+            .contentMargins(.bottom, CGFloat(miniPlayerPadding), for: .scrollContent)
             .toolbar {
                 IconButton(icon: Image(systemName: "plus.circle.fill")) {
                     showingPlaylistCreation = true
@@ -82,21 +83,12 @@ struct PlaylistsView: View {
                 EditButton()
                     .accessibilityLabel("Edit playlists")
             }
-            .onChange(of: showingPlaylistCreation) { _, newValue in
-                if !newValue {
-                    viewModel.fetchPlaylists()
-                }
+            .onAppear {
+                print(viewModel.filteredPlaylists.map(\.Name))
             }
             .onChange(of: playlistToRename) {
                 if let _ = playlistToRename {
                     showingRenamePlaylist = true
-                }
-            }
-            .onChange(of: showingRenamePlaylist) { _, newValue in
-                if !newValue {
-                    DispatchQueue.main.async {
-                        viewModel.fetchPlaylists()
-                    }
                 }
             }
             .sheet(isPresented: $showingPlaylistCreation) {
@@ -118,9 +110,6 @@ struct PlaylistsView: View {
                 Text("Are you sure you want to remove \"\(playlist.Name)\"?")
             }
             .navigationTitle("Playlists")
-        }
-        .task {
-            viewModel.fetchPlaylists()
         }
     }
     

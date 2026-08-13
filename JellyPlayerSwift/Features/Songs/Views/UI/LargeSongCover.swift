@@ -11,6 +11,8 @@ import SwiftUI
 struct LargeSongCover: View {
     private let song: Song
     
+    private static let maxCoverSize = CGSize(width: 1080, height: 1080)
+    
     init(_ song: Song) {
         self.song = song
     }
@@ -22,6 +24,8 @@ struct LargeSongCover: View {
                 .scaledToFit()
         } else {
             KFImage(song.coverUrl)
+                .setProcessor(DownsamplingImageProcessor(size: Self.maxCoverSize))
+                .cacheOriginalImage()
                 .placeholder {
                     Image(systemName: "opticaldisc.fill")
                         .resizable()

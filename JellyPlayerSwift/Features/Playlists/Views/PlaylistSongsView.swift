@@ -29,7 +29,7 @@ struct PlaylistSongsView: View {
     }
     
     var body: some View {
-        AsyncView(isLoading: $viewModel.isLoading) {
+        AsyncView(isLoading: viewModel.isLoading) {
             List {
                 ForEach(viewModel.filteredSongs, id: \.Id) { song in
                     Button {
@@ -87,7 +87,38 @@ struct PlaylistSongsView: View {
                     .foregroundStyle(.primary)
                 }
                 .onDelete(perform: deleteRows)
+                
+                if viewModel.filterText.isEmpty {
+                    Section {
+                        if viewModel.isLoadingSuggestions {
+                            ProgressView()
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .padding()
+                        } else {
+                            ForEach(viewModel.suggestedSongs, id: \.Id) { song in
+                                HStack {
+                                    SongRow(song)
+                                    
+                                    Spacer()
+                                    
+                                    Button {
+                                        viewModel.addSuggestedSong(song)
+                                    } label: {
+                                        Image(systemName: "plus.circle")
+                                            .font(.title2)
+                                    }
+                                    .buttonStyle(.borderless)
+                                    .accessibilityLabel("Add \(song.Name) to playlist")
+                                }
+                                .padding(.vertical, 4)
+                            }
+                        }
+                    } header: {
+                        Headline("Suggested Songs")
+                    }
+                }
             }
+            .contentMargins(.bottom, CGFloat(miniPlayerPadding), for: .scrollContent)
             .onChange(of: songToAdd) {
                 if let _ = songToAdd {
                     showingAddSong = true
@@ -138,7 +169,13 @@ struct PlaylistSongsView: View {
                     .accessibilityHint("Remove songs from playlist")
             }
             .sheet(isPresented: $showingAddToPlaylist) {
-                AddItemsView(playlistId: viewModel.playlist.Id, refreshAction: viewModel.fetchSongs)
+                AddItemsView(
+                    playlistId: viewModel.playlist.Id,
+                    existingSongIds: Set(viewModel.songs.map(\.Id)),
+                    onSongsAdded: { newSongs in
+                        viewModel.appendSongs(newSongs)
+                    }
+                )
             }
             .sheet(isPresented: $showingAddSong) {
                 AddSongToPlaylistView(songToAdd!)
@@ -162,6 +199,9 @@ struct PlaylistSongsView: View {
         }
         .task {
             viewModel.fetchSongs()
+        }
+        .refreshable {
+            viewModel.fetchSongs(forceRefresh: true)
         }
     }
     

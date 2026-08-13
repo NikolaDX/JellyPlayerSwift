@@ -50,10 +50,7 @@ class FavoritesService: ObservableObject {
     func addSongToFavorites(song: Song) async {
         do {
             try await jellyfinService.addToServer(queryItems: [], path: "FavoriteItems/\(song.Id)")
-            song.UserData.IsFavorite = true
-            Task { @MainActor in
-                objectWillChange.send()
-            }
+            LibraryService.shared.setFavorite(for: song.Id, isFavorite: true)
         } catch {
             print("Error adding to favorites: \(error.localizedDescription)")
         }
@@ -62,10 +59,7 @@ class FavoritesService: ObservableObject {
     func removeFromFavorites(song: Song) async {
         do {
             try await jellyfinService.removeFromServer(queryItems: [], path: "FavoriteItems/\(song.Id)")
-            song.UserData.IsFavorite = false
-            Task { @MainActor in
-                objectWillChange.send()
-            }
+            LibraryService.shared.setFavorite(for: song.Id, isFavorite: false)
         } catch {
             print("Error removing from favorites: \(error.localizedDescription)")
         }

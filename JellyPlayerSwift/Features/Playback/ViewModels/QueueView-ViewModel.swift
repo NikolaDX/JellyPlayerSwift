@@ -6,11 +6,15 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension QueueView {
     @Observable
     class ViewModel {
         let playbackService = PlaybackService.shared
+        
+        var isLoadingRecommendations = false
+        var recommendationError: RecommendationError?
         
         var queue: [Song] {
             playbackService.getQueue()
@@ -48,6 +52,28 @@ extension QueueView {
         
         func moveQueueItems(from indexes: IndexSet, to destination: Int) {
             playbackService.moveSong(from: indexes, to: destination)
+        }
+        
+        func addRecommended() async {
+            isLoadingRecommendations = true
+            recommendationError = nil
+            
+            defer {
+                isLoadingRecommendations = false
+            }
+            
+            do {
+                let allSongs = await SongsService().fetchAllSongs()
+                let recommendations = try RecommendationService.shared.getRecommendations(
+                    from: allSongs,
+                    request: .queue(queue: queue)
+                )
+                playbackService.addToQueue(songs: Array(recommendations.prefix(10)))
+            } catch let error as RecommendationError {
+                recommendationError = error
+            }  catch {
+                recommendationError = .recommendationFailed
+            }
         }
     }
 }

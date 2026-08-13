@@ -21,25 +21,33 @@ struct SongCover: View {
                 .resizable()
                 .scaledToFit()
                 .frame(maxWidth: 50, maxHeight: 50)
+                .clipped()
+                .compositingGroup()
                 .clipShape(.rect(cornerRadius: 10))
         } else {
             KFImage(song.coverUrl)
+                .cacheOriginalImage(false)
+                .diskCacheExpiration(.days(7))
                 .placeholder {
                     Image(systemName: "opticaldisc.fill")
                         .resizable()
                         .scaledToFit()
                         .foregroundStyle(.secondary)
                         .frame(maxWidth: 50, maxHeight: 50)
+                        .clipped()
+                        .compositingGroup()
                         .clipShape(.rect(cornerRadius: 10))
                 }
                 .resizable()
                 .scaledToFit()
                 .frame(maxWidth: 50, maxHeight: 50)
+                .clipped()
+                .compositingGroup()
                 .clipShape(.rect(cornerRadius: 10))
         }
     }
 }
 
-#Preview {
-    SongCover(Song(Id: "Id", Name: "Name", IndexNumber: 1, Album: "Album", AlbumId: "AlbumId", RunTimeTicks: 120000, Artists: ["Artist"], UserData: UserData(IsFavorite: false, PlayCount: 1), DateCreated: ""))
-}
+//#Preview {
+//    SongCover(Song(Id: "Id", Name: "Name", IndexNumber: 1, Album: "Album", AlbumId: "AlbumId", RunTimeTicks: 120000, Artists: ["Artist"], Genres: ["Metal"], UserData: SongUserData(IsFavorite: false, PlayCount: 1), DateCreated: ""))
+//}

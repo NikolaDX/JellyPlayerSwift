@@ -13,8 +13,14 @@ extension PlaylistSongsView {
         var songs: [Song] = []
         var isLoading: Bool = false
         
+        var suggestedSongs: [Song] = []
+        var isLoadingSuggestions: Bool = false
+        
         private var favoritesService: FavoritesService
         private var downloadService: DownloadService
+        
+        var lastFetched: Date?
+        let cacheLifetime: TimeInterval = 300
         
         let playlist: Playlist
         
@@ -63,14 +69,24 @@ extension PlaylistSongsView {
             }
         }
         
-        func fetchSongs() {
+        func fetchSongs(forceRefresh: Bool = false) {
+            if !forceRefresh,
+                let lastFetched,
+                Date().timeIntervalSince(lastFetched) < cacheLifetime,
+                !songs.isEmpty {
+                return
+            }
+            
             isLoading = true
             let playlistsService = PlaylistsService()
             Task { @MainActor in
                 songs = await playlistsService.fetchPlaylistSongs(playlistId: playlist.Id)
+                self.lastFetched = Date()
                 withAnimation {
                     isLoading = false
                 }
+                
+                await fetchSuggestions()
             }
         }
         
@@ -79,7 +95,10 @@ extension PlaylistSongsView {
             Task { @MainActor in
                 do {
                     try await playlistsSerivce.removeSongsFromPlaylist(songIds: songIds, playlistId: playlistId)
-                    fetchSongs()
+                    
+                    let songIdsCollection = Set(songIds)
+                    
+                    songs.removeAll(where: { songIdsCollection.contains($0.Id) })
                 } catch {
                     print("Error removing song: \(error.localizedDescription)")
                 }
@@ -131,6 +150,60 @@ extension PlaylistSongsView {
                     PlaybackService.shared.playAndBuildQueue(songsToPlay[0], songsToPlay: songsToPlay)
                 }
             }
+        }
+        
+        func fetchSuggestions() async {
+            isLoadingSuggestions = true
+            
+            let songsService = SongsService()
+            
+            let candidatePool = await songsService.fetchAllSongs()
+            
+            let existingSongIds = Set(songs.map { $0.Id })
+            
+            let unplayedCandidates = candidatePool.filter { !existingSongIds.contains($0.Id) }
+            
+            let scored = RecommendationService.shared.score(
+                toScore: unplayedCandidates,
+                request: .playlist(playlistSongs: self.songs)
+            )
+            
+            let topSuggestions = scored
+                .sorted { $0.score > $1.score }
+                .prefix(3)
+                .map { $0.song }
+            
+            withAnimation {
+                self.suggestedSongs = Array(topSuggestions)
+                isLoadingSuggestions = false
+            }
+        }
+        
+        func addSuggestedSong(_ song: Song) {
+            let playlistsService = PlaylistsService()
+            
+            Task { @MainActor in
+                do {
+                    try await playlistsService.addSongsToPlaylist(songIds: [song.Id], playlistId: playlist.Id)
+                    
+                    withAnimation {
+                        if let index = suggestedSongs.firstIndex(where: { $0.Id == song.Id }) {
+                            suggestedSongs.remove(at: index)
+                        }
+                    }
+                    
+                    songs.append(song)
+                    
+                    await fetchSuggestions()
+                } catch {
+                    print("Error adding suggested song: \(error.localizedDescription)")
+                }
+            }
+        }
+        
+        func appendSongs(_ newSongs: [Song]) {
+            songs.append(contentsOf: newSongs)
+            LibraryService.shared.adjustPlaylistSongCount(id: playlist.Id, by: newSongs.count)
         }
     }
 }

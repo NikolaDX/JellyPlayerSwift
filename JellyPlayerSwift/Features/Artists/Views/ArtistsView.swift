@@ -11,7 +11,7 @@ struct ArtistsView: View {
     @State private var viewModel = ViewModel()
     
     var body: some View {
-        AsyncView(isLoading: $viewModel.isLoading) {
+        AsyncView(isLoading: viewModel.isLoading) {
             List(viewModel.filteredArtists, id: \.Id) { artist in
                 NavigationLink(destination: ArtistDetailsView(artist: artist)) {
                     ArtistListRow(artist: artist)
@@ -29,9 +29,6 @@ struct ArtistsView: View {
             .searchable(text: $viewModel.filterText, prompt: "Search for an artist...")
         }
         .navigationTitle("Artists")
-        .task {
-            viewModel.fetchArtists()
-        }
     }
 }
 

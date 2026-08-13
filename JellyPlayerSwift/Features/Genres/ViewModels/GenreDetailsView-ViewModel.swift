@@ -11,23 +11,17 @@ extension GenreDetailsView {
     @Observable
     class ViewModel {
         let genre: Genre
-        var genreAlbums: [Album] = []
-        var isLoading: Bool = false
+        
+        var genreAlbums: [Album] {
+            LibraryService.shared.fetchGenreAlbums(genre: genre.Name)
+        }
+        
+        var isLoading: Bool {
+            LibraryService.shared.isLoading && genreAlbums.isEmpty
+        }
         
         init(genre: Genre) {
             self.genre = genre
-        }
-        
-        func fetchGenreAlbums() {
-            if !genreAlbums.isEmpty { return }
-            isLoading = true
-            let genresService = GenresService()
-            Task { @MainActor in
-                self.genreAlbums = await genresService.fetchGenreAlbums(genreId: genre.Id)
-                withAnimation {
-                    isLoading = false
-                }
-            }
         }
         
         func playGenre() async {

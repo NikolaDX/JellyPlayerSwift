@@ -10,25 +10,19 @@ import SwiftUI
 extension GenresView {
     @Observable
     class ViewModel {
-        var genres: [Genre] = []
-        var isLoading: Bool = false
+        var genres: [Genre] {
+            LibraryService.shared.genres
+        }
+        
+        var isLoading: Bool {
+            LibraryService.shared.isLoading && genres.isEmpty
+        }
         
         var filterText: String = ""
         
         var filteredGenres: [Genre] {
             filterText.isEmpty ? genres : genres.filter {
                 $0.Name.localizedCaseInsensitiveContains(filterText)
-            }
-        }
-        
-        func fetchGenres() {
-            isLoading = true
-            let genresService = GenresService()
-            Task { @MainActor in
-                self.genres = await genresService.fetchGenres()
-                withAnimation {
-                    isLoading = false
-                }
             }
         }
     }

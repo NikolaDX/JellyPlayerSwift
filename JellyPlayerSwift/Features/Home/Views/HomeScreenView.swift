@@ -5,6 +5,7 @@
 //  Created by Nikola Ristic on 5/2/25.
 //
 
+import Kingfisher
 import SwiftUI
 
 struct HomeScreenView: View {
@@ -17,16 +18,16 @@ struct HomeScreenView: View {
             Group {
                 if networkService.isConnected {
                     if let _ = access {
-                        AlbumsStackView(navigationPath: $navigationPath)
-                            .modifier(MiniPlayerModifier())
+                        RecommendedSongsCarouselView()
+                            .padding(.top)
+                        
+                        AlbumsDiscoBallView()
+                            .accessibilityHidden(true)
                     } else {
                         ServerNotConfiguredView()
-                            .modifier(MiniPlayerModifier())
-                        
                     }
                 } else {
                     NetworkUnavailableView()
-                        .modifier(MiniPlayerModifier())
                 }
             }
             .navigationTitle("JellyPlayer")

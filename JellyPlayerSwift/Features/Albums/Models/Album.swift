@@ -18,10 +18,11 @@ struct Album: Codable, Hashable {
     let AlbumArtists: [Artist]
     let DateCreated: String?
     let PremiereDate: String?
+    let Genres: [String]?
     
     var coverUrl: URL? {
         if let serverUrl = UserDefaults.standard.string(forKey: serverKey) {
-            return URL(string: "\(serverUrl)/Items/\(Id)/Images/Primary")
+            return URL(string: "\(serverUrl)/Items/\(Id)/Images/Primary?maxWidth=\(coverMaxWidth)&maxHeight=\(coverMaxHeight)&quality=\(coverQuality)")
         } else {
             return nil
         }   
@@ -33,5 +34,12 @@ struct Album: Codable, Hashable {
         } else {
             return "Unknown artist"
         }
+    }
+    
+    var getGenres: String {
+        guard let genres = Genres, !genres.isEmpty else {
+            return "Unknown genre"
+        }
+        return genres.joined(separator: ", ")
     }
 }

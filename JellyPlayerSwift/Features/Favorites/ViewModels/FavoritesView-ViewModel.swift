@@ -10,18 +10,14 @@ import SwiftUI
 extension FavoritesView {
     @Observable
     class ViewModel {
-        var favoriteSongs: [Song] = []
-        var isLoading: Bool = false
+        let libraryService = LibraryService.shared
         
-        func fetchSongs() {
-            isLoading = true
-            let favoritesService = FavoritesService()
-            Task { @MainActor in
-                self.favoriteSongs = await favoritesService.fetchFavoriteSongs()
-                withAnimation {
-                    isLoading = false
-                }
-            }
+        var favoriteSongs: [Song] {
+            libraryService.fetchFavorites()
+        }
+        
+        var isLoading: Bool {
+            libraryService.isLoading && favoriteSongs.isEmpty
         }
     }
 }

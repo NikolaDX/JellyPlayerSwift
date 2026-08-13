@@ -11,27 +11,34 @@ extension AddItemsView {
     @Observable
     class ViewModel {
         let playlistId: String
-        let refreshAction: () -> Void
-        var songs: [Song] = []
+        let existingSongIds: Set<String>
+        private var allSongs: [Song] = []
+        let onSongsAdded: ([Song]) -> Void
         
-        init(playlistId: String, refreshAction: @escaping () -> Void) {
+        var songs: [Song] {
+            allSongs.filter { !existingSongIds.contains($0.Id) }
+        }
+        
+        init(playlistId: String, existingSongIds: Set<String>, onSongsAdded: @escaping ([Song]) -> Void) {
             self.playlistId = playlistId
-            self.refreshAction = refreshAction
+            self.existingSongIds = existingSongIds
+            self.onSongsAdded = onSongsAdded
         }
         
         func fetchAllSongs() {
             let songsService = SongsService()
             Task { @MainActor in
-                self.songs = await songsService.fetchAllSongs()
+                self.allSongs = await songsService.fetchAllSongs()
             }
         }
         
         func addSongsToPlaylist(songIds: [String]) {
             let playlistsSerivce = PlaylistsService()
+            let addedSongs = allSongs.filter { songIds.contains($0.Id) }
             Task { @MainActor in
                 do {
                     try await playlistsSerivce.addSongsToPlaylist(songIds: songIds, playlistId: playlistId)
-                    self.refreshAction()
+                    onSongsAdded(addedSongs)
                 } catch {
                     print("Error removing song: \(error.localizedDescription)")
                 }

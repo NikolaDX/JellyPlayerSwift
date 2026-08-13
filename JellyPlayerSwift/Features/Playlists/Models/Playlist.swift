@@ -11,9 +11,9 @@ struct PlaylistResponse: Codable {
     let Items: [Playlist]
 }
 
-class Playlist: Codable, Equatable {
+struct Playlist: Codable, Equatable {
     let Id: String
-    let Name: String
+    var Name: String
     let DateCreated: String
     var NumberOfSongs: Int?
     
@@ -25,13 +25,9 @@ class Playlist: Codable, Equatable {
     
     var coverUrl: URL? {
         if let serverUrl = UserDefaults.standard.string(forKey: serverKey) {
-            return URL(string: "\(serverUrl)/Items/\(Id)/Images/Primary")
+            return URL(string: "\(serverUrl)/Items/\(Id)/Images/Primary?maxWidth=\(coverMaxWidth)&maxHeight=\(coverMaxHeight)&quality=\(coverQuality)")
         } else {
             return nil
         }
-    }
-    
-    static func ==(lhs: Playlist, rhs: Playlist) -> Bool {
-        lhs.Id == rhs.Id
     }
 }

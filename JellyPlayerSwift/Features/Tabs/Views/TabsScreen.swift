@@ -12,17 +12,18 @@ struct TabsScreen: View {
         TabView {
             Tab("Home", systemImage: "house.fill") {
                 HomeScreenView()
-                    .modifier(MiniPlayerModifier())
             }
             
             Tab("Library", systemImage: "music.note") {
                 LibraryView()
-                    .modifier(MiniPlayerModifier())
             }
             
-            Tab("Settings", systemImage: "gear", role: .search) {
+            Tab("Settings", systemImage: "gear") {
                 SettingsView()
-                    .modifier(MiniPlayerModifier())
+            }
+            
+            Tab("Search", systemImage: "magnifyingglass", role: .search) {
+                SearchView()
             }
         }
     }

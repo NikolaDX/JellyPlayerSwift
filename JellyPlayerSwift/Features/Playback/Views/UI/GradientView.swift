@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct GradientView: View {
+    @Environment(\.colorScheme) var colorScheme
     private var color: Color
     
     init(color: Color) {
@@ -16,7 +17,7 @@ struct GradientView: View {
     
     var body: some View {
         LinearGradient(
-           gradient: Gradient(colors: [color, color.opacity(0.5)]),
+           gradient: Gradient(colors: [color, color.mix(with: .white, by: 0.25)]),
            startPoint: .bottomTrailing,
            endPoint: .topLeading
         )

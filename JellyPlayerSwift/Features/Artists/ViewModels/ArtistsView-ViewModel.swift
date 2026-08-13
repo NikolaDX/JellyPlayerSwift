@@ -10,25 +10,22 @@ import SwiftUI
 extension ArtistsView {
     @Observable
     class ViewModel {
-        var artists: [Artist] = []
-        var isLoading: Bool = false
+        var artists: [Artist] {
+            LibraryService.shared.artists
+        }
+        
+        var isLoading: Bool {
+            LibraryService.shared.isLoading && artists.isEmpty
+        }
         
         var filterText: String = ""
+        
+        var lastFetched: Date?
+        let cacheLifetime: TimeInterval = 300
         
         var filteredArtists: [Artist] {
             filterText.isEmpty ? artists : artists.filter {
                 $0.Name.localizedStandardContains(filterText)
-            }
-        }
-        
-        func fetchArtists() {
-            isLoading = true
-            let artistsService = ArtistsService()
-            Task { @MainActor in
-                self.artists = await artistsService.fetchArtists()
-                withAnimation {
-                    isLoading = false
-                }
             }
         }
         

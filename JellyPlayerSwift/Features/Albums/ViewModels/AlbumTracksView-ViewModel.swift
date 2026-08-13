@@ -11,8 +11,21 @@ extension AlbumTracksView {
     @Observable
     class ViewModel {
         let album: Album
-        var songs: [Song] = []
-        var isLoading: Bool = false
+        var songs: [Song] {
+            LibraryService.shared
+                .fetchAlbumTracks(for: album.Id)
+                .sorted {
+                    if ($0.ParentIndexNumber ?? 1) != ($1.ParentIndexNumber ?? 1) {
+                        return ($0.ParentIndexNumber ?? 1) < ($1.ParentIndexNumber ?? 1)
+                    }
+
+                    return ($0.IndexNumber ?? 0) < ($1.IndexNumber ?? 0)
+                }
+        }
+        
+        var isLoading: Bool {
+            LibraryService.shared.isLoading && songs.isEmpty
+        }
         
         private var favoritesService: FavoritesService
         private var downloadService: DownloadService
@@ -23,15 +36,18 @@ extension AlbumTracksView {
             self.downloadService = downloadService
         }
         
-        func fetchSongs() {
-            isLoading = true
-            let albumService = AlbumService()
-            Task { @MainActor in
-                songs = await albumService.fetchAlbumSongs(albumId: album.Id)
-                withAnimation {
-                    isLoading = false
-                }
+        func songsByDisc() -> [(disc: Int, songs: [Song])] {
+            let grouped = Dictionary(grouping: songs) {
+                $0.ParentIndexNumber ?? 1
             }
+
+            return grouped
+                .map { ($0.key, $0.value) }
+                .sorted { $0.disc < $1.disc }
+        }
+        
+        var hasMultipleDiscs: Bool {
+            songsByDisc().count > 1
         }
         
         func playSong(_ song: Song) {

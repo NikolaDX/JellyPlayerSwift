@@ -55,7 +55,7 @@ struct SongsView: View {
     }
     
     var body: some View {
-        List(filteredSongs, id: \.Id) { song in
+        return List(filteredSongs, id: \.Id) { song in
             Button {
                 PlaybackService.shared.playAndBuildQueue(song, songsToPlay: sortedSongs)
             } label: {
@@ -63,7 +63,7 @@ struct SongsView: View {
                     .accessibilityElement(children: .combine)
                     .accessibilityLabel("Song: \(song.Name) by \(song.Artists.joined(separator: ", "))")
                     .contextMenu {
-                        if song.UserData.IsFavorite {
+                        if isFavorite(song) {
                             ContextButton(isDestructive: true, text: "Remove from favorites", systemImage: "star.slash") {
                                 Task { @MainActor in
                                     await favoritesService.removeFromFavorites(song: song)
@@ -111,6 +111,7 @@ struct SongsView: View {
             }
             .foregroundStyle(.primary)
         }
+        .contentMargins(.bottom, CGFloat(miniPlayerPadding), for: .scrollContent)
         .onChange(of: songToAdd) {
             if let _ = songToAdd {
                 showingAddToPlaylist = true
@@ -169,6 +170,9 @@ struct SongsView: View {
         }
     }
     
+    private func isFavorite(_ song: Song) -> Bool {
+        LibraryService.shared.songs.first(where: { $0.Id == song.Id })?.UserData.IsFavorite ?? song.UserData.IsFavorite
+    }
 }
 
 #Preview {

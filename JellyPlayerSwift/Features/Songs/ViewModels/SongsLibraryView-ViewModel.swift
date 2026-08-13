@@ -10,19 +10,12 @@ import SwiftUI
 extension SongsLibraryView {
     @Observable
     class ViewModel {
-        var songs: [Song] = []
-        var isLoading: Bool = false
+        var songs: [Song] {
+            LibraryService.shared.songs
+        }
         
-        func fetchSongs() {
-            if !songs.isEmpty { return }
-            isLoading = true
-            let songsService = SongsService()
-            Task { @MainActor in
-                self.songs = await songsService.fetchAllSongs()
-                withAnimation {
-                    isLoading = false
-                }
-            }
+        var isLoading: Bool {
+            LibraryService.shared.isLoading
         }
     }
 }

@@ -22,17 +22,34 @@ extension RenamePlaylistView {
         
         func renamePlaylist() {
             errorMessage = nil
-            self.isLoading = true
-            let playlistsSerivce = PlaylistsService()
+            isLoading = true
+
+            let playlistsService = PlaylistsService()
+
             Task { @MainActor in
+                defer {
+                    isLoading = false
+                }
+
                 do {
-                    try await playlistsSerivce.renamePlaylist(playlistId: playlistId, newName: newPlaylistName)
+                    try await playlistsService.renamePlaylist(
+                        playlistId: playlistId,
+                        newName: newPlaylistName
+                    )
+
+                    LibraryService.shared.renamePlaylist(
+                        id: playlistId,
+                        newName: newPlaylistName
+                    )
+
                     showingSuccessMessage = true
+                    
+                    print(LibraryService.shared.playlists.map(\.Name))
+
                 } catch {
                     errorMessage = error.localizedDescription
                 }
             }
-            self.isLoading = false
         }
     }
 }

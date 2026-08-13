@@ -10,14 +10,24 @@ import SwiftUI
 extension PlaylistsView {
     @Observable
     class ViewModel {
-        var playlists: [Playlist] = []
-        var isLoading: Bool = false
+        let library = LibraryService.shared
+        
+        var playlists: [Playlist] {
+            library.playlists
+        }
+        
+        var isLoading: Bool {
+            library.isLoading
+        }
         
         var selectedSortOption: String = "Name"
         var selectedSortOrder: String = "Ascending"
         var filterText: String = ""
         
+        
         var sortedPlaylists: [Playlist] {
+            let playlists = library.playlists
+            
             let sorted: [Playlist]
             
             switch selectedSortOption {
@@ -42,23 +52,12 @@ extension PlaylistsView {
             }
         }
         
-        func fetchPlaylists() {
-            isLoading = true
-            let playlistsService = PlaylistsService()
-            Task { @MainActor in
-                self.playlists = await playlistsService.fetchPlaylists()
-                withAnimation {
-                    isLoading = false
-                }
-            }
-        }
-        
         func deletePlaylist(playlistId: String) {
             let playlistsService = PlaylistsService()
             Task { @MainActor in
                 do {
                     try await playlistsService.deletePlaylist(playlistId: playlistId)
-                    fetchPlaylists()
+                    LibraryService.shared.removePlaylist(playlistId: playlistId)
                 } catch {
                     print("Error deleting playlist: \(error.localizedDescription)")
                 }

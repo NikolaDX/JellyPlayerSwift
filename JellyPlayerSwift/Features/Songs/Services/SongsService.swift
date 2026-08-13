@@ -25,12 +25,11 @@ class SongsService {
     func fetchAllSongs() async -> [Song] {
         if let data = await jellyfinService.fetchItems(queryItems: [
             URLQueryItem(name: "IncludeItemTypes", value: "Audio"),
-            URLQueryItem(name: "Fields", value: "DateCreated"),
+            URLQueryItem(name: "Fields", value: "Genres,DateCreated"),
             URLQueryItem(name: "Recursive", value: "true"),
             URLQueryItem(name: "SortBy", value: "Name"),
-            URLQueryItem(name: "SortOrder", value: "Ascending")
+            URLQueryItem(name: "SortOrder", value: "Ascending"),
         ]) {
-            print(String(data: data, encoding: .utf8) ?? "No data.")
             do {
                 let raw = try JSONSerialization.jsonObject(with: data) as? [String: Any]
                 if let itemsArray = raw?["Items"] as? [[String: Any]] {
@@ -48,7 +47,7 @@ class SongsService {
     }
     
     func generateInstantMix(songId: String) async -> [Song] {
-        if let data = await jellyfinService.fetchSpecific(queryItems: [], toFetch: "Items/\(songId)/InstantMix") {
+        if let data = await jellyfinService.fetchSpecific(queryItems: [], toFetch: "Songs/\(songId)/InstantMix") {
             do {
                 let raw = try JSONSerialization.jsonObject(with: data) as? [String: Any]
                 if let itemsArray = raw?["Items"] as? [[String: Any]] {

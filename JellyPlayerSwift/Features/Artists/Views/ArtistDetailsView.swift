@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ArtistDetailsView: View {
+    @EnvironmentObject private var themeService: ThemeService
     @State private var viewModel: ViewModel
     
     init(artist: Artist) {
@@ -15,7 +16,7 @@ struct ArtistDetailsView: View {
     }
     
     var body: some View {
-        AsyncView(isLoading: $viewModel.isLoading) {
+        AsyncView(isLoading: viewModel.isLoading) {
             GeometryReader { proxy in
                 ScrollView {
                     ArtistHeader(artist: viewModel.artist)
@@ -29,6 +30,7 @@ struct ArtistDetailsView: View {
                                 await viewModel.playArtist()
                             }
                         }
+                        .foregroundStyle(themeService.selectedAccentColor)
                         .accessibilityHint("Play all songs from this artist")
                         
                         NiceIconButton("Shuffle", buttonImage: "shuffle") {
@@ -36,6 +38,7 @@ struct ArtistDetailsView: View {
                                 await viewModel.shuffleArtist()
                             }
                         }
+                        .foregroundStyle(themeService.selectedAccentColor)
                         .accessibilityLabel("Shuffle")
                         .accessibilityHint("Shuffle all songs from this artist")
                     }
@@ -46,9 +49,6 @@ struct ArtistDetailsView: View {
             }
         }
         .navigationTitle(viewModel.artist.Name)
-        .task {
-            viewModel.fetchArtistAlbums()
-        }
     }
 }
 
