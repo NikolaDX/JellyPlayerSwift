@@ -9,9 +9,9 @@
   
 <p align="center">
   <img src="https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/screenshot1.PNG" width="22%">
-  <img src="https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/screenshot1.PNG" width="22%">
-  <img src="https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/screenshot1.PNG" width="22%">
-  <img src="https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/screenshot1.PNG" width="22%">
+  <img src="https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/screenshot2.PNG" width="22%">
+  <img src="https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/screenshot3.PNG" width="22%">
+  <img src="https://github.com/NikolaDX/JellyPlayerSwift/blob/main/Images/screenshot4.PNG" width="22%">
 </p>
 
 **Album artwork belongs to the respective artists, labels, and copyright holders.** It is displayed solely as part of the music library interface and is not claimed as original content.
